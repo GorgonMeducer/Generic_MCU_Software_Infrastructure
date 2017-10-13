@@ -22,6 +22,66 @@
 //! \brief import head files
 
 /*============================ MACROS ========================================*/
+
+
+/*----------------------------------------------------------------------------*
+ * Hardware Abstruct Layer Configuration                                      *
+ *----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------*
+ * Scheduler Configuration                                                    *
+ *----------------------------------------------------------------------------*/
+//! \name configure safe task service:1.2K for current configuration
+//! @{
+#define TASK_SCHEDULER                      ENABLED
+#define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
+#define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
+#define SAFE_TASK_CALL_STACK                ENABLED
+#define SAFE_TASK_USE_RESERVED_SYSTEM_RAM   DISABLED
+
+
+#define SAFE_TASK_QUEUE_POOL_SIZE           (1ul)       //!< task queue pool size
+#define SAFE_TASK_POOL_SIZE                 (8ul)       //!< task pool size       
+//! @}
+
+
+/*----------------------------------------------------------------------------*
+ * Component Configuration                                                    *
+ *----------------------------------------------------------------------------*/
+
+#define USE_MAL_PAGE_FREE_ACCESS                            ENABLED
+#define USE_COMPONENT_MAL_SDF_W25QXXXX                      ENABLED
+#define USE_COMPONENT_MAL_SRAM                              ENABLED
+#define USE_COMPONENT_SW_SDIO                               ENABLED
+
+/*----------------------------------------------------------------------------*
+ * Service Configuration                                                      *
+ *----------------------------------------------------------------------------*/
+#define USE_SERVICE_ES_SIMPLE_FRAME                         ENABLED
+
+#define USE_SERVICE_GUI_TGUI                                ENABLED
+#if USE_SERVICE_GUI_TGUI == ENABLED
+#   define TGUI_SIZE_INT_TYPE                               TGUI_MEDIUM
+#   define TGUI_COLOR_BITS                                  TGUI_4BITS
+#endif
+
+//! \name CRC configuration
+//! @{
+#define CRC_OPT_SIZE        2
+#define CRC_OPT_BALANCE     1
+#define CRC_OPT_SPEED       0
+
+#define CRC8_OPTIMIZE                   CRC_OPT_BALANCE
+#define CRC8_ROHC_OPTIMIZE              CRC_OPT_BALANCE
+#define CRC16_MODBUS_OPTIMIZE           CRC_OPT_BALANCE
+#define CRC16_USB_OPTIMIZE              CRC_OPT_BALANCE
+#define CRC16_CCITT_FALSE_OPTIMIZE      CRC_OPT_BALANCE
+#define CRC32_IEEE802_3_OPTIMIZE        CRC_OPT_BALANCE
+#define CRC32_OPTIMIZE                  CRC_OPT_BALANCE
+//! @}
+
+
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
