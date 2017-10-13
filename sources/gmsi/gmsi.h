@@ -15,8 +15,8 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __ES_FRAMEWORK_H__
-#define __ES_FRAMEWORK_H__
+#ifndef __GMSI_FRAMEWORK_H__
+#define __GMSI_FRAMEWORK_H__
 
 
 /*============================ INCLUDES ======================================*/
@@ -26,7 +26,7 @@
 
 /*============================ MACROS ========================================*/
 
-//! \name GSF Interface Type
+//! \name GMSI Interface Type
 //! @{
 //! general purpose interface for normal MCU applicatoin
 #define GENERAL_PURPOSE                 0           
@@ -36,14 +36,14 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 
-//! \name gsf version info
+//! \name gmsi version info
 //! @{
 extern const struct {
     uint8_t chPurpose;          //!< software framework purpose
     uint8_t chInterface;        //!< interface version
     uint8_t chMajor;            //!< major version
     uint8_t chMinor;            //!< minor version
-} GSFVersion;
+} GMSIVersion;
 //! @}
 
 /*============================ PROTOTYPES ====================================*/

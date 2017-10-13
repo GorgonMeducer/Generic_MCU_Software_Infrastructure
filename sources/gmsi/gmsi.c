@@ -22,7 +22,7 @@
 
 /*============================ MACROS ========================================*/
 
-//! \name GSF Interface Type
+//! \name GMSI Interface Type
 //! @{
 //! general purpose interface for normal MCU applicatoin
 #define GENERAL_PURPOSE                 0           
@@ -59,7 +59,7 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 
-//! \name gsf version info
+//! \name gmsi version info
 //! @{
 const struct {
     uint8_t chPurpose;          //!< software framework purpose
