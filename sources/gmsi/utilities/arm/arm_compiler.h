@@ -99,42 +99,84 @@
 
 //! \brief none standard memory types
 #if __IS_COMPILER_IAR__
-#   define FLASH            const
-#   define EEPROM           const
-#   define NO_INIT          __no_init
-#   define ROOT             __root
-#   define IN_LINE          inline
-#   define WEAK             __weak
-#   define RAMFUNC          __ramfunc
-#   define __asm__          __asm
-#   define ALIGN(__N)       _Pragma(__STR(data_alignment=__N))
-#   define AT_ADDR(__ADDR)  @ __ADDR
-#   define SECTION(__SEC)   _Pragma(__STR(location=__SEC))
+#   define FLASH                const
+#   define EEPROM               const
+#   define NO_INIT              __no_init
+#   define ROOT                 __root
+#   define INLINE               inline
+#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define WEAK                 __weak
+#   define RAMFUNC              __ramfunc
+#   define __asm__              __asm
+#   define __ALIGN(__N)         _Pragma(__STR(data_alignment=__N))
+#   define __AT_ADDR(__ADDR)    @ __ADDR
+#   define __SECTION(__SEC)     _Pragma(__STR(location=__SEC))
+
+#   define PACKED               __packed
+#   define UNALIGNED            __packed
+#   define TRANSPARENT_UNION    __attribute__((transparent_union))
+
 #elif __IS_COMPILER_GCC__
-#   define FLASH            const
-#   define EEPROM           const
-#   define NO_INIT          __attribute__(( section( "noinit"))
-#   define ROOT             __attribute__((used))    
-#   define IN_LINE          inline
-#   define WEAK             __attribute__((weak))
-#   define RAMFUNC          __attribute__((section ("textrw")))
-#   define __asm__          __asm
-#   define ALIGN(__N)       __attribute__((aligned (__N)))
-#   define AT_ADDR(__ADDR)  __attribute__((at(__ADDR))) 
-#   define SECTION(__SEC)   __attribute__((section (__SEC)))
-#elif __IS_COMPILER_MDK__
-#   define FLASH            const
-#   define EEPROM           const
-#   define NO_INIT          __attribute__( ( section( "noinit"),zero_init) )
-#   define ROOT             __attribute__((used))    
-#   define IN_LINE          __inline
-#   define WEAK             __attribute__((weak))
-#   define RAMFUNC          __attribute__((section ("textrw")))
-#   define __asm__          __asm
-#   define ALIGN(__N)       __attribute__((aligned (__N))) 
-#   define AT_ADDR(__ADDR)  __attribute__((at(__ADDR)))
-#   define SECTION(__SEC)   __attribute__((section (__SEC)))
+#   define FLASH                const
+#   define EEPROM               const
+#   define NO_INIT              __attribute__(( section( ".bss.noinit"))
+#   define ROOT                 __attribute__((used))    
+#   define INLINE              inline
+#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define WEAK                 __attribute__((weak))
+#   define RAMFUNC              __attribute__((section (".textrw")))
+#   define __asm__              __asm
+#   define __ALIGN(__N)         __attribute__((aligned (__N)))
+#   define __AT_ADDR(__ADDR)    __attribute__((at(__ADDR))) 
+#   define __SECTION(__SEC)     __attribute__((section (__SEC)))
+
+#   define PACKED               __attribute__((packed))
+#   define UNALIGNED            __attribute__((packed))
+#   define TRANSPARENT_UNION    __attribute__((transparent_union))
+
+#elif __IS_COMPILER_ARM_COMPILER_5__
+#   define FLASH                const
+#   define EEPROM               const
+#   define NO_INIT              __attribute__( ( section( ".bss.noinit"),zero_init) )
+#   define ROOT                 __attribute__((used))    
+#   define INLINE              __inline
+#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define WEAK                 __attribute__((weak))
+#   define RAMFUNC              __attribute__((section (".textrw")))
+#   define __asm__              __asm
+#   define __ALIGN(__N)         __attribute__((aligned (__N))) 
+#   define __AT_ADDR(__ADDR)    __attribute__((at(__ADDR)))
+#   define __SECTION(__SEC)     __attribute__((section (__SEC)))
+
+
+#   define PACKED               __packed
+#   define UNALIGNED            __packed
+#   define TRANSPARENT_UNION    __attribute__((transparent_union))
+
+#elif __IS_COMPILER_ARM_COMPILER_6__
+#   define FLASH                const
+#   define EEPROM               const
+#   define NO_INIT              __attribute__( ( section( ".bss.noinit")) )
+#   define ROOT                 __attribute__((used))    
+#   define INLINE              __inline
+#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define WEAK                 __attribute__((weak))
+#   define RAMFUNC              __attribute__((section (".textrw")))
+#   define __asm__              __asm
+#   define __ALIGN(__N)         __attribute__((aligned (__N))) 
+#   define __AT_ADDR(__ADDR)    __attribute__((section (".ARM.__at_" #__ADDR)))
+#   define __SECTION(__SEC)     __attribute__((section (__SEC)))
+
+#   define PACKED               __attribute__((packed))
+#   define UNALIGNED            __unaligned
+#   define TRANSPARENT_UNION    __attribute__((transparent_union))
+
 #endif
+
+
+#define AT_ADDR(__ADDR)     __AT_ADDR(__ADDR)
+#define ALIGN(__N)          __ALIGN(__N)
+#define SECTION(__SEC)      __SECTION(__SEC)
 
 /*----------------------------------------------------------------------------*
  * Signal & Interrupt Definition                                              *
@@ -142,30 +184,59 @@
 
   /*!< Macro to enable all interrupts. */
 #if __IS_COMPILER_IAR__
-#   define ENABLE_GLOBAL_INTERRUPT()       __enable_interrupt()
-#elif __IS_COMPILER_MDK__
-#   define ENABLE_GLOBAL_INTERRUPT()      __enable_irq()
+#   define ENABLE_GLOBAL_INTERRUPT()            __enable_interrupt()
+#elif __IS_COMPILER_ARM_COMPILER_5__ || __IS_COMPILER_ARM_COMPILER_6__
+#   define ENABLE_GLOBAL_INTERRUPT()            __enable_irq()
 #else
-#   define ENABLE_GLOBAL_INTERRUPT()       __asm__ __volatile__ (" CPSIE i")
+#   define ENABLE_GLOBAL_INTERRUPT()            __asm__ __volatile__ (" CPSIE i")
 #endif
 
   /*!< Macro to disable all interrupts. */
 #if __IS_COMPILER_IAR__
-#   define DISABLE_GLOBAL_INTERRUPT()      __disable_interrupt()
-#elif __IS_COMPILER_MDK__
-#   define DISABLE_GLOBAL_INTERRUPT()      __disable_irq()
+#   define DISABLE_GLOBAL_INTERRUPT()           __disable_interrupt()
+#elif __IS_COMPILER_ARM_COMPILER_5__ || __IS_COMPILER_ARM_COMPILER_6__
+#   define DISABLE_GLOBAL_INTERRUPT()           __disable_irq()
 #else
-#   define DISABLE_GLOBAL_INTERRUPT()      __asm__ __volatile__ (" CPSID i");
+#   define DISABLE_GLOBAL_INTERRUPT()           __asm__ __volatile__ (" CPSID i");
 #endif
 
 #if __IS_COMPILER_IAR__
-#   define GET_GLOBAL_INTERRUPT_STATE()        __get_interrupt_state()
-#   define SET_GLOBAL_INTERRUPT_STATE(__STATE) __set_interrupt_state(__STATE)
+#   define GET_GLOBAL_INTERRUPT_STATE()         __get_interrupt_state()
+#   define SET_GLOBAL_INTERRUPT_STATE(__STATE)  __set_interrupt_state(__STATE)
 typedef __istate_t   istate_t;
-#elif __IS_COMPILER_MDK__
-#   define GET_GLOBAL_INTERRUPT_STATE()        __disable_irq()
+#elif __IS_COMPILER_ARM_COMPILER_5__ || __IS_COMPILER_ARM_COMPILER_6__
+#   define GET_GLOBAL_INTERRUPT_STATE()         __disable_irq()
 #   define SET_GLOBAL_INTERRUPT_STATE(__STATE) if (__STATE) { __enable_irq(); }
 typedef int   istate_t;
+#elif __IS_COMPILER_GCC__
+#   define GET_GLOBAL_INTERRUPT_STATE()         __get_PRIMASK()
+
+/**
+  \brief   Get Priority Mask
+  \details Returns the current state of the priority mask bit from the Priority Mask Register.
+  \return               Priority Mask value
+ */
+__attribute__((always_inline)) static inline uint32_t __get_PRIMASK(void)
+{
+    unsigned int result;
+
+    __asm__ volatile ("MRS %0, primask" : "=r" (result) );
+    return(result);
+}
+
+#   define SET_GLOBAL_INTERRUPT_STATE(__STATE)  __set_PRIMASK(__STATE)
+
+/**
+  \brief   Set Priority Mask
+  \details Assigns the given value to the Priority Mask Register.
+  \param [in]    priMask  Priority Mask
+ */
+__attribute__((always_inline)) static inline void __set_PRIMASK(unsigned int priMask)
+{
+    __asm__ volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
+}
+
+
 #else
 #error No support for interrupt state access
 #endif

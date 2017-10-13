@@ -33,21 +33,28 @@
 #define __IS_COMPILER_GCC__ defined(__GNUC__)
 //! @}
 
-//! \note for arm_mdk
-#ifdef __IS_COMPILER_MDK__
-    #undef __IS_COMPILER_MDK__
+//! \note for arm compiler 5
+#ifdef __IS_COMPILER_ARM_COMPILER_5__
+    #undef __IS_COMPILER_ARM_COMPILER_5__
 #endif
-#define __IS_COMPILER_MDK__ defined(__CC_ARM)
+#define __IS_COMPILER_ARM_COMPILER_5__ ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
+//! @}
+
+//! \note for arm compiler 6
+#ifdef __IS_COMPILER_ARM_COMPILER_6__
+    #undef __IS_COMPILER_ARM_COMPILER_6__
+#endif
+#define __IS_COMPILER_ARM_COMPILER_6__ ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
 //! @}
 
 
 /* -------------------  Start of section using anonymous unions  ------------------ */
-#if     __IS_COMPILER_MDK__
+#if     __IS_COMPILER_ARM_COMPILER_5__
     //#pragma push
     #pragma anon_unions
 #elif   __IS_COMPILER_IAR__
     #pragma language=extended
-#elif   __IS_COMPILER_GCC__
+#elif   __IS_COMPILER_GCC__ OR __IS_COMPILER_ARM_COMPILER_6__
     /* anonymous unions are enabled by default */
 #else
     #warning Not supported compiler type

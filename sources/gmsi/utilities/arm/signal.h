@@ -21,7 +21,7 @@
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
 
-#if __IS_COMPILER_MDK__
+#elif __IS_COMPILER_ARM_COMPILER_5__ || __IS_COMPILER_ARM_COMPILER_6__
 //! \brief The safe ATOM code section macro
 # define SAFE_ATOM_CODE(...)     {\
         istate_t tState = GET_GLOBAL_INTERRUPT_STATE();\
