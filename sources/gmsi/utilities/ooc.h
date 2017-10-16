@@ -82,8 +82,7 @@
      typedef union __NAME __NAME;                
 
 #define __DEF_CLASS(__NAME,...)                 \
-    /*typedef union __NAME __NAME;  */          \
-    typedef struct __##__NAME __##__NAME;       \hai
+    typedef struct __##__NAME __##__NAME;       \
     struct __##__NAME {                         \
         __VA_ARGS__
 #define DEF_CLASS(__NAME, ...)      __DEF_CLASS(__NAME, __VA_ARGS__)
@@ -122,7 +121,6 @@
 
 
 #define __EXTERN_CLASS(__NAME,...)                  \
-    /*typedef union __NAME __NAME; */               \
     union __NAME {                                  \
         __VA_ARGS__                                 \
         uint_fast8_t __NAME##__chMask[(sizeof(struct{\
