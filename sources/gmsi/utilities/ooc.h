@@ -63,15 +63,27 @@
 //! \brief macro for initializing an event
 #define INIT_DELEGATE(__NAME/*,__ASYN*/)           delegate_init(&(__NAME)/*, (__ASYN)*/)
 
-
- 
+/*! \note add WHICH macro to support multiple inheriting and implementations
+ *!       DEF_CLASS( example_base_t )
+ *!           ...
+ *!       END_DEF_CLASS( example_base_t )
+ *!
+ *!       DEF_INTERFACE( i_example_t )
+ *!           ...
+ *!       END_INTERFACE( i_example_t )
+ *!     
+ *!       DEF_CLASS( example_t, WHICH( INHERIT( example_base_t ) IMPLEMENT( i_example_t ) ) )
+ *!           ...
+ *!       END_DEF_CLASS( example_t, WHICH( INHERIT( example_base_t ) IMPLEMENT( i_example_t ) ) )
+  */
+#define WHICH(...)                  struct { __VA_ARGS__ };
 
 #define DECLARE_CLASS(__NAME)                   \
      typedef union __NAME __NAME;                
 
 #define __DEF_CLASS(__NAME,...)                 \
     /*typedef union __NAME __NAME;  */          \
-    typedef struct __##__NAME __##__NAME;       \
+    typedef struct __##__NAME __##__NAME;       \hai
     struct __##__NAME {                         \
         __VA_ARGS__
 #define DEF_CLASS(__NAME, ...)      __DEF_CLASS(__NAME, __VA_ARGS__)
@@ -121,6 +133,21 @@
         }) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];\
     };
 
+/*! \note Support for protected members
+ */
+//! @{
+#define __DEF_PROTECTED         (__BELONGS_TO, ...)     DEF_CLASS               (__##__BELONGS_TO, __VA_ARGS__ )
+#define __END_DEF_PROTECTED     (__BELONGS_TO, ...)     END_DEF_CLASS           ( __##__BELONGS_TO, __VA_ARGS__ )
+#define __EXTERN_PROTECTED      (__BELONGS_TO, ...)     EXTERN_CLASS            (__##__BELONGS_TO, __VA_ARGS__ )
+#define __END_EXTERN_PROTECTED  (__BELONGS_TO, ...)     END_EXTERN_CLASS        ( __##__BELONGS_TO, __VA_ARGS__ )
+#define __PROTECTED             (__BELONGS_TO)          CLASS                   (__##__BELONGS_TO)
+
+#define DEF_PROTECTED           (__BELONGS_TO, ...)     __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
+#define END_DEF_PROTECTED       (__BELONGS_TO, ...)     __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
+#define EXTERN_PROTECTED        (__BELONGS_TO, ...)     __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
+#define END_EXTERN_PROTECTED    (__BELONGS_TO, ...)     __END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
+#define PROTECTED               (__BELONGS_TO)          __PROTECTED             (__BELONGS_TO)
+//! @}
 
 //! \name interface definition
 //! @{
