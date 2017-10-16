@@ -82,13 +82,6 @@ bool platform_init( void )
 {
     bool bResult = false;
 
-#if SYSTEM_LOW_LEVEL_INIT != ENABLED
-
-    extern bool BEFORE_SYSTEM_INIT(void);
-    BEFORE_SYSTEM_INIT();
-    
-#endif
-
     do {
         /*! initialize hardware abstract layer */
         if ( !hal_init() ) {

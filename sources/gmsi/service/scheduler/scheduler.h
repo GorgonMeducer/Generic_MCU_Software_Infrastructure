@@ -261,6 +261,8 @@
 #define ___RSV(__N)             __RSV(__N)
 #define RESERVED                ___RSV(__LINE__)
 
+DECLARE_CLASS(task_t)
+    
 EXTERN_CLASS(task_t)
 #if SAFE_TASK_CALL_STACK == ENABLED
     void                            *RESERVED;             
@@ -295,7 +297,7 @@ END_EXTERN_CLASS(task_t)
  */
 typedef fsm_rt_t safe_task_func_t(void *pArg, void *);
 
-
+DECLARE_CLASS(safe_call_stack_item_t)
 //! \name call stack item
 //! @{
 EXTERN_CLASS(safe_call_stack_item_t)
@@ -306,6 +308,8 @@ END_EXTERN_CLASS(safe_call_stack_item_t);
 
 
 #if SAFE_TASK_THREAD_SYNC == ENABLED
+
+DECLARE_CLASS(fsm_flag_t)
 
 //! \name task event item
 //! @{

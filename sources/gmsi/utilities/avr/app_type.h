@@ -143,17 +143,19 @@
 #define IS_FSM_ERR(__FSM_RT)        ((__FSM_RT) < fsm_rt_cpl)
      
 /*============================ TYPES =========================================*/
-#if 0
+#ifndef __FSM_RT_TYPE__
+#define __FSM_RT_TYPE__
 //! \name finit state machine state
 //! @{
 typedef enum {
     fsm_rt_err          = -1,    //!< fsm error, error code can be get from other interface
     fsm_rt_cpl          = 0,     //!< fsm complete
     fsm_rt_on_going     = 1,     //!< fsm on-going
-    fsm_rt_asyn         = 2,     //!< fsm asynchronose complete, you can check it later.
-    fsm_rt_wait_for_obj = 3,     //!< fsm wait for object
+    fsm_rt_wait_for_obj = 2,     //!< fsm wait for object
+    fsm_rt_asyn         = 3,     //!< fsm asynchronose complete, you can check it later.
 } fsm_rt_t;
 //! @}
+
 #endif
 
 /*============================ GLOBAL VARIABLES ==============================*/

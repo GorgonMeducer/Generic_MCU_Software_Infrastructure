@@ -41,11 +41,12 @@
 
 
 /*============================ TYPES =========================================*/
-
+DECLARE_CLASS(pool_item_t)
 DEF_CLASS(pool_item_t)
     pool_item_t             *ptNext;
 END_DEF_CLASS(pool_item_t)
 
+DECLARE_CLASS(pool_t)
 DEF_CLASS(pool_t)
     pool_item_t             *ptFreeList;
     uint_fast16_t           tCounter;

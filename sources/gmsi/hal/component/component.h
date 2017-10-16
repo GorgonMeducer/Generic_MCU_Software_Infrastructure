@@ -20,13 +20,10 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-#include ".\bootloader\bootloader.h"
-#include ".\EzPort\EzPort.h"
-#include ".\memory\memory.h"
-#include ".\sensor\sensor.h"
-#include ".\dma_helper\dma_helper.h"
 #include ".\key\key.h"
-#include ".\train_wave\train_wave.h"
+#include ".\memory\memory.h"
+#include ".\bootloader\bootloader.h"
+#include ".\sw_sdio\sw_sdio.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/

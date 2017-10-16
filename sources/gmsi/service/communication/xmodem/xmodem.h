@@ -14,12 +14,13 @@
 *  limitations under the License.                                           *
 *                                                                           *
 ****************************************************************************/
-#ifndef __TEMPLATE_USE_SERVICE_XMODEM_H__
-#define __TEMPLATE_USE_SERVICE_XMODEM_H__
+#ifndef __USE_SERVICE_XMODEM_H__
+#define __USE_SERVICE_XMODEM_H__
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
+#if USE_SERVICE_XMODEM == ENABLED
 /*============================ MACROS ========================================*/
 #define fsm_rt_user_cancel              ((fsm_rt_t)-2)
 
@@ -63,5 +64,7 @@ extern bool xmodem_init(xmodem_t *ptCFG);
  *! \retrun fsm_rt_user_cancel  user cancel transfer
  */
 extern fsm_rt_t xmodem_task(void);
+#endif
 
 #endif
+

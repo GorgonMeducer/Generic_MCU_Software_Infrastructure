@@ -21,6 +21,7 @@
 /*============================ INCLUDES ======================================*/
 #include <stdint.h>
 
+
 /*! \NOTE the uint_fast8_t used in this header file is defined in stdint.h 
           if you don't have stdint.h supported in your toolchain, you should
           define uint_fast8_t all by yourself with following rule:
@@ -31,7 +32,7 @@
  */
 
 /*============================ MACROS ========================================*/
-
+#define EVENT_RT_UNREGISTER         4
 
 
 /* -----------------  Start of section using anonymous unions  -------------- */
@@ -102,20 +103,20 @@
  *! \param ... initialization list
  */
 #define __INIT_CLASS_OBJ(__TYPE, __OBJ, ...)        \
-            union {                                 \
+            union {               \
                 CLASS(__TYPE) __##__OBJ;            \
-                __TYPE   __OBJ;                     \
-            } = {                                   \
-                .__##__OBJ = __VA_ARGS__,           \
+                __TYPE;                     \
+            } __OBJ = {                             \
+                .__##__OBJ = __VA_ARGS__            \
             }
-#define INIT_CLASS_OBJ(__TYEP, __OBJ, ...)          \
+#define INIT_CLASS_OBJ(__TYPE, __OBJ, ...)          \
             __INIT_CLASS_OBJ(__TYPE, __OBJ, __VA_ARGS__)
 
 #define __EXTERN_CLASS_OBJ( __TYPE, __OBJ )         \
             extern union {                          \
                 CLASS(__TYPE) __##__OBJ;            \
-                __TYPE   __OBJ;                     \
-            };
+                __TYPE;                             \
+            }__OBJ;
 #define EXTERN_CLASS_OBJ(__TYPE, __OBJ)             \
             __EXTERN_CLASS_OBJ( __TYPE, __OBJ )
 
@@ -134,17 +135,17 @@
 /*! \note Support for protected members
  */
 //! @{
-#define __DEF_PROTECTED         (__BELONGS_TO, ...)     DEF_CLASS               (__##__BELONGS_TO, __VA_ARGS__ )
-#define __END_DEF_PROTECTED     (__BELONGS_TO, ...)     END_DEF_CLASS           ( __##__BELONGS_TO, __VA_ARGS__ )
-#define __EXTERN_PROTECTED      (__BELONGS_TO, ...)     EXTERN_CLASS            (__##__BELONGS_TO, __VA_ARGS__ )
-#define __END_EXTERN_PROTECTED  (__BELONGS_TO, ...)     END_EXTERN_CLASS        ( __##__BELONGS_TO, __VA_ARGS__ )
-#define __PROTECTED             (__BELONGS_TO)          CLASS                   (__##__BELONGS_TO)
+#define __DEF_PROTECTED(__BELONGS_TO, ...)          DEF_CLASS               (__##__BELONGS_TO, __VA_ARGS__ )
+#define __END_DEF_PROTECTED(__BELONGS_TO, ...)      END_DEF_CLASS           ( __##__BELONGS_TO, __VA_ARGS__ )
+#define __EXTERN_PROTECTED(__BELONGS_TO, ...)       EXTERN_CLASS            (__##__BELONGS_TO, __VA_ARGS__ )
+#define __END_EXTERN_PROTECTED(__BELONGS_TO, ...)   END_EXTERN_CLASS        ( __##__BELONGS_TO, __VA_ARGS__ )
+#define __PROTECTED(__BELONGS_TO)                   CLASS                   (__##__BELONGS_TO)
 
-#define DEF_PROTECTED           (__BELONGS_TO, ...)     __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
-#define END_DEF_PROTECTED       (__BELONGS_TO, ...)     __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
-#define EXTERN_PROTECTED        (__BELONGS_TO, ...)     __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
-#define END_EXTERN_PROTECTED    (__BELONGS_TO, ...)     __END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
-#define PROTECTED               (__BELONGS_TO)          __PROTECTED             (__BELONGS_TO)
+#define DEF_PROTECTED(__BELONGS_TO, ...)            __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
+#define END_DEF_PROTECTED(__BELONGS_TO, ...)        __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
+#define EXTERN_PROTECTED(__BELONGS_TO, ...)         __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
+#define END_EXTERN_PROTECTED(__BELONGS_TO, ...)     __END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
+#define PROTECTED(__BELONGS_TO)                     __PROTECTED             (__BELONGS_TO)
 //! @}
 
 //! \name interface definition

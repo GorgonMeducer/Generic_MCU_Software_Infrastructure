@@ -162,7 +162,8 @@
 #define IS_FSM_ERR(__FSM_RT)        ((__FSM_RT) < fsm_rt_cpl)
 
 /*============================ TYPES =========================================*/
-#if 0
+#ifndef __FSM_RT_TYPE__
+#define __FSM_RT_TYPE__
 //! \name finit state machine state
 //! @{
 typedef enum {
@@ -173,7 +174,9 @@ typedef enum {
     fsm_rt_asyn         = 3,     //!< fsm asynchronose complete, you can check it later.
 } fsm_rt_t;
 //! @}
+
 #endif
+
 
 #define __REG_TYPE__
 

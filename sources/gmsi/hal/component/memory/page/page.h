@@ -60,6 +60,7 @@ typedef struct {
 }page_cfg_t;
 //! @}
 
+DECLARE_CLASS(page_t)
 //! \name class page_t
 //! @{
 EXTERN_CLASS(page_t)

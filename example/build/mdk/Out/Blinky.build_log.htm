@@ -1,0 +1,160 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.24.2.0
+Copyright (C) 2017 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Gabriel Wang, ARM, LIC=HF8SD-SIPSG-URL2J-S5ESR-14VUR-YESXZ
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.24.1
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 5 (build 528)
+Assembler:       Armasm.exe V5.06 update 5 (build 528)
+Linker/Locator:  ArmLink.exe V5.06 update 5 (build 528)
+Library Manager: ArmAr.exe V5.06 update 5 (build 528)
+Hex Converter:   FromElf.exe V5.06 update 5 (build 528)
+CPU DLL:         SARMCM3.DLL V5.24.1
+Dialog DLL:      DCM.DLL V1.16.0.0
+Target DLL:      ULP2CM3.DLL V2.209.4.0
+Dialog DLL:      TCM.DLL V1.32.0.0
+ 
+<h2>Project:</h2>
+C:\Work\SVN\projects\MCU\Template\Generic_MCU_Software_Infrastructure\Generic_MCU_Software_Infrastructure\example\build\mdk\Blinky.uvprojx
+Project File Date:  10/16/2017
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'V2M-MPS2'
+compiling bsp.c...
+compiling gmsi.c...
+compiling hal.c...
+compiling component.c...
+compiling Blinky.c...
+compiling key.c...
+compiling key_queue.c...
+compiling bootloader.c...
+compiling sdf_w25qxxx.c...
+compiling mal.c...
+compiling sram.c...
+compiling crc.c...
+compiling sw_sdio.c...
+compiling page.c...
+compiling crc8.c...
+compiling crc7.c...
+compiling crc16.c...
+compiling xmodem.c...
+compiling crc32.c...
+compiling es_simple_frame.c...
+compiling random.c...
+compiling memory.c...
+compiling epool.c...
+compiling shell.c...
+compiling scheduler.c...
+compiling task.c...
+compiling service.c...
+linking...
+Program Size: Code=3136 RO-data=312 RW-data=40 ZI-data=1048  
+FromELF: creating hex file...
+".\Out\Blinky.axf" - 0 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.0.1.pack
+                ARM.CMSIS.5.0.1
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.0.1
+   * Component: USART Version: 2.3.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.ARM_Compiler.1.3.1.pack
+                Keil.ARM_Compiler.1.3.1
+                Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
+   * Component: STDOUT Variant: User Version: 1.2.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.MDK-Middleware.7.4.1.pack
+                Keil.MDK-Middleware.7.4.1
+                Middleware for Keil MDK-Professional and MDK-Plus
+   * Component: Touchscreen Version: 1.0.1
+   * Component: LED Version: 1.0.0
+   * Component: Graphic LCD Version: 1.0.0
+   * Component: Buttons Version: 1.0.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.V2M-MPS2_CMx_BSP.1.6.0.pack
+                Keil.V2M-MPS2_CMx_BSP.1.6.0
+                ARM V2M-MPS2 Board Support PACK for Cortex-M System Design Kit Devices
+   * Component: Startup Version: 1.0.0
+   * Component: USART Version: 1.0.0
+   * Component: Touchscreen Version: 2.0.0
+   * Component: LED Version: 2.0.0
+   * Component: Graphic LCD Version: 2.0.0
+   * Component: Common Version: 2.0.0
+   * Component: Buttons Version: 2.0.0
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\Device\CMSDK_CM7_SP
+  .\RTE\_V2M-MPS2
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Driver\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include
+  C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.4.1\Board
+  C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.6.0\Boards\ARM\V2M-MPS2\Common
+  C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.6.0\Device\CMSDK_CM7\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: Keil::Device:Startup:1.0.0
+      Include file:  CMSIS\Config\RTE_Device.h
+      Source file:   Device\CMSDK_CM7\Source\ARM\startup_CMSDK_CM7.s
+      Source file:   Device\CMSDK_CM7\Source\system_CMSDK_CM7.c
+
+   * Component: Keil::CMSIS Driver:USART:1.0.0
+      Source file:   CMSIS\Driver\USART_V2M-MPS2.c
+
+   * Component: Keil.V2M-MPS2::Board Support:Touchscreen:2.0.0
+      Source file:   Boards\ARM\V2M-MPS2\Common\Touch_V2M-MPS2.c
+
+   * Component: Keil.V2M-MPS2::Board Support:LED:2.0.0
+      Source file:   Boards\ARM\V2M-MPS2\Common\LED_V2M-MPS2.c
+
+   * Component: Keil.V2M-MPS2::Board Support:Graphic LCD:2.0.0
+      Include file:  Boards\ARM\V2M-MPS2\Common\GLCD_Config.h
+      Source file:   Boards\ARM\V2M-MPS2\Common\GLCD_V2M-MPS2.c
+      Source file:   Boards\ARM\V2M-MPS2\Common\GLCD_Fonts.c
+
+   * Component: Keil.V2M-MPS2::Board Support:Common:2.0.0
+      Include file:  Boards\ARM\V2M-MPS2\Common\SMM_MPS2.h
+      Include file:  Boards\ARM\V2M-MPS2\Common\Device.h
+
+   * Component: Keil.V2M-MPS2::Board Support:Buttons:2.0.0
+      Source file:   Boards\ARM\V2M-MPS2\Common\Buttons_V2M-MPS2.c
+
+   * Component: Keil.ARM Compiler::Compiler:I/O:STDOUT:User:1.2.0
+      Source file:   Template\stdout_USART.c
+      Source file:   Template\stdout_display.c
+      Source file:   Template\stdout_user.c
+      Source file:   Source\retarget_io.c
+
+   * Component: ARM::CMSIS:CORE:5.0.1
+
+   * Component: ::CMSIS Driver:USART:2.3.0 (API)
+      Include file:  CMSIS\Driver\Include\Driver_USART.h
+
+   * Component: ::Board Support:Touchscreen:1.0.1 (API)
+      Include file:  Board\Board_Touch.h
+
+   * Component: ::Board Support:LED:1.0.0 (API)
+      Include file:  Board\Board_LED.h
+
+   * Component: ::Board Support:Graphic LCD:1.0.0 (API)
+      Include file:  Board\Board_GLCD.h
+
+   * Component: ::Board Support:Buttons:1.0.0 (API)
+      Include file:  Board\Board_Buttons.h
+Build Time Elapsed:  00:00:44
+</pre>
+</body>
+</html>

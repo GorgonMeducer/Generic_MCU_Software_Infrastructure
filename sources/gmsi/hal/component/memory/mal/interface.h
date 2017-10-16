@@ -116,10 +116,10 @@ END_DEF_INTERFACE(i_mem_t)
 //! @}
 
 //! \brief define abstract class mem_t
-DEF_CLASS_IMPLEMENT(mem_t, REF_INTERFACE(i_mem_t))
+DEF_CLASS(mem_t, REF_INTERFACE(i_mem_t))
     page_t *ptPage;
 
-END_DEF_CLASS_IMPLEMENT(mem_t, REF_INTERFACE(i_mem_t))
+END_DEF_CLASS(mem_t, REF_INTERFACE(i_mem_t))
 
 
 

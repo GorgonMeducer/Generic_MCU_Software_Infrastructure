@@ -30,7 +30,7 @@
 
 //WEAK void SCHEDULER_INIT(void){}
 
-extern void SCHEDULER_INIT(void);
+//extern void SCHEDULER_INIT(void);
 
 /*! \brief initialize all services
  *! \param none
@@ -39,7 +39,7 @@ extern void SCHEDULER_INIT(void);
  */
 bool service_init(void)
 {
-    SCHEDULER_INIT();
+    //SCHEDULER_INIT();
 
     return true;
 }

@@ -231,7 +231,10 @@ const i_mem_t ISDF = {
         },
 };
 
-INIT_CLASS_OBJ(mem_t, SDF,
+            
+INIT_CLASS_OBJ (
+        mem_t, 
+        SDF,
         {
             .ptMethod = &ISDF
         }

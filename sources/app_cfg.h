@@ -33,7 +33,7 @@
  *----------------------------------------------------------------------------*/
 //! \name configure safe task service:1.2K for current configuration
 //! @{
-#define TASK_SCHEDULER                      ENABLED
+#define TASK_SCHEDULER                      DISABLED
 #define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
 #define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
 #define SAFE_TASK_CALL_STACK                ENABLED
@@ -50,16 +50,20 @@
  *----------------------------------------------------------------------------*/
 
 #define USE_MAL_PAGE_FREE_ACCESS                            ENABLED
-#define USE_COMPONENT_MAL_SDF_W25QXXXX                      ENABLED
+#define USE_COMPONENT_MAL_SDF_W25QXXXX                      DISABLED
 #define USE_COMPONENT_MAL_SRAM                              ENABLED
-#define USE_COMPONENT_SW_SDIO                               ENABLED
+#define USE_COMPONENT_SW_SDIO                               DISABLED
+
+
+#define USE_COMPONENT_BOOTLOADER                            DISABLED
 
 /*----------------------------------------------------------------------------*
  * Service Configuration                                                      *
  *----------------------------------------------------------------------------*/
 #define USE_SERVICE_ES_SIMPLE_FRAME                         ENABLED
+#define USE_SERVICE_XMODEM                                  DISABLED
 
-#define USE_SERVICE_GUI_TGUI                                ENABLED
+#define USE_SERVICE_GUI_TGUI                                DISABLED
 #if USE_SERVICE_GUI_TGUI == ENABLED
 #   define TGUI_SIZE_INT_TYPE                               TGUI_MEDIUM
 #   define TGUI_COLOR_BITS                                  TGUI_4BITS

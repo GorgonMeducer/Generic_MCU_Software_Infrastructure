@@ -20,7 +20,6 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-#include ".\driver\driver.h"
 #include ".\component\component.h"
 #include ".\bsp\bsp.h"
 

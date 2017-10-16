@@ -34,7 +34,7 @@
  */
 typedef fsm_rt_t safe_task_func_t( void *pArg, void * pTask);
 
-
+DECLARE_CLASS(safe_call_stack_item_t)
 //! \name call stack item
 //! @{
 DEF_CLASS(safe_call_stack_item_t)
@@ -46,6 +46,8 @@ END_DEF_CLASS(safe_call_stack_item_t);
 typedef volatile struct _task       safe_task_t;
 
 #if SAFE_TASK_THREAD_SYNC == ENABLED
+DECLARE_CLASS(fsm_flag_t)
+
 //! \name task event item
 //! @{
 DEF_CLASS(fsm_flag_t)

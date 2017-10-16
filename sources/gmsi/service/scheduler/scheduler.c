@@ -68,7 +68,7 @@ NO_INIT struct {
 //! @}
 #endif
 
-#endif
+
 
 //! \name co-operation scheduler interface
 //! @{
@@ -97,8 +97,9 @@ DEF_INTERFACE(scheduler_t)
 #endif
 END_DEF_INTERFACE(scheduler_t)
 //! @}
+#endif
 
-#if TASK_SCHEDULER == ENABLED && !defined(__LIB_REFERENCE__)
+#if TASK_SCHEDULER == ENABLED
 /*============================ PROTOTYPES ====================================*/
 static bool _register_task( safe_task_t *pTask );
 extern void scheduler_init( void );

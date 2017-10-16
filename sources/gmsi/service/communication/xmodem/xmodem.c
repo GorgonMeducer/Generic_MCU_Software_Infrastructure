@@ -18,6 +18,7 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
+#if USE_SERVICE_XMODEM == ENABLED
 /*============================ MACROS ========================================*/
 //! \name Xmodem Protocol Control Character
 //! @{
@@ -713,5 +714,5 @@ static xm_packet_t xmodem_rec_checkout(uint8_t * pchBuffer, bool chMode)
     
     return PACKET_ON_GOING;
 }
-
+#endif
 /*EOF*/
