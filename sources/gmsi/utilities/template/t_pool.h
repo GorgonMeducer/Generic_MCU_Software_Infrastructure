@@ -20,8 +20,8 @@
 
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
-#define END_DEF_POOL
-#define END_DEF_SAFE_POOL
+#define END_DEF_POOL(__NAME)
+#define END_DEF_SAFE_POOL(__NAME)
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 #ifndef NONE_ATOM_ACCESS
@@ -57,11 +57,13 @@
             __NAME##_get_pool_item_count_allocated((__POOL))
 
 #define EXTERN_POOL(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE)                   \
+DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 EXTERN_CLASS(__NAME##_pool_item_t)                                              \
     __TYPE                  tObject;                                            \
     __NAME##_pool_item_t    *ptNext;                                            \
 END_EXTERN_CLASS(__NAME##_pool_item_t)                                          \
                                                                                 \
+DECLARE_CLASS(__NAME##_pool_t)                                                  \
 EXTERN_CLASS(__NAME##_pool_t)                                                   \
     __NAME##_pool_item_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
@@ -79,11 +81,13 @@ extern bool __NAME##_pool_add_heap(                                             
     __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptBuffer, __PTR_TYPE tSize); 
 
 #define DEF_POOL_EX(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE, __ATOM_ACCESS)    \
+DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 DEF_CLASS(__NAME##_pool_item_t)                                                 \
     __TYPE                  tObject;                                            \
     __NAME##_pool_item_t    *ptNext;                                            \
 END_DEF_CLASS(__NAME##_pool_item_t)                                             \
                                                                                 \
+DECLARE_CLASS(__NAME##_pool_t)                                                  \
 DEF_CLASS(__NAME##_pool_t)                                                      \
     __NAME##_pool_item_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
@@ -193,7 +197,6 @@ __PTR_TYPE __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool)      
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
