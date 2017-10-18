@@ -59,13 +59,15 @@
 #define EXTERN_POOL(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE)                   \
 DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 EXTERN_CLASS(__NAME##_pool_item_t)                                              \
-    __TYPE                  tObject;                                            \
-    __NAME##_pool_item_t    *ptNext;                                            \
-END_EXTERN_CLASS(__NAME##_pool_item_t)                                          \
+    union {                                                                     \
+        INHERIT(__single_list_node_t)                                           \
+        __TYPE                  tObject;                                        \
+    };                                                                          \
+EXTERN_DEF_CLASS(__NAME##_pool_item_t)                                          \
                                                                                 \
 DECLARE_CLASS(__NAME##_pool_t)                                                  \
 EXTERN_CLASS(__NAME##_pool_t)                                                   \
-    __NAME##_pool_item_t    *ptFreeList;                                        \
+    __single_list_node_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
     __PTR_TYPE              tCounter;                                           \
 END_EXTERN_CLASS(__NAME##_pool_t)                                               \
@@ -83,13 +85,15 @@ extern bool __NAME##_pool_add_heap(                                             
 #define DEF_POOL_EX(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE, __ATOM_ACCESS)    \
 DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 DEF_CLASS(__NAME##_pool_item_t)                                                 \
-    __TYPE                  tObject;                                            \
-    __NAME##_pool_item_t    *ptNext;                                            \
+    union {                                                                     \
+        INHERIT(__single_list_node_t)                                           \
+        __TYPE                  tObject;                                        \
+    };                                                                          \
 END_DEF_CLASS(__NAME##_pool_item_t)                                             \
                                                                                 \
 DECLARE_CLASS(__NAME##_pool_t)                                                  \
 DEF_CLASS(__NAME##_pool_t)                                                      \
-    __NAME##_pool_item_t    *ptFreeList;                                        \
+    __single_list_node_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
     __PTR_TYPE              tCounter;                                           \
 END_DEF_CLASS(__NAME##_pool_t)                                                  \
@@ -120,7 +124,8 @@ static void __##__NAME##_pool_free_item(                                        
 {                                                                               \
     ((CLASS(__NAME##_pool_item_t) *)ptItem)->ptNext =                           \
         ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList;                         \
-    ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList  = ptItem;                   \
+    ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList  =                           \
+        (__single_list_node_t *)ptItem;                                         \
 }                                                                               \
                                                                                 \
 void __NAME##_pool_free(                                                        \
@@ -141,7 +146,7 @@ void __NAME##_pool_free(                                                        
                                                                                 \
 __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool)                              \
 {                                                                               \
-    __NAME##_pool_item_t *ptItem = NULL;                                        \
+    __single_list_node_t *ptItem = NULL;                                        \
                                                                                 \
     if (NULL == ptPool) {                                                       \
         return NULL;                                                            \
