@@ -122,10 +122,10 @@ bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                
 static void __##__NAME##_pool_free_item(                                        \
     __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptItem)                      \
 {                                                                               \
-    ((CLASS(__NAME##_pool_item_t) *)ptItem)->ptNext =                           \
-        ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList;                         \
-    ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList  =                           \
-        (__single_list_node_t *)ptItem;                                         \
+    LIST_STACK_PUSH(                                                            \
+        ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList,                         \
+        ptItem                                                                  \
+    );                                                                          \
 }                                                                               \
                                                                                 \
 void __NAME##_pool_free(                                                        \
@@ -157,11 +157,11 @@ __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool)                              
             if ((NULL == ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList)) {     \
                 break;                                                          \
             }                                                                   \
-            ptItem = ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList;            \
-            ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList  =                   \
-                ((CLASS(__NAME##_pool_item_t) *)ptItem)->ptNext;                \
-            ((CLASS(__NAME##_pool_item_t) *)ptItem)->ptNext = NULL;             \
-            ((CLASS(__NAME##_pool_t) *)ptPool)->tCounter++;                     \
+                                                                                \
+            LIST_STACK_POP(                                                     \
+                ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList,                 \
+                ptItem                                                          \
+            );                                                                  \
         } while(false);                                                         \
     )                                                                           \
                                                                                 \
