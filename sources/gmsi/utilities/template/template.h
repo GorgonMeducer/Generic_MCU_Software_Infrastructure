@@ -25,6 +25,17 @@
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
+
+
+DEF_STRUCTURE( __single_list_node_t )
+    __single_list_node_t     *ptNext;
+END_DEF_STRUCTURE( __single_list_note_t )
+
+DEF_STRUCTURE( __dual_list_node_t )
+    __dual_list_node_t       *ptNext;
+    __dual_list_node_t       *ptPrevious;
+END_DEF_STRUCTURE( __dual_list_note_t )
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
