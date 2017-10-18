@@ -27,10 +27,10 @@
 
 #define __LIST_STACK_PUSH(__P_TOP, __P_NODE)                                   \
         do {                                                                   \
-            __single_list_node_t *ptTemp = (__single_list_node_t *)(__P_TOP);  \
+            ((__single_list_node_t *)(__P_NODE))->ptNext =                     \
+                (__single_list_node_t *)(__P_TOP);                             \
             (*(__single_list_node_t **)&(__P_TOP)) =                           \
                 (__single_list_node_t *)(__P_NODE);                            \
-            ((__single_list_node_t *)(__P_NODE))->ptNext = ptTemp;             \
         } while(0)                                
 #define LIST_STACK_PUSH(__P_TOP, __P_NODE)    __LIST_STACK_PUSH((__P_TOP), (__P_NODE))
 
