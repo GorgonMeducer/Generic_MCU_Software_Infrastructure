@@ -22,7 +22,7 @@
 #include ".\app_cfg.h"
 
 /*============================ MACROS ========================================*/
-#define END_DEF_EPOOL
+#define END_DEF_EPOOL(__NAME)
 
 
 #ifndef __ATOM_ACCESS
@@ -57,6 +57,7 @@
             __NAME##_get_pool_item_count_allocated((__EPOOL))
 
 #define EXTERN_EPOOL(__NAME, __TYPE)                                            \
+DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 EXTERN_CLASS(__NAME##_pool_item_t)                                              \
     union {                                                                     \
         INHERIT(pool_item_t)                                                    \
@@ -64,6 +65,7 @@ EXTERN_CLASS(__NAME##_pool_item_t)                                              
     };                                                                          \
 END_EXTERN_CLASS(__NAME##_pool_item_t)                                          \
                                                                                 \
+DECLARE_CLASS(__NAME##_pool_t)                                                  \
 EXTERN_CLASS(__NAME##_pool_t)                                                   \
     INHERIT(pool_t)                                                             \
 END_EXTERN_CLASS(__NAME##_pool_t)                                               \
@@ -77,6 +79,7 @@ extern uint16_t __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool);
 extern __MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);              \
 
 #define DEF_EPOOL(__NAME, __TYPE)                                               \
+DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 DEF_CLASS(__NAME##_pool_item_t)                                                 \
     union {                                                                     \
         INHERIT(pool_item_t)                                                    \
@@ -84,6 +87,7 @@ DEF_CLASS(__NAME##_pool_item_t)                                                 
     };                                                                          \
 END_DEF_CLASS(__NAME##_pool_item_t)                                             \
                                                                                 \
+DECLARE_CLASS(__NAME##_pool_t)                                                  \
 DEF_CLASS(__NAME##_pool_t)                                                      \
     INHERIT(pool_t)                                                             \
 END_DEF_CLASS(__NAME##_pool_t)                                                  \

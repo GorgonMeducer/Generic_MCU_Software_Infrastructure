@@ -59,27 +59,41 @@ extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
  
   \return          0 on success, or -1 on error.
 */
-int stdout_init (void) {
-  int32_t status;
- 
-  status = ptrUSART->Initialize(NULL);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
-  status = ptrUSART->PowerControl(ARM_POWER_FULL);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
-  status = ptrUSART->Control(ARM_USART_MODE_ASYNCHRONOUS |
-                             ARM_USART_DATA_BITS_8       |
-                             ARM_USART_PARITY_NONE       |
-                             ARM_USART_STOP_BITS_1       |
-                             ARM_USART_FLOW_CONTROL_NONE,
-                             USART_BAUDRATE);
-  if (status != ARM_DRIVER_OK) return (-1);
+int stdout_init (void) 
+{
+    
+    do {
+        int32_t status;
 
-  status = ptrUSART->Control(ARM_USART_CONTROL_TX, 1);
-  if (status != ARM_DRIVER_OK) return (-1);
+        status = ptrUSART->Initialize(NULL);
+        if (status != ARM_DRIVER_OK) { 
+            break; 
+        }
 
-  return (0);
+        status = ptrUSART->PowerControl(ARM_POWER_FULL);
+        if (status != ARM_DRIVER_OK) { 
+            break; 
+        }
+
+        status = ptrUSART->Control( ARM_USART_MODE_ASYNCHRONOUS     |
+                                    ARM_USART_DATA_BITS_8           |
+                                    ARM_USART_PARITY_NONE           |
+                                    ARM_USART_STOP_BITS_1           |
+                                    ARM_USART_FLOW_CONTROL_NONE,
+                                    USART_BAUDRATE);
+        if (status != ARM_DRIVER_OK) { 
+            break; 
+        }
+
+        status = ptrUSART->Control(ARM_USART_CONTROL_TX, 1);
+        if (status != ARM_DRIVER_OK) { 
+            break; 
+        }
+        
+        return 0;
+    } while(false);
+
+    return (-1);
 }
  
  
@@ -89,15 +103,13 @@ int stdout_init (void) {
   \param[in]   ch  Character to output
   \return          The character written, or -1 on write error.
 */
-int stdout_putchar (int ch) {
-  uint8_t buf[1];
- 
-  buf[0] = ch;
-  if (ptrUSART->Send(buf, 1) != ARM_DRIVER_OK) {
-    return (-1);
-  }
-  while (ptrUSART->GetTxCount() != 1);
-  return (ch);
+int stdout_putchar (int ch) 
+{
+    if (ptrUSART->Send((uint8_t *)&ch, 1) != ARM_DRIVER_OK) {
+        return (-1);
+    }
+    while (ptrUSART->GetTxCount() != 1);
+    return (ch);
 }
 
 bool serial_out(uint8_t chByte)

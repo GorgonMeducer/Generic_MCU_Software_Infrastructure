@@ -15,13 +15,14 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __USE_SERVICE_MEMORY_H__
-#define __USE_SERVICE_MEMORY_H__
+//! \note do not move this pre-processor statement to other places
+#include "..\app_cfg.h"
+
+#ifndef __STREAM_2_BLOCK_APP_CFG_H__
+#define __STREAM_2_BLOCK_APP_CFG_H__
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
-#include ".\epool\epool.h"
-#include ".\stream2block\stream2block.h"
+
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -29,7 +30,7 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-
-
+ 
 
 #endif
+/* EOF */

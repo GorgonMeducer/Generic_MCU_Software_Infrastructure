@@ -15,21 +15,24 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __USE_SERVICE_MEMORY_H__
-#define __USE_SERVICE_MEMORY_H__
+#ifndef __STREAM_2_BLOCK_H__
+#define __STREAM_2_BLOCK_H__
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-#include ".\epool\epool.h"
-#include ".\stream2block\stream2block.h"
+
+#if USE_SERVICE_STREAM_TO_BLOCK == ENABLED
+#include "..\epool\epool.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
 
 
+
 #endif
+#endif
+/* EOF */

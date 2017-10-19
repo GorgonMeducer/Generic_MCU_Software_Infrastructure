@@ -545,6 +545,36 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
             </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1239,6 +1269,36 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
             </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1796,6 +1856,36 @@
               <FileName>service.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2355,6 +2445,36 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
             </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2912,6 +3032,36 @@
               <FileName>service.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
             </File>
           </Files>
         </Group>

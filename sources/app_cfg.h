@@ -63,6 +63,10 @@
 #define USE_SERVICE_ES_SIMPLE_FRAME                         ENABLED
 #define USE_SERVICE_XMODEM                                  DISABLED
 
+
+#define USE_SERVICE_STREAM_TO_BLOCK                         ENABLED
+#define STREAM_BUFFER_BLOCK_SIZE                            8
+
 #define USE_SERVICE_GUI_TGUI                                DISABLED
 #if USE_SERVICE_GUI_TGUI == ENABLED
 #   define TGUI_SIZE_INT_TYPE                               TGUI_MEDIUM

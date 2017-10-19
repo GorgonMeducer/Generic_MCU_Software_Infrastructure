@@ -21,15 +21,15 @@
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
 
-#define END_DEF_QUEUE
-#define END_DEF_QUEUE_U8
-#define END_DEF_QUEUE_U16
-#define END_DEF_QUEUE_U32
+#define END_DEF_QUEUE(__NAME)
+#define END_DEF_QUEUE_U8(__NAME)
+#define END_DEF_QUEUE_U16(__NAME)
+#define END_DEF_QUEUE_U32(__NAME)
 
-#define END_DEF_SAFE_QUEUE
-#define END_DEF_SAFE_QUEUE_U8
-#define END_DEF_SAFE_QUEUE_U16
-#define END_DEF_SAFE_QUEUE_U32
+#define END_DEF_SAFE_QUEUE(__NAME)
+#define END_DEF_SAFE_QUEUE_U8(__NAME)
+#define END_DEF_SAFE_QUEUE_U16(__NAME)
+#define END_DEF_SAFE_QUEUE_U32(__NAME)
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 #ifndef NONE_ATOM_ACCESS
@@ -44,6 +44,9 @@
 
 #define QUEUE_SERIALIZE(__NAME, __QUEUE, __BUFFER, __SIZE)                  \
             __NAME##_queue_init((__QUEUE), (__BUFFER), (__SIZE), true)
+                
+#define QUEUE_INIT_EX(__NAME, __QUEUE, __BUFFER, __SIZE, __SERIALISED)      \
+            __NAME##_queue_init((__QUEUE), (__BUFFER), (__SIZE), (__SERIALISED))
 
 #define QUEUE_DESERIALIZE(__NAME, __QUEUE)                                  \
             __NAME##_get_queue_buffer(__QUEUE) 
@@ -75,6 +78,7 @@
 #define QUEUE(__NAME)   __NAME##_queue_t
 
 #define EXTERN_QUEUE(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE)              \
+DECLARE_CLASS(__NAME##_queue_t)                                             \
 EXTERN_CLASS(__NAME##_queue_t)                                              \
     __TYPE          *ptBuffer;                                              \
     __PTR_TYPE      tSize;                                                  \
@@ -102,6 +106,7 @@ extern __TYPE * __NAME##_get_queue_buffer(__NAME##_queue_t *ptQueue);
 
 #define DEF_QUEUE_EX(                                                       \
     __NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE, __ATOM_ACCESS)                \
+DECLARE_CLASS(__NAME##_queue_t)                                             \
 DEF_CLASS(__NAME##_queue_t)                                                 \
     __TYPE          *ptBuffer;                                              \
     __PTR_TYPE      tSize;                                                  \
