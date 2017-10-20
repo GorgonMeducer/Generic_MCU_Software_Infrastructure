@@ -390,6 +390,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -574,6 +579,21 @@
               <FileName>t_list.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1114,6 +1134,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1299,6 +1324,21 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
             </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1374,7 +1414,7 @@
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>armcc -E ..\..\Blinky.c --c99 -o output.log</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1702,6 +1742,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1886,6 +1931,21 @@
               <FileName>t_list.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2290,6 +2350,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2474,6 +2539,21 @@
               <FileName>t_list.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2878,6 +2958,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3062,6 +3147,21 @@
               <FileName>t_list.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
           </Files>
         </Group>

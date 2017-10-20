@@ -1,20 +1,22 @@
-/*----------------------------------------------------------------------------
- * Name:    Blinky.c
- * Purpose: LED Flasher for MPS2
- * Note(s): possible defines set in "options for target - C/C++ - Define"
- *            __USE_LCD    - enable Output on GLCD
- *            __USE_TIMER0 - use Timer0  to generate timer interrupt
- *                         - use SysTick to generate timer interrupt (default)
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
- *
- * This software is supplied "AS IS" without warranties of any kind.
- *
- * Copyright (c) 2015 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------*/
+/****************************************************************************
+*  Copyright 2017 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*                                                                           *
+*  Licensed under the Apache License, Version 2.0 (the "License");          *
+*  you may not use this file except in compliance with the License.         *
+*  You may obtain a copy of the License at                                  *
+*                                                                           *
+*     http://www.apache.org/licenses/LICENSE-2.0                            *
+*                                                                           *
+*  Unless required by applicable law or agreed to in writing, software      *
+*  distributed under the License is distributed on an "AS IS" BASIS,        *
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+*  See the License for the specific language governing permissions and      *
+*  limitations under the License.                                           *
+*                                                                           *
+****************************************************************************/
+
+/*============================ INCLUDES ======================================*/
+
 
 #include <stdio.h>
 #include "Device.h"                     // Keil::Board Support:V2M-MPS2:Common
@@ -25,10 +27,27 @@
 #include "Board_GLCD.h"                 // ::Board Support:Graphic LCD
 #include "GLCD_Config.h"                // Keil.SAM4E-EK::Board Support:Graphic LCD
 
-#include "..\sources\gmsi\gmsi.h"       // Import GMSI Support
+#include "app_platform.h"
+
+/*============================ MACROS ========================================*/
+
+/*============================ MACROFIED FUNCTIONS ===========================*/
+
+/*============================ TYPES =========================================*/
 
 
+
+
+
+/*============================ GLOBAL VARIABLES ==============================*/
+/*============================ LOCAL VARIABLES ===============================*/
 static volatile uint32_t s_wMSTicks = 0;   
+
+/*============================ PROTOTYPES ====================================*/
+/*============================ IMPLEMENTATION ================================*/
+
+
+
 
 
 /*----------------------------------------------------------------------------
@@ -40,6 +59,13 @@ void SysTick_Handler (void)
     /* 1ms timer event handler */
     s_wMSTicks++;
     
+    if (!(s_wMSTicks & (_BV(10) - 1))) {
+        static volatile uint16_t wValue = 0;
+
+        printf("%s [%08x]\r\n", "Hello world!", wValue++);
+        
+        //STREAM_OUT.Stream.Flush();
+    }
 }
 
 
@@ -60,6 +86,7 @@ static void System_Init(void)
     SysTick_Config(SystemCoreClock >> 10);  /* Generate interrupt roughly each 1 ms  */
 }
 
+
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
@@ -69,10 +96,6 @@ int main (void)
     
     while (true) {
 
-        if (!(s_wMSTicks & (_BV(10) - 1))) {
-            static volatile uint16_t wValue = 0;
-
-            printf("%s [%08x]\r\n", "Hello World", wValue++);
-        }
     }
 }
+

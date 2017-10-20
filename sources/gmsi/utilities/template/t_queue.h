@@ -31,6 +31,16 @@
 #define END_DEF_SAFE_QUEUE_U16(__NAME)
 #define END_DEF_SAFE_QUEUE_U32(__NAME)
 
+#define END_EXTERN_QUEUE(__NAME)
+#define END_EXTERN_QUEUE_U8(__NAME)
+#define END_EXTERN_QUEUE_U16(__NAME)
+#define END_EXTERN_QUEUE_U32(__NAME)
+
+#define END_EXTERN_SAFE_QUEUE(__NAME)
+#define END_EXTERN_SAFE_QUEUE_U8(__NAME)
+#define END_EXTERN_SAFE_QUEUE_U16(__NAME)
+#define END_EXTERN_SAFE_QUEUE_U32(__NAME)
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 #ifndef NONE_ATOM_ACCESS
 #   define NONE_ATOM_ACCESS(...)        {__VA_ARGS__;}

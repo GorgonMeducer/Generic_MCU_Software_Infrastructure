@@ -112,7 +112,7 @@ bool page_init(page_t *ptPage, page_cfg_t *ptCFG)
 
     //! initialize page_t object
     TYPE_CONVERT(&(this.hwPageSize), uint16_t) = 
-                                        ((uint16_t)1 << ptCFG->tPageSize + 2) - 1;
+                                        ((uint16_t)1 << (ptCFG->tPageSize + 2)) - 1;
     this.pchBuffer = ptCFG->pchBuffer;
     TYPE_CONVERT(&(this.tIO), i_page_t) = ptCFG->tIO;
 

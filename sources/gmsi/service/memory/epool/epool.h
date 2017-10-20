@@ -23,13 +23,10 @@
 
 /*============================ MACROS ========================================*/
 #define END_DEF_EPOOL(__NAME)
+#define END_EXTERN_EPOOL(__NAME)
 
-
-#ifndef __ATOM_ACCESS
-#define __ATOM_ACCESS       SAFE_ATOM_CODE
-#endif
-#ifndef __MUTEX_TYPE
-#define __MUTEX_TYPE        bool
+#ifndef __EPOOL_MUTEX_TYPE
+#define __EPOOL_MUTEX_TYPE        bool
 #endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -60,7 +57,7 @@
 DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 EXTERN_CLASS(__NAME##_pool_item_t)                                              \
     union {                                                                     \
-        INHERIT(pool_item_t)                                                    \
+        INHERIT(__single_list_node_t)                                           \
         __TYPE                  tMem;                                           \
     };                                                                          \
 END_EXTERN_CLASS(__NAME##_pool_item_t)                                          \
@@ -76,13 +73,13 @@ extern bool __NAME##_pool_add_heap(                                             
 extern __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool);                      \
 extern void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem);        \
 extern uint16_t __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool);\
-extern __MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);              \
+extern __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);        \
 
 #define DEF_EPOOL(__NAME, __TYPE)                                               \
 DECLARE_CLASS(__NAME##_pool_item_t)                                             \
 DEF_CLASS(__NAME##_pool_item_t)                                                 \
     union {                                                                     \
-        INHERIT(pool_item_t)                                                    \
+        INHERIT(__single_list_node_t)                                           \
         __TYPE                  tMem;                                           \
     };                                                                          \
 END_DEF_CLASS(__NAME##_pool_item_t)                                             \
@@ -119,23 +116,20 @@ uint16_t __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool)        
     return pool_get_item_count_allocated((pool_t *)ptPool);                     \
 }                                                                               \
                                                                                 \
-__MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                      \
+__EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                \
 {                                                                               \
     return pool_get_mutex((pool_t *)ptPool);                                    \
-}                                                                               \
+}                                                                               
 
 /*============================ TYPES =========================================*/
-DECLARE_CLASS(pool_item_t)
-EXTERN_CLASS(pool_item_t)
-    pool_item_t             *ptNext;
-END_EXTERN_CLASS(pool_item_t)
-
 DECLARE_CLASS(pool_t)
 EXTERN_CLASS(pool_t)
-    pool_item_t             *ptFreeList;
+    __single_list_node_t    *ptFreeList;
     uint_fast16_t           tCounter;
-    __MUTEX_TYPE            tMutex;
+    __EPOOL_MUTEX_TYPE      tMutex;
 END_EXTERN_CLASS(pool_t)
+
+typedef void pool_item_init_event_handler_t(void *pItem, uint_fast16_t hwItemSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -144,9 +138,16 @@ END_EXTERN_CLASS(pool_t)
 extern bool pool_init(pool_t *ptPool);
 extern bool pool_add_heap(pool_t *ptPool, void *ptBuffer,
                    uint16_t tPoolSize, uint16_t hwItemSize);
+extern bool pool_add_heap_ex( pool_t *ptPool, 
+                    void *ptBuffer,
+                    uint16_t hwPoolSize, 
+                    uint16_t hwItemSize,
+                    pool_item_init_event_handler_t *fnHandler);
 extern void *pool_new(pool_t *ptPool);
 extern void pool_free(pool_t *ptPool, void *ptItem);
 extern uint16_t pool_get_item_count_allocated(pool_t *ptPool);
-extern __MUTEX_TYPE *pool_get_mutex(pool_t *ptPool);
+extern __EPOOL_MUTEX_TYPE *pool_get_mutex(pool_t *ptPool);
+
 
 #endif
+                    

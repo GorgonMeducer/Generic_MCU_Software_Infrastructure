@@ -114,7 +114,8 @@
      
      
 //! \brief This macro convert variable types between different datatypes.
-# define TYPE_CONVERT(__ADDR,__TYPE)     (*((__TYPE *)(__ADDR)))
+#define __TYPE_CONVERT(__ADDR,__TYPE)       (*((__TYPE *)(__ADDR)))
+#define TYPE_CONVERT(__ADDR, __TYPE)        __TYPE_CONVERT((__ADDR), __TYPE)
 
 //! \brief initialize large object
 # define OBJECT_INIT_ZERO(__OBJECT) \

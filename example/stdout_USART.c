@@ -32,7 +32,8 @@
    ---------------------------------------------------------------------------*/
  
 #include "Driver_USART.h"
- 
+#include "..\sources\gmsi\gmsi.h"       // Import GMSI Support
+
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
  
 // <h>STDOUT USART Interface
@@ -52,7 +53,62 @@
  
 extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
 #define ptrUSART       (&USART_Driver_(USART_DRV_NUM))
+
+
+
+
+DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT, 128)
+
+END_DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+
+
+DEF_INPUT_STREAM_BUFFER(STREAM_IN, 8)
+
+END_DEF_OUTPUT_STREAM_BUFFER(STREAM_IN)
+
+static STREAM_OUT_block_t *s_ptWriteBuffer = NULL;
+static STREAM_IN_block_t *s_ptReadBuffer = NULL;
+
+static void request_send(void)
+{
+    s_ptWriteBuffer = STREAM_OUT.Block.Exchange(s_ptWriteBuffer);
+    if (NULL != s_ptWriteBuffer) {
+        while(ARM_DRIVER_OK != Driver_USART0.Send(s_ptWriteBuffer->chBuffer, s_ptWriteBuffer->wSize));
+    }
+}
+
+static void request_read(void)
+{
+    s_ptReadBuffer = STREAM_IN.Block.Exchange(s_ptReadBuffer);
+    if (NULL != s_ptReadBuffer) {
+        while(ARM_DRIVER_OK != Driver_USART0.Receive(s_ptReadBuffer->chBuffer, s_ptReadBuffer->wSize));
+    }
+}
+
+void transfer_string(const char *pchStr, uint_fast16_t hwSize)
+{
+    while(ARM_DRIVER_OK != Driver_USART0.Send(pchStr, hwSize));
+}
  
+static void UART0_Signal_Handler (uint32_t wEvent)
+{
+    if (wEvent == ARM_USART_EVENT_SEND_COMPLETE) {
+        request_send();
+    } else if (wEvent == ARM_USART_EVENT_RECEIVE_COMPLETE) {
+        request_read();
+    }
+}
+static void output_stream_req_transaction_event_handler(stream_buffer_t *ptObj)
+{
+    if (NULL == ptObj) {
+        return ;
+    }
+    
+    extern ARM_DRIVER_USART  Driver_USART0;
+    
+    request_send();
+}
+
  
 /**
   Initialize stdout
@@ -65,7 +121,7 @@ int stdout_init (void)
     do {
         int32_t status;
 
-        status = ptrUSART->Initialize(NULL);
+        status = ptrUSART->Initialize(&UART0_Signal_Handler);
         if (status != ARM_DRIVER_OK) { 
             break; 
         }
@@ -80,23 +136,44 @@ int stdout_init (void)
                                     ARM_USART_PARITY_NONE           |
                                     ARM_USART_STOP_BITS_1           |
                                     ARM_USART_FLOW_CONTROL_NONE,
-                                    USART_BAUDRATE);
+                                    USART_BAUDRATE                  );
         if (status != ARM_DRIVER_OK) { 
             break; 
         }
 
-        status = ptrUSART->Control(ARM_USART_CONTROL_TX, 1);
+        status = ptrUSART->Control( ARM_USART_CONTROL_TX           /*  |
+                                    ARM_USART_CONTROL_RX*/, 
+                                    ENABLED                         );
         if (status != ARM_DRIVER_OK) { 
             break; 
         }
         
+        do {
+            static NO_INIT STREAM_OUT_stream_buffer_block_t s_tBlocks[4];
+            OUTPUT_STREAM_BUFFER_CFG(
+                STREAM_OUT, 
+                &output_stream_req_transaction_event_handler
+            );
+            
+            STREAM_OUT.AddBuffer(s_tBlocks, sizeof(s_tBlocks));
+        } while(false);
+        
+        do {
+            static NO_INIT STREAM_IN_stream_buffer_block_t s_tBlocks[32];
+            INPUT_STREAM_BUFFER_CFG(
+                STREAM_IN
+            );
+            
+            STREAM_IN.AddBuffer(s_tBlocks, sizeof(s_tBlocks));
+        } while(false);
         return 0;
     } while(false);
+    
+    
 
     return (-1);
 }
- 
- 
+
 /**
   Put a character to the stdout
  
@@ -105,11 +182,16 @@ int stdout_init (void)
 */
 int stdout_putchar (int ch) 
 {
+    /*
     if (ptrUSART->Send((uint8_t *)&ch, 1) != ARM_DRIVER_OK) {
         return (-1);
     }
     while (ptrUSART->GetTxCount() != 1);
     return (ch);
+    */
+    while(!STREAM_OUT.Stream.Write(ch));
+    
+    return ch;
 }
 
 bool serial_out(uint8_t chByte)

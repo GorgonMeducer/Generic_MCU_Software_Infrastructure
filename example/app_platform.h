@@ -15,45 +15,34 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __GMSI_FRAMEWORK_H__
-#define __GMSI_FRAMEWORK_H__
-
+#ifndef __USE_APP_PLATFORM_H__
+#define __USE_APP_PLATFORM_H__
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
-#include ".\hal\hal.h"
-#include ".\service\service.h"
+#include "..\sources\gmsi\gmsi.h"       // Import GMSI Support
 
 /*============================ MACROS ========================================*/
-
-//! \name GMSI Interface Type
-//! @{
-//! general purpose interface for normal MCU applicatoin
-#define GENERAL_PURPOSE                 0           
-//! @}
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+#define LOG(__STR)                                                              \
+        do {                                                                    \
+            static char chBuffer[] = {__STR};                                   \
+            transfer_string(chBuffer, sizeof(chBuffer));                        \
+        } while(false)
+
 /*============================ TYPES =========================================*/
+
+EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT, 128)
+                      
+END_EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+
 /*============================ GLOBAL VARIABLES ==============================*/
-
-//! \name gmsi version info
-//! @{
-extern const struct {
-    uint8_t chPurpose;          //!< software framework purpose
-    uint8_t chInterface;        //!< interface version
-    uint8_t chMajor;            //!< major version
-    uint8_t chMinor;            //!< minor version
-} GMSIVersion;
-//! @}
-
+/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
+extern void transfer_string(const char *pchStr, uint_fast16_t hwSize);
 
-/*! \note initialize platform
- *  \param none
- *  \retval true platform initialization succeeded.
- *  \retval false platform initialization failed
- */
-extern bool platform_init( void );
+
+
 
 #endif
