@@ -104,9 +104,16 @@ static void output_stream_req_transaction_event_handler(stream_buffer_t *ptObj)
         return ;
     }
     
-    extern ARM_DRIVER_USART  Driver_USART0;
-    
     request_send();
+}
+
+static void output_stream_req_read_event_handler(stream_buffer_t *ptObj)
+{
+    if (NULL == ptObj) {
+        return ;
+    }
+    
+    request_read();
 }
 
  
@@ -141,9 +148,12 @@ int stdout_init (void)
             break; 
         }
 
-        status = ptrUSART->Control( ARM_USART_CONTROL_TX           /*  |
-                                    ARM_USART_CONTROL_RX*/, 
-                                    ENABLED                         );
+        status = ptrUSART->Control( ARM_USART_CONTROL_TX ,ENABLED   );
+        if (status != ARM_DRIVER_OK) { 
+            break; 
+        }
+        
+        status = ptrUSART->Control( ARM_USART_CONTROL_RX ,ENABLED   );
         if (status != ARM_DRIVER_OK) { 
             break; 
         }
@@ -161,7 +171,8 @@ int stdout_init (void)
         do {
             static NO_INIT STREAM_IN_stream_buffer_block_t s_tBlocks[32];
             INPUT_STREAM_BUFFER_CFG(
-                STREAM_IN
+                STREAM_IN,
+                &output_stream_req_read_event_handler
             );
             
             STREAM_IN.AddBuffer(s_tBlocks, sizeof(s_tBlocks));

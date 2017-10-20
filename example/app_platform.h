@@ -36,6 +36,10 @@ EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT, 128)
                       
 END_EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT)
 
+EXTERN_INPUT_STREAM_BUFFER(STREAM_IN, 8)
+                      
+END_EXTERN_INPUT_STREAM_BUFFER(STREAM_OUT)        
+        
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/

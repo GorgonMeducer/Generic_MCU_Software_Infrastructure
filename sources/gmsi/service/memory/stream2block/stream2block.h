@@ -146,7 +146,7 @@
 
         
 /*----------------------------------------------------------------------------*
- * Input stream template                                                     *
+ * Input stream template                                                      *
  *----------------------------------------------------------------------------*/
 #define INPUT_STREAM_BUFFER_CFG(__NAME, ...)                                    \
         do {                                                                    \
@@ -237,7 +237,7 @@
         bool (*AddBuffer)(void *, uint_fast16_t );                              \
                                                                                 \
         struct {                                                                \
-            bool (*Read)(uint8_t *);                                              \
+            bool (*Read)(uint8_t *);                                            \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -284,7 +284,7 @@ END_EXTERN_QUEUE_U8(StreamBufferQueue)
 //! @{
 DECLARE_CLASS(stream_buffer_t)
 
-typedef void stream_buffer_req_transaction_event_t(stream_buffer_t *ptThis);
+typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 
 EXTERN_CLASS(stream_buffer_t, 
@@ -299,7 +299,8 @@ EXTERN_CLASS(stream_buffer_t,
     stream_buffer_block_t                  *ptListTail;                 //!< Queue Tail
     stream_buffer_block_t                  *ptUsedByQueue;              //!< buffer block used by queue
     stream_buffer_block_t                  *ptUsedByOutside;            //!< buffer block lent out  
-    stream_buffer_req_transaction_event_t  *fnRequestTransfer;                
+    stream_buffer_req_event_t              *fnRequestSend;              //!< callback for triggering the first output transaction
+    stream_buffer_req_event_t              *fnRequestReceive;    
 
 END_EXTERN_CLASS(stream_buffer_t)
 //! @}
@@ -310,7 +311,7 @@ typedef struct {
         OUTPUT_STREAM
     } tDirection;
     
-    stream_buffer_req_transaction_event_t   *fnRequestTransfer;
+    stream_buffer_req_event_t              *fnRequestHandler;
     
 }stream_buffer_cfg_t;
 
@@ -331,25 +332,6 @@ DEF_INTERFACE(i_stream_buffer_t)
 
 END_DEF_INTERFACE(i_stream_buffer_t)
     
-    
-/*! \brief only used as a reference
-    
-DEF_INTERFACE(i_input_stream_buffer_t)
-
-    bool (*Init)(stream_buffer_cfg_t *);
-    bool (*AddBuffer)(void *, uint_fast16_t );
-        
-    struct {
-        bool (*Read)(uint8_t *);
-    } Stream;
-    
-    struct {
-        void *(*Exchange)( void *);
-    } Block;
-
-END_DEF_INTERFACE(i_input_stream_buffer_t)
-*/
-
 /*============================ GLOBAL VARIABLES ==============================*/
     
 extern const i_stream_buffer_t STREAM_BUFFER;    

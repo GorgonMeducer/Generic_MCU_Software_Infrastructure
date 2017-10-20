@@ -62,7 +62,7 @@ void SysTick_Handler (void)
     if (!(s_wMSTicks & (_BV(10) - 1))) {
         static volatile uint16_t wValue = 0;
 
-        printf("%s [%08x]\r\n", "Hello world!", wValue++);
+        //printf("%s [%08x]\r\n", "Hello world!", wValue++);
         
         //STREAM_OUT.Stream.Flush();
     }
@@ -95,7 +95,12 @@ int main (void)
     System_Init();
     
     while (true) {
-
+        uint8_t chByte;
+        if (STREAM_IN.Stream.Read(&chByte)) {
+            while(!STREAM_OUT.Stream.Write(chByte));
+        } else {
+            STREAM_OUT.Stream.Flush();
+        }
     }
 }
 

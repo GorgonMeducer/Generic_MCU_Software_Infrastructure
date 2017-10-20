@@ -59,7 +59,7 @@ END_DEF_QUEUE_U8(StreamBufferQueue)
 //! @{
 DECLARE_CLASS(stream_buffer_t)
 
-typedef void stream_buffer_req_transaction_event_t(stream_buffer_t *ptThis);
+typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 
 DEF_CLASS(stream_buffer_t, 
@@ -74,7 +74,8 @@ DEF_CLASS(stream_buffer_t,
     stream_buffer_block_t                  *ptListTail;                 //!< Queue Tail
     stream_buffer_block_t                  *ptUsedByQueue;              //!< buffer block used by queue
     stream_buffer_block_t                  *ptUsedByOutside;            //!< buffer block lent out  
-    stream_buffer_req_transaction_event_t  *fnRequestTransfer;
+    stream_buffer_req_event_t              *fnRequestSend;              //!< callback for triggering the first output transaction
+    stream_buffer_req_event_t              *fnRequestReceive; 
 
 END_DEF_CLASS(stream_buffer_t)
 //! @}
@@ -85,7 +86,7 @@ typedef struct {
         OUTPUT_STREAM
     } tDirection;
     
-    stream_buffer_req_transaction_event_t   *fnRequestTransfer;
+    stream_buffer_req_event_t              *fnRequestHandler;
     
 }stream_buffer_cfg_t;
 
@@ -162,9 +163,12 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
                 this.ptListHead = NULL;
                 this.ptListTail = NULL;
                 this.ptUsedByQueue = NULL;
-                
-                this.fnRequestTransfer = ptCFG->fnRequestTransfer;
-                
+                this.ptUsedByOutside = NULL;
+                if (this.bIsOutput) {
+                    this.fnRequestSend = ptCFG->fnRequestHandler;
+                } else {
+                    this.fnRequestReceive = ptCFG->fnRequestHandler;
+                }
                 //! initialise pool
                 if (!pool_init(REF_OBJ_AS(this, pool_t))) {
                     break;
@@ -313,12 +317,19 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
     
     if (bIsStreamForRead) {
         
-        TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wSize = 
-                TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wBlockSize;
-        pool_free( REF_OBJ_AS(this, pool_t), this.ptUsedByQueue);
-        
+        if (NULL != this.ptUsedByQueue) {
+            TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wSize = 
+                    TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wBlockSize;
+            pool_free( REF_OBJ_AS(this, pool_t), this.ptUsedByQueue);
+        }
         //! fetch a block from list, and initialise it as a full queue
         ptBlock = (CLASS(stream_buffer_block_t) *)get_item_from_list(ptObj);
+        
+        if ( NULL == this.ptUsedByOutside) {
+            if (NULL != this.fnRequestReceive) {
+                (*this.fnRequestReceive)(ptObj);
+            }
+        }
     } else {
         
         //! add buffer to block list ( which is used as output list)
@@ -336,8 +347,8 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             
             if (NULL == this.ptUsedByOutside ) {
                 //! this is no transaction, we need to trigger one
-                if (NULL != this.fnRequestTransfer) {
-                    this.fnRequestTransfer(ptObj);
+                if (NULL != this.fnRequestSend) {
+                    (*this.fnRequestSend)(ptObj);
                 }
             }
         } while(false);
@@ -378,10 +389,15 @@ static void stream_flush(stream_buffer_t *ptObj)
         return ;
     }
     if (this.bIsOutput) {
+        if (0 == GET_QUEUE_COUNT(StreamBufferQueue, 
+                            REF_OBJ_AS(this, QUEUE(StreamBufferQueue)))) {
+            return ;
+        }
         if (!queue_init(ptObj, false)) {
             //! queue is empty
             this.bIsQueueInitialised = false;
         }
+        while( NULL != TYPE_CONVERT( &(this.ptUsedByOutside), stream_buffer_block_t * volatile));
     }
 }
 
