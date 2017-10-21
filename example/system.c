@@ -35,7 +35,7 @@ static volatile uint32_t s_wMSTicks = 0;
 
 void SysTick_Handler (void) 
 {
-    /* 1ms timer event handler */
+    /*! 1ms timer event handler */
     s_wMSTicks++;
     
     if (!(s_wMSTicks % 1000)) {
@@ -46,7 +46,7 @@ void SysTick_Handler (void)
         //STREAM_OUT.Stream.Flush();
     }
     
-    /* call application platform 1ms event handler */
+    /*! call application platform 1ms event handler */
     app_platform_1ms_event_handler();
 }
 
@@ -55,9 +55,8 @@ void SysTick_Handler (void)
 static void System_Init(void)
 {
     app_platform_init();
-    
 
-    SysTick_Config(SystemCoreClock  / 1000);  /* Generate interrupt every 1 ms  */
+    SysTick_Config(SystemCoreClock  / 1000);  //!< Generate interrupt every 1 ms 
 }
 
 

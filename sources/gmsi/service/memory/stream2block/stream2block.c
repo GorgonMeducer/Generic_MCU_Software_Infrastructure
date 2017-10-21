@@ -92,17 +92,19 @@ typedef struct {
 
 DEF_INTERFACE(i_stream_buffer_t)
 
-    bool (*Init)(stream_buffer_t *, stream_buffer_cfg_t *);
-    bool (*AddBuffer)(stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
+    bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
+    bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
         
     struct {
-        bool (*Read)(stream_buffer_t *, uint8_t *);
-        bool (*Write)(stream_buffer_t *, uint8_t);
-        void (*Flush)(stream_buffer_t *ptObj);
+        bool    (*Read)         (stream_buffer_t *, uint8_t *);
+        bool    (*Write)        (stream_buffer_t *, uint8_t);
+        void    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
     struct {
-        void *(*Exchange)(stream_buffer_t *, void *);
+        void *  (*Exchange)     (stream_buffer_t *, void *);
+        void *  (*GetNext)      (stream_buffer_t *);
+        void    (*Return)       (stream_buffer_t *, void *);
     } Block;
 
 END_DEF_INTERFACE(i_stream_buffer_t)
@@ -124,7 +126,9 @@ static bool stream_write(           stream_buffer_t *ptObj,
 static void *request_next_buffer_block(
                                     stream_buffer_t *ptObj, 
                                     void *ptOld);
-static void stream_flush(stream_buffer_t *ptObj);
+static void *get_next_block(        stream_buffer_t *ptObj);
+static void return_block(           stream_buffer_t *ptObj, void *ptOld);
+static void stream_flush(           stream_buffer_t *ptObj);
                                     
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -138,7 +142,9 @@ const i_stream_buffer_t STREAM_BUFFER = {
             .Flush =    &stream_flush,
         },
         .Block = {
-            .Exchange =  &request_next_buffer_block,
+            .Exchange = &request_next_buffer_block,
+            .GetNext =  &get_next_block,
+            .Return =   &return_block,
         },
     };
 
@@ -255,7 +261,69 @@ static stream_buffer_block_t *get_item_from_list(stream_buffer_t *ptObj)
     return ptResult;
 }
 
+static void *get_next_block(stream_buffer_t *ptObj)
+{
+    void *pBlock = NULL;
+    
+    do {
+        if (NULL == ptObj) {
+            break;
+        }
+        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
+        stream_buffer_block_t *ptItem = NULL;
+        
+        if (this.bIsOutput) {
+            //! find the next block from the list
+            ptItem = get_item_from_list(ptObj);
+        } else {
+            
+            //! get a new block
+            ptItem = (stream_buffer_block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+            
+            if (NULL != ptItem) {
+                //! reset block size
+                TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wSize = 
+                    TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wBlockSize;
+            }
+        }
+        
+        this.ptUsedByOutside = ptItem;
+        if (NULL != ptItem) {
+            pBlock = (void *)&(((CLASS(stream_buffer_block_t) *)ptItem)->wBuffer);
+        }
+    } while(false);
 
+    return pBlock;
+}
+
+static void return_block(stream_buffer_t *ptObj, void *ptOld)
+{
+    do {
+        if (NULL == ptObj || NULL == ptOld) {
+            break;
+        }
+        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
+        stream_buffer_block_t *ptPrevious = 
+                            (stream_buffer_block_t *)((size_t)ptOld -                   //!< get the block header
+                            (sizeof(stream_buffer_block_t) - sizeof(uint32_t)));        //!< calculate offset for stream_buffer_block_t
+            
+        if (this.bIsOutput) {
+            
+            //! reset block size
+            TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wSize = 
+                TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wBlockSize;
+            //! stream is used for output
+            pool_free(REF_OBJ_AS(this, pool_t), ptPrevious);
+            
+        } else {
+
+            //! stream is used for input
+            //! add block to the list
+            append_item_to_list(ptObj, ptPrevious);
+        }
+    } while(false);
+
+}
 
 static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
 {
