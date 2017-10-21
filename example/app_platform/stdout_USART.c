@@ -46,12 +46,13 @@
 //   <o>Connect to hardware via Driver_USART# <0-255>
 //   <i>Select driver control block for USART interface
 #define USART_DRV_NUM           0
- 
-//   <o>Baudrate
-#define USART_BAUDRATE          115200
- 
 // </h>
- 
+
+
+#ifndef USART_BAUDRATE
+#   define USART_BAUDRATE          115200
+#endif
+
  
 #define _USART_Driver_(n)  Driver_USART##n
 #define  USART_Driver_(n) _USART_Driver_(n)

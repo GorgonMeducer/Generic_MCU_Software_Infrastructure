@@ -1726,7 +1726,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--diag_suppress=1</MiscControls>
-              <Define>__USE_LCD __USE_TIMER0 __USE_FPGA __USER_DEFINED_APP_CFG_H__=..\example\app_cfg.h</Define>
+              <Define>__USE_LCD __USE_TIMER0 __USE_FPGA __USER_DEFINED_APP_CFG_H__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>

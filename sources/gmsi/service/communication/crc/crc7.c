@@ -18,6 +18,7 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
+
 /*============================ MACROS ========================================*/
 #define CRC7_POLY                  (0x89)
 
@@ -186,4 +187,5 @@ uint8_t crc7_check(uint8_t *pchCRCValue, uint8_t chData)
     return (*pchCRCValue = chCRC7);
 
 }
+
 #endif

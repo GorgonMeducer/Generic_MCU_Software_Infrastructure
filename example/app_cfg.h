@@ -25,73 +25,42 @@
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/
 
+//-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
+
 /*----------------------------------------------------------------------------*
  * Application Platform Configuration                                         *
  *----------------------------------------------------------------------------*/
-#define STREAM_IN_RCV_TIMEOUT               (5)
+
+//  <h> STDOUT (via UART) configuration
+//      <o>SerialPort Baudrate
+//      <i>Configure the baudrate of the UART which is used as stdout (printf)
+#define USART_BAUDRATE                      (115200)
+
+//      <o>Block Input Timeout in ms <0-65535>
+//      <i>When timeout, all received bytes will be imported to input stream (STREAM_IN), 0 means disabling the timeout feature.
+#define STREAM_IN_RCV_TIMEOUT               (10)
+
+//      <h> Output Stream (STREAM_OUT)
+//          <o>The size of output buffer block <8-4096> 
+//          <i>Output stream will be transfered in blocks, the size of an output block is defined here.
 #define OUTPUT_STREAM_BLOCK_SIZE            (32)
+//          <o>The number of output blocks in a dedicated heap <2-65535>
+//          <i>All output blocks are allocated from a dedicated heap, the size of the heap is defined here.
 #define OUTPUT_STREAM_BLOCK_COUNT           (4)
+//      </h>
+//      <h> Input Stream (STREAM_IN)
+//          <o>The size of input buffer block <8-4096> 
+//          <i>Input stream will be received in blocks, the size of an input block is defined here.
 #define INPUT_STREAM_BLOCK_SIZE             (32)  
+//          <o>The number of input blocks in a dedicated heap <2-65535>
+//          <i>All input blocks are allocated from a dedicated heap, the size of the heap is defined here.
 #define INPUT_STREAM_BLOCK_COUNT            (8)
-
-/*----------------------------------------------------------------------------*
- * Scheduler Configuration                                                    *
- *----------------------------------------------------------------------------*/
-//! \name configure safe task service:1.2K for current configuration
-//! @{
-#define TASK_SCHEDULER                      DISABLED
-#define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
-#define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
-#define SAFE_TASK_CALL_STACK                ENABLED
-#define SAFE_TASK_USE_RESERVED_SYSTEM_RAM   DISABLED
-
-
-#define SAFE_TASK_QUEUE_POOL_SIZE           (1ul)       //!< task queue pool size
-#define SAFE_TASK_POOL_SIZE                 (8ul)       //!< task pool size       
-//! @}
-
-
-/*----------------------------------------------------------------------------*
- * Component Configuration                                                    *
- *----------------------------------------------------------------------------*/
-
-#define USE_MAL_PAGE_FREE_ACCESS            DISABLED
-#define USE_COMPONENT_MAL_SDF_W25QXXXX      DISABLED
-#define USE_COMPONENT_MAL_SRAM              DISABLED
-#define USE_COMPONENT_SW_SDIO               DISABLED
-
-
-#define USE_COMPONENT_BOOTLOADER            DISABLED
-
-/*----------------------------------------------------------------------------*
- * Service Configuration                                                      *
- *----------------------------------------------------------------------------*/
-#define USE_SERVICE_ES_SIMPLE_FRAME         DISABLED
-#define USE_SERVICE_XMODEM                  DISABLED
+//      </h>
+//  </h>
 
 
 #define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
 
-#define USE_SERVICE_GUI_TGUI                DISABLED
-#if USE_SERVICE_GUI_TGUI == ENABLED
-#   define TGUI_SIZE_INT_TYPE               TGUI_MEDIUM
-#   define TGUI_COLOR_BITS                  TGUI_4BITS
-#endif
-
-//! \name CRC configuration
-//! @{
-#define CRC_OPT_SIZE        2
-#define CRC_OPT_BALANCE     1
-#define CRC_OPT_SPEED       0
-
-#define CRC8_OPTIMIZE                   CRC_OPT_BALANCE
-#define CRC8_ROHC_OPTIMIZE              CRC_OPT_BALANCE
-#define CRC16_MODBUS_OPTIMIZE           CRC_OPT_BALANCE
-#define CRC16_USB_OPTIMIZE              CRC_OPT_BALANCE
-#define CRC16_CCITT_FALSE_OPTIMIZE      CRC_OPT_BALANCE
-#define CRC32_IEEE802_3_OPTIMIZE        CRC_OPT_BALANCE
-#define CRC32_OPTIMIZE                  CRC_OPT_BALANCE
-//! @}
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/

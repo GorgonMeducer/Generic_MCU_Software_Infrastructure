@@ -78,21 +78,26 @@
 #   define TGUI_COLOR_BITS                  TGUI_4BITS
 #endif
 
+
+
+
+#define CRC7_OPTIMIZE                       CRC_OPT_SPEED
+#define CRC8_OPTIMIZE                       CRC_OPT_BALANCE
+#define CRC8_ROHC_OPTIMIZE                  CRC_OPT_BALANCE
+#define CRC16_MODBUS_OPTIMIZE               CRC_OPT_BALANCE
+#define CRC16_USB_OPTIMIZE                  CRC_OPT_BALANCE
+#define CRC16_CCITT_FALSE_OPTIMIZE          CRC_OPT_BALANCE
+#define CRC32_IEEE802_3_OPTIMIZE            CRC_OPT_BALANCE
+#define CRC32_OPTIMIZE                      CRC_OPT_BALANCE
+//! @}
+
+#endif
+
 //! \name CRC configuration
 //! @{
 #define CRC_OPT_SIZE        2
 #define CRC_OPT_BALANCE     1
 #define CRC_OPT_SPEED       0
-
-#define CRC8_OPTIMIZE                   CRC_OPT_BALANCE
-#define CRC8_ROHC_OPTIMIZE              CRC_OPT_BALANCE
-#define CRC16_MODBUS_OPTIMIZE           CRC_OPT_BALANCE
-#define CRC16_USB_OPTIMIZE              CRC_OPT_BALANCE
-#define CRC16_CCITT_FALSE_OPTIMIZE      CRC_OPT_BALANCE
-#define CRC32_IEEE802_3_OPTIMIZE        CRC_OPT_BALANCE
-#define CRC32_OPTIMIZE                  CRC_OPT_BALANCE
-//! @}
-
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -103,7 +108,7 @@
 /*============================ IMPLEMENTATION ================================*/
 /*============================ INCLUDES ======================================*/
 
-#endif
+
 
 #endif
 
