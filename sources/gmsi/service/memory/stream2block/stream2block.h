@@ -28,19 +28,9 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
 /*----------------------------------------------------------------------------*
- * Output stream template                                                     *
+ * common template                                                            *
  *----------------------------------------------------------------------------*/
- 
-#define OUTPUT_STREAM_BUFFER_CFG(__NAME, ...)                                   \
-        do {                                                                    \
-            stream_buffer_cfg_t tCFG = {                                        \
-                .tDirection = OUTPUT_STREAM,                                    \
-                __VA_ARGS__                                                     \
-            };                                                                  \
-            __NAME.Init(&tCFG);                                                 \
-        } while(false)
-
-#define __DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \
+#define __STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                            \
     DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
     DEF_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))   \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
@@ -61,21 +51,40 @@
                 &s_t##__NAME##StreamBuffer,                                     \
                 pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
     }                                                                           \
-    static bool __NAME##_stream_write(uint8_t chData)                           \
-    {                                                                           \
-        return STREAM_BUFFER.Stream.Write(&s_t##__NAME##StreamBuffer, chData);  \
-    }                                                                           \
-    static void __NAME##_stream_flush(void)                                     \
-    {                                                                           \
-        STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);                 \
-    }                                                                           \
     static __NAME##_block_t * __NAME##_stream_exchange_block(                   \
                                             __NAME##_block_t *ptOld)            \
     {                                                                           \
         return (__NAME##_block_t *)STREAM_BUFFER.Block.Exchange(                \
                 &s_t##__NAME##StreamBuffer, (void *)ptOld);                     \
-    }                                                                           \
-    DEF_INTERFACE(i_##__NAME##_output_stream_buffer_t)                          \
+    }                                                                           
+    
+#define __EXTERN_STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                     \
+    DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
+    EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))\
+        uint8_t chBuffer[__BLOCK_SIZE];                                         \
+    END_EXTERN_CLASS(__NAME##_stream_buffer_block_t,                            \
+                        INHERIT(stream_buffer_block_t))                         \
+    typedef struct {                                                            \
+        uint32_t wSize;                                                         \
+        uint8_t chBuffer[__BLOCK_SIZE];                                         \
+    } __NAME##_block_t;                                                         
+
+
+/*----------------------------------------------------------------------------*
+ * Output stream template                                                     *
+ *----------------------------------------------------------------------------*/
+
+#define OUTPUT_STREAM_BUFFER_CFG(__NAME, ...)                                   \
+        do {                                                                    \
+            stream_buffer_cfg_t tCFG = {                                        \
+                .tDirection = OUTPUT_STREAM,                                    \
+                __VA_ARGS__                                                     \
+            };                                                                  \
+            __NAME.Init(&tCFG);                                                 \
+        } while(false)
+    
+#define __OUTPUT_STREAM_BUFFER_COMMON(__NAME)                                   \
+    const struct {                                                              \
                                                                                 \
         bool (*Init)(stream_buffer_cfg_t *);                                    \
         bool (*AddBuffer)(void *, uint_fast16_t );                              \
@@ -89,9 +98,19 @@
             __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
         } Block;                                                                \
                                                                                 \
-    END_DEF_INTERFACE(i_##__NAME##_output_stream_buffer_t)                      \
-                                                                                \
-    const i_##__NAME##_output_stream_buffer_t __NAME = {                        \
+    }  __NAME        
+        
+#define __DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \
+    __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
+    static bool __NAME##_stream_write(uint8_t chData)                           \
+    {                                                                           \
+        return STREAM_BUFFER.Stream.Write(&s_t##__NAME##StreamBuffer, chData);  \
+    }                                                                           \
+    static void __NAME##_stream_flush(void)                                     \
+    {                                                                           \
+        STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);                 \
+    }                                                                           \
+    __OUTPUT_STREAM_BUFFER_COMMON(__NAME) = {                                   \
             .Init =         &__NAME##_stream_buffer_init,                       \
             .AddBuffer =    &__NAME##_stream_add_buffer,                        \
             .Stream = {                                                         \
@@ -106,37 +125,12 @@
 #define DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                          \
             __DEF_OUTPUT_STREAM_BUFFER(__NAME, (__BLOCK_SIZE))
 
-        
 #define END_DEF_OUTPUT_STREAM_BUFFER(__NAME)
         
+
 #define __EXTERN_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                     \
-    DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))\
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    END_EXTERN_CLASS(__NAME##_stream_buffer_block_t,                            \
-                        INHERIT(stream_buffer_block_t))                         \
-    typedef struct {                                                            \
-        uint32_t wSize;                                                         \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    } __NAME##_block_t;                                                         \
-                                                                                \
-    DEF_INTERFACE(i_##__NAME##_output_stream_buffer_t)                          \
-                                                                                \
-        bool (*Init)(stream_buffer_cfg_t *);                                    \
-        bool (*AddBuffer)(void *, uint_fast16_t );                              \
-                                                                                \
-        struct {                                                                \
-            bool (*Write)(uint8_t);                                             \
-            void (*Flush)(void);                                                \
-        } Stream;                                                               \
-                                                                                \
-        struct {                                                                \
-            __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
-        } Block;                                                                \
-                                                                                \
-    END_DEF_INTERFACE(i_##__NAME##_output_stream_buffer_t)                      \
-                                                                                \
-    extern const i_##__NAME##_output_stream_buffer_t __NAME;
+    __EXTERN_STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                       \
+    extern __OUTPUT_STREAM_BUFFER_COMMON(__NAME);
 
         
 #define EXTERN_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                       \
@@ -157,38 +151,8 @@
             __NAME.Init(&tCFG);                                                 \
         } while(false)
 
-#define __DEF_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                         \
-    DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    DEF_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))   \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    END_DEF_CLASS(__NAME##_stream_buffer_block_t,INHERIT(stream_buffer_block_t))\
-    typedef struct {                                                            \
-        uint32_t wSize;                                                         \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    } __NAME##_block_t;                                                         \
-    NO_INIT static stream_buffer_t s_t##__NAME##StreamBuffer;                   \
-                                                                                \
-    static bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)         \
-    {                                                                           \
-        return STREAM_BUFFER.Init(&s_t##__NAME##StreamBuffer, ptCFG);           \
-    }                                                                           \
-    static bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast16_t hwSize) \
-    {                                                                           \
-        return STREAM_BUFFER.AddBuffer(                                         \
-                &s_t##__NAME##StreamBuffer,                                     \
-                pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
-    }                                                                           \
-    static bool __NAME##_stream_read(uint8_t *pchData)                          \
-    {                                                                           \
-        return STREAM_BUFFER.Stream.Read(&s_t##__NAME##StreamBuffer, pchData);  \
-    }                                                                           \
-    static __NAME##_block_t * __NAME##_stream_exchange_block(                   \
-                                            __NAME##_block_t *ptOld)            \
-    {                                                                           \
-        return (__NAME##_block_t *)STREAM_BUFFER.Block.Exchange(                \
-                &s_t##__NAME##StreamBuffer, (void *)ptOld);                     \
-    }                                                                           \
-    DEF_INTERFACE(i_##__NAME##_input_stream_buffer_t)                           \
+#define __INPUT_STREAM_BUFFER_COMMON(__NAME)                                    \
+    const struct {                                                              \
                                                                                 \
         bool (*Init)(stream_buffer_cfg_t *);                                    \
         bool (*AddBuffer)(void *, uint_fast16_t );                              \
@@ -201,9 +165,16 @@
             __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
         } Block;                                                                \
                                                                                 \
-    END_DEF_INTERFACE(i_##__NAME##_input_stream_buffer_t)                       \
-                                                                                \
-    const i_##__NAME##_input_stream_buffer_t __NAME = {                         \
+    }  __NAME
+        
+                                                                                        
+#define __DEF_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                         \
+    __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
+    static bool __NAME##_stream_read(uint8_t *pchData)                          \
+    {                                                                           \
+        return STREAM_BUFFER.Stream.Read(&s_t##__NAME##StreamBuffer, pchData);  \
+    }                                                                           \
+    __INPUT_STREAM_BUFFER_COMMON(__NAME) = {                                    \
             .Init =         &__NAME##_stream_buffer_init,                       \
             .AddBuffer =    &__NAME##_stream_add_buffer,                        \
             .Stream = {                                                         \
@@ -221,32 +192,8 @@
 #define END_DEF_INPUT_STREAM_BUFFER(__NAME)
         
 #define __EXTERN_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                      \
-    DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))\
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    END_EXTERN_CLASS(__NAME##_stream_buffer_block_t,                            \
-                        INHERIT(stream_buffer_block_t))                         \
-    typedef struct {                                                            \
-        uint32_t wSize;                                                         \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    } __NAME##_block_t;                                                         \
-                                                                                \
-    DEF_INTERFACE(i_##__NAME##_input_stream_buffer_t)                           \
-                                                                                \
-        bool (*Init)(stream_buffer_cfg_t *);                                    \
-        bool (*AddBuffer)(void *, uint_fast16_t );                              \
-                                                                                \
-        struct {                                                                \
-            bool (*Read)(uint8_t *);                                            \
-        } Stream;                                                               \
-                                                                                \
-        struct {                                                                \
-            __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
-        } Block;                                                                \
-                                                                                \
-    END_DEF_INTERFACE(i_##__NAME##_input_stream_buffer_t)                       \
-                                                                                \
-    extern const i_##__NAME##_input_stream_buffer_t __NAME;
+    __EXTERN_STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                       \
+    extern __INPUT_STREAM_BUFFER_COMMON(__NAME);
 
         
 #define EXTERN_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \

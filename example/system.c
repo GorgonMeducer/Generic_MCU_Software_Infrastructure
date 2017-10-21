@@ -57,7 +57,7 @@ static void System_Init(void)
     app_platform_init();
     
 
-    SysTick_Config(SystemCoreClock  / 1000);  /* Generate interrupt each 1 ms  */
+    SysTick_Config(SystemCoreClock  / 1000);  /* Generate interrupt every 1 ms  */
 }
 
 
