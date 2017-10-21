@@ -123,7 +123,14 @@ extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
 
 static void request_read(void)
 {
+#if true
+    if (NULL != s_ptReadBuffer) {
+        STREAM_IN.Block.Return(s_ptReadBuffer);
+    }
+    s_ptReadBuffer = STREAM_IN.Block.GetNext();
+#else
     s_ptReadBuffer = STREAM_IN.Block.Exchange(s_ptReadBuffer);
+#endif
     if (NULL != s_ptReadBuffer) {
         if (NULL == s_ptReadBuffer->chBuffer || 0 == s_ptReadBuffer->wSize) {
             return ;            //!< this should not happen
@@ -195,7 +202,14 @@ void USART0_RX_CPL_Handler(void)
 
 static void request_send(void)
 {
+#if false 
+    if (NULL != s_ptWriteBuffer) {
+        STREAM_OUT.Block.Return(s_ptWriteBuffer);
+    }
+    s_ptWriteBuffer = STREAM_OUT.Block.GetNext();
+#else
     s_ptWriteBuffer = STREAM_OUT.Block.Exchange(s_ptWriteBuffer);
+#endif
     if (NULL != s_ptWriteBuffer) {
         while(ARM_DRIVER_OK != Driver_USART0.Send(s_ptWriteBuffer->chBuffer, s_ptWriteBuffer->wSize));
     }
@@ -208,9 +222,9 @@ static void UART0_Signal_Handler (uint32_t wEvent)
 {
     if (wEvent == ARM_USART_EVENT_SEND_COMPLETE) {
         request_send();
-    } else if (wEvent == ARM_USART_EVENT_RECEIVE_COMPLETE) {
+    } /*else if (wEvent == ARM_USART_EVENT_RECEIVE_COMPLETE) {
         request_read();
-    }
+    } */
 }
 static void output_stream_req_transaction_event_handler(stream_buffer_t *ptObj)
 {

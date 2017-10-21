@@ -38,7 +38,7 @@
 
 //      <o>Block Input Timeout in ms <0-65535>
 //      <i>When timeout, all received bytes will be imported to input stream (STREAM_IN), 0 means disabling the timeout feature.
-#define STREAM_IN_RCV_TIMEOUT               (20)
+#define STREAM_IN_RCV_TIMEOUT               (2000)
 
 //      <h> Output Stream (STREAM_OUT)
 //          <o>The size of output buffer block <8-4096> 

@@ -56,7 +56,16 @@
     {                                                                           \
         return (__NAME##_block_t *)STREAM_BUFFER.Block.Exchange(                \
                 &s_t##__NAME##StreamBuffer, (void *)ptOld);                     \
-    }                                                                           
+    }                                                                           \
+    static __NAME##_block_t * __NAME##_stream_get_next_block(void)              \
+    {                                                                           \
+        return (__NAME##_block_t *)STREAM_BUFFER.Block.GetNext(                 \
+                &s_t##__NAME##StreamBuffer);                                    \
+    }                                                                           \
+    static void __NAME##_stream_return_block(__NAME##_block_t *ptOld)           \
+    {                                                                           \
+        STREAM_BUFFER.Block.Return(&s_t##__NAME##StreamBuffer, (void *)ptOld);  \
+    }                                                                           \
     
 #define __EXTERN_STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                     \
     DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
@@ -95,7 +104,9 @@
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
-            __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
+            __NAME##_block_t *(*Exchange)   ( __NAME##_block_t * );             \
+            __NAME##_block_t *(*GetNext)    (void);                             \
+            void              (*Return)     (__NAME##_block_t *);               \
         } Block;                                                                \
                                                                                 \
     }  __NAME        
@@ -119,6 +130,8 @@
             },                                                                  \
             .Block = {                                                          \
                 .Exchange = &__NAME##_stream_exchange_block,                    \
+                .GetNext  = &__NAME##_stream_get_next_block,                    \
+                .Return =   &__NAME##_stream_return_block,                      \
             },                                                                  \
         };
     
@@ -163,6 +176,8 @@
                                                                                 \
         struct {                                                                \
             __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
+            __NAME##_block_t *(*GetNext) (void);                                \
+            void              (*Return)  (__NAME##_block_t *);                  \
         } Block;                                                                \
                                                                                 \
     }  __NAME
@@ -182,6 +197,8 @@
             },                                                                  \
             .Block = {                                                          \
                 .Exchange = &__NAME##_stream_exchange_block,                    \
+                .GetNext  = &__NAME##_stream_get_next_block,                    \
+                .Return =   &__NAME##_stream_return_block,                      \
             },                                                                  \
         };
     
@@ -264,17 +281,19 @@ typedef struct {
 
 DEF_INTERFACE(i_stream_buffer_t)
 
-    bool (*Init)(stream_buffer_t *, stream_buffer_cfg_t *);
-    bool (*AddBuffer)(stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
+    bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
+    bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
         
     struct {
-        bool (*Read)(stream_buffer_t *, uint8_t *);
-        bool (*Write)(stream_buffer_t *, uint8_t);
-        void (*Flush)(stream_buffer_t *ptObj);
+        bool    (*Read)         (stream_buffer_t *, uint8_t *);
+        bool    (*Write)         (stream_buffer_t *, uint8_t);
+        void    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
     struct {
-        void *(*Exchange)(stream_buffer_t *, void *);
+        void *  (*Exchange)     (stream_buffer_t *, void *);
+        void *  (*GetNext)      (stream_buffer_t *);
+        void    (*Return)       (stream_buffer_t *, void *);
     } Block;
 
 END_DEF_INTERFACE(i_stream_buffer_t)
