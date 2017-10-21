@@ -12,3 +12,4 @@ example/build/mdk/Out/Blinky.map
 example/build/mdk/Out/Blinky_V2M-MPS2.dep
 example/build/mdk/Out/ExtDll.iex
 example/build/mdk/Out/startup_cmsdk_cm7.lst
+*.TMP
