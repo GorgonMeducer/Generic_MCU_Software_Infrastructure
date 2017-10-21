@@ -15,31 +15,31 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __APP_CFG__
-#define __APP_CFG__
+
+//! \note do not move this pre-processor statement to other places
+
+#ifndef __SYSTEM_APP_CFG_H__
+#define __SYSTEM_APP_CFG_H__
+
 
 /*============================ INCLUDES ======================================*/
-//! \brief import head files
-
-#ifdef __USER_DEFINED_APP_CFG_H__
-#include "..\example\app_cfg.h"
-#else
-
 /*============================ MACROS ========================================*/
 
-
 /*----------------------------------------------------------------------------*
- * Hardware Abstruct Layer Configuration                                      *
+ * Application Platform Configuration                                         *
  *----------------------------------------------------------------------------*/
-
-
+#define STREAM_IN_RCV_TIMEOUT               (5)
+#define OUTPUT_STREAM_BLOCK_SIZE            (32)
+#define OUTPUT_STREAM_BLOCK_COUNT           (4)
+#define INPUT_STREAM_BLOCK_SIZE             (32)  
+#define INPUT_STREAM_BLOCK_COUNT            (8)
 
 /*----------------------------------------------------------------------------*
  * Scheduler Configuration                                                    *
  *----------------------------------------------------------------------------*/
 //! \name configure safe task service:1.2K for current configuration
 //! @{
-#define TASK_SCHEDULER                      ENABLED
+#define TASK_SCHEDULER                      DISABLED
 #define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
 #define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
 #define SAFE_TASK_CALL_STACK                ENABLED
@@ -55,9 +55,9 @@
  * Component Configuration                                                    *
  *----------------------------------------------------------------------------*/
 
-#define USE_MAL_PAGE_FREE_ACCESS            ENABLED
+#define USE_MAL_PAGE_FREE_ACCESS            DISABLED
 #define USE_COMPONENT_MAL_SDF_W25QXXXX      DISABLED
-#define USE_COMPONENT_MAL_SRAM              ENABLED
+#define USE_COMPONENT_MAL_SRAM              DISABLED
 #define USE_COMPONENT_SW_SDIO               DISABLED
 
 
@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------------*
  * Service Configuration                                                      *
  *----------------------------------------------------------------------------*/
-#define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
+#define USE_SERVICE_ES_SIMPLE_FRAME         DISABLED
 #define USE_SERVICE_XMODEM                  DISABLED
 
 
@@ -94,16 +94,12 @@
 //! @}
 
 
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ IMPLEMENTATION ================================*/
-/*============================ INCLUDES ======================================*/
+
 
 #endif
-
-#endif
-
+/* EOF */

@@ -19,34 +19,36 @@
 #define __USE_APP_PLATFORM_H__
 
 /*============================ INCLUDES ======================================*/
-#include "..\sources\gmsi\gmsi.h"       // Import GMSI Support
+#include ".\app_cfg.h"
+
+#include <stdio.h>
+#include "Device.h"                     // Keil::Board Support:V2M-MPS2:Common
+#include "RTE_Components.h"             // Component selection
+#include "Board_LED.h"                  // ::Board Support:LED
+#include "Board_Buttons.h"              // ::Board Support:Buttons
+#include "Board_Touch.h"                // ::Board Support:Touchscreen
+#include "Board_GLCD.h"                 // ::Board Support:Graphic LCD
+#include "GLCD_Config.h"                // Keil.SAM4E-EK::Board Support:Graphic LCD
+
+#include ".\stdout_USART.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
-
-#define LOG(__STR)                                                              \
-        do {                                                                    \
-            static char chBuffer[] = {__STR};                                   \
-            transfer_string(chBuffer, sizeof(chBuffer));                        \
-        } while(false)
-
-/*============================ TYPES =========================================*/
-
-EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT, 128)
-                      
-END_EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT)
-
-EXTERN_INPUT_STREAM_BUFFER(STREAM_IN, 8)
-                      
-END_EXTERN_INPUT_STREAM_BUFFER(STREAM_OUT)        
-        
+/*============================ TYPES =========================================*/     
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern void transfer_string(const char *pchStr, uint_fast16_t hwSize);
+/*! \note initialize board specific package
+ *  \param none
+ *  \retval true hal initialization succeeded.
+ *  \retval false hal initialization failed
+ */  
+extern bool app_platform_init( void );
 
-
+/* \note please put it into a 1ms timer handler
+ */
+extern void app_platform_1ms_event_handler(void);
 
 
 #endif

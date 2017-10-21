@@ -16,6 +16,7 @@
 ****************************************************************************/
 
 /*============================ INCLUDES ======================================*/
+#include ".\app_cfg.h"
 
 
 #include <stdio.h>
@@ -27,80 +28,48 @@
 #include "Board_GLCD.h"                 // ::Board Support:Graphic LCD
 #include "GLCD_Config.h"                // Keil.SAM4E-EK::Board Support:Graphic LCD
 
-#include "app_platform.h"
+#include ".\stdout_USART.h"
 
 /*============================ MACROS ========================================*/
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
-
 /*============================ TYPES =========================================*/
-
-
-
-
-
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-static volatile uint32_t s_wMSTicks = 0;   
-
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-
-
-
-
-/*----------------------------------------------------------------------------
-  SysTick / Timer0 IRQ Handler
- *----------------------------------------------------------------------------*/
-
-void SysTick_Handler (void) 
+/* \note please put it into a 1ms timer handler
+ */
+void app_platform_1ms_event_handler(void)
 {
-    /* 1ms timer event handler */
-    s_wMSTicks++;
-    
-    if (!(s_wMSTicks & (_BV(10) - 1))) {
-        static volatile uint16_t wValue = 0;
+    stream_in_1ms_event_handler();
+}
 
-        //printf("%s [%08x]\r\n", "Hello world!", wValue++);
+
+/*! \note initialize board specific package
+ *  \param none
+ *  \retval true hal initialization succeeded.
+ *  \retval false hal initialization failed
+ */  
+bool app_platform_init( void )
+{
+    do {
         
-        //STREAM_OUT.Stream.Flush();
-    }
-}
+        SystemCoreClockUpdate();
 
-
-
-static void System_Init(void)
-{
-    SystemCoreClockUpdate();
-
-    LED_Initialize();                       /* Initializ LEDs                 */
-    Buttons_Initialize();                   /* Initializ Push Buttons         */
-    
-#ifdef RTE_Compiler_IO_STDOUT_User
-    extern int stdout_init (void);
-
-    stdout_init();                          /* Initializ Serial interface     */
-#endif
-
-    SysTick_Config(SystemCoreClock >> 10);  /* Generate interrupt roughly each 1 ms  */
-}
-
-
-/*----------------------------------------------------------------------------
-  Main function
- *----------------------------------------------------------------------------*/
-int main (void) 
-{
-    System_Init();
-    
-    while (true) {
-        uint8_t chByte;
-        if (STREAM_IN.Stream.Read(&chByte)) {
-            while(!STREAM_OUT.Stream.Write(chByte));
-        } else {
-            STREAM_OUT.Stream.Flush();
+        LED_Initialize();                       /* Initializ LEDs                 */
+        Buttons_Initialize();                   /* Initializ Push Buttons         */
+        
+    #ifdef RTE_Compiler_IO_STDOUT_User
+        if (!stdout_init()) {
+            break;
         }
-    }
-}
+    #endif
+        
 
+    } while(false);
+    
+    return false;
+}
+  
+/* EOF */

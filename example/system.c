@@ -15,31 +15,68 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __ENVIRONMENT_CFG__
-#define __ENVIRONMENT_CFG__
-
 /*============================ INCLUDES ======================================*/
+#include ".\app_platform\app_platform.h"
+
 /*============================ MACROS ========================================*/
-
-#define __CPU_ARM__                      //!< arm family
-
-#define __CORTEX_M7__                    //!< cortex-m0
-//#define __CORTEX_M0P__                   //!< cortex-m0+
-//#define __CORTEX_M1__                    //!< cortex-m1
-//#define __CORTEX_M3__                    //!< cortex-m3
-//#define __CORTEX_M4__                    //!< cortex-m4
-//#define __CORTEX_M7__                    //!< cortex-m7
-//#define __CORTEX_M23__                   //!< cortex-m23
-//#define __CORTEX_M33__                   //!< cortex-m33
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
+static volatile uint32_t s_wMSTicks = 0;   
+
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
-/*============================ INCLUDES ======================================*/
 
 
-#endif
+/*----------------------------------------------------------------------------
+  SysTick / Timer0 IRQ Handler
+ *----------------------------------------------------------------------------*/
+
+void SysTick_Handler (void) 
+{
+    /* 1ms timer event handler */
+    s_wMSTicks++;
+    
+    if (!(s_wMSTicks % 1000)) {
+        static volatile uint16_t wValue = 0;
+
+        //printf("%s [%08x]\r\n", "Hello world!", wValue++);
+        
+        //STREAM_OUT.Stream.Flush();
+    }
+    
+    /* call application platform 1ms event handler */
+    app_platform_1ms_event_handler();
+}
+
+
+
+static void System_Init(void)
+{
+    app_platform_init();
+    
+
+    SysTick_Config(SystemCoreClock  / 1000);  /* Generate interrupt each 1 ms  */
+}
+
+
+/*----------------------------------------------------------------------------
+  Main function
+ *----------------------------------------------------------------------------*/
+int main (void) 
+{
+    System_Init();
+    
+    while (true) {
+        
+        //! software loopback 
+        uint8_t chByte;
+        if (STREAM_IN.Stream.Read(&chByte)) {
+            while(!STREAM_OUT.Stream.Write(chByte));
+        } else {
+            STREAM_OUT.Stream.Flush();
+        }
+    }
+}
 

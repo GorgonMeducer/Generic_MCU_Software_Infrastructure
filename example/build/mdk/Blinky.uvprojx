@@ -381,19 +381,14 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
-              <FileName>Blinky.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Blinky.c</FilePath>
+              <FilePath>..\..\system.c</FilePath>
             </File>
             <File>
-              <FileName>stdout_USART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\stdout_USART.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_platform.h</FileName>
+              <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\app_platform.h</FilePath>
+              <FilePath>..\..\app_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -594,6 +589,31 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1125,19 +1145,14 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
-              <FileName>Blinky.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Blinky.c</FilePath>
+              <FilePath>..\..\system.c</FilePath>
             </File>
             <File>
-              <FileName>stdout_USART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\stdout_USART.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_platform.h</FileName>
+              <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\app_platform.h</FilePath>
+              <FilePath>..\..\app_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1338,6 +1353,31 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1686,7 +1726,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--diag_suppress=1</MiscControls>
-              <Define>__USE_LCD __USE_TIMER0 __USE_FPGA</Define>
+              <Define>__USE_LCD __USE_TIMER0 __USE_FPGA __USER_DEFINED_APP_CFG_H__=..\example\app_cfg.h</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -1733,19 +1773,14 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
-              <FileName>Blinky.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Blinky.c</FilePath>
+              <FilePath>..\..\system.c</FilePath>
             </File>
             <File>
-              <FileName>stdout_USART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\stdout_USART.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_platform.h</FileName>
+              <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\app_platform.h</FilePath>
+              <FilePath>..\..\app_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1946,6 +1981,31 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2341,19 +2401,14 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
-              <FileName>Blinky.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Blinky.c</FilePath>
+              <FilePath>..\..\system.c</FilePath>
             </File>
             <File>
-              <FileName>stdout_USART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\stdout_USART.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_platform.h</FileName>
+              <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\app_platform.h</FilePath>
+              <FilePath>..\..\app_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2554,6 +2609,31 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2949,19 +3029,14 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
-              <FileName>Blinky.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Blinky.c</FilePath>
+              <FilePath>..\..\system.c</FilePath>
             </File>
             <File>
-              <FileName>stdout_USART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\stdout_USART.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_platform.h</FileName>
+              <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\app_platform.h</FilePath>
+              <FilePath>..\..\app_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3162,6 +3237,31 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -15,31 +15,22 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __ENVIRONMENT_CFG__
-#define __ENVIRONMENT_CFG__
+
+
+#ifndef __APP_PLATFORM_APP_CFG_H__
+#define __APP_PLATFORM_APP_CFG_H__
 
 /*============================ INCLUDES ======================================*/
+#include "..\..\sources\gmsi\gmsi.h"       // Import GMSI Support
+
+
 /*============================ MACROS ========================================*/
-
-#define __CPU_ARM__                      //!< arm family
-
-#define __CORTEX_M7__                    //!< cortex-m0
-//#define __CORTEX_M0P__                   //!< cortex-m0+
-//#define __CORTEX_M1__                    //!< cortex-m1
-//#define __CORTEX_M3__                    //!< cortex-m3
-//#define __CORTEX_M4__                    //!< cortex-m4
-//#define __CORTEX_M7__                    //!< cortex-m7
-//#define __CORTEX_M23__                   //!< cortex-m23
-//#define __CORTEX_M33__                   //!< cortex-m33
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-/*============================ IMPLEMENTATION ================================*/
-/*============================ INCLUDES ======================================*/
 
 
 #endif
-
+/* EOF */
