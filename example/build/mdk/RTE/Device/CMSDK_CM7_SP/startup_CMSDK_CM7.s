@@ -88,10 +88,10 @@ __Vectors       DCD     __initial_sp               ;     Top of Stack
                 DCD     SysTick_Handler            ;     SysTick Handler
 
                 ; External Interrupts
-                ; we add this to bypass the one used by MPS2 system driver
-                DCD     USART0_RX_CPL_Handler      ;DCD     UART0RX_Handler            ;   0 UART 0 receive interrupt
+                ; we add these to bypass the one used by MPS2 system driver
+                DCD     USART0_RX_CPL_Handler      ;DCD     UART0RX_Handler            ;   0 UART 0 receive interrupt   
+                DCD     USART0_TX_CPL_Handler      ;DCD     UART0TX_Handler            ;   1 UART 0 transmit interrupt
                     
-                DCD     UART0TX_Handler            ;   1 UART 0 transmit interrupt
                 DCD     UART1RX_Handler            ;   2 UART 1 receive interrupt
                 DCD     UART1TX_Handler            ;   3 UART 1 transmit interrupt
                 DCD     UART2RX_Handler            ;   4 UART 2 receive interrupt
@@ -190,6 +190,7 @@ Default_Handler PROC
                 EXPORT UART0RX_Handler            [WEAK]
                 EXPORT USART0_RX_CPL_Handler      [WEAK]        ; we add this to bypass the one used by MPS2 system driver
                 EXPORT UART0TX_Handler            [WEAK]
+                EXPORT USART0_TX_CPL_Handler      [WEAK]        ; we add this to bypass the one used by MPS2 system driver
                 EXPORT UART1RX_Handler            [WEAK]
                 EXPORT UART1TX_Handler            [WEAK]
                 EXPORT UART2RX_Handler            [WEAK]
@@ -224,6 +225,7 @@ Default_Handler PROC
 UART0RX_Handler
 USART0_RX_CPL_Handler
 UART0TX_Handler
+USART0_TX_CPL_Handler
 UART1RX_Handler
 UART1TX_Handler
 UART2RX_Handler

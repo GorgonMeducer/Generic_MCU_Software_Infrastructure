@@ -42,7 +42,7 @@
  */
 void app_platform_1ms_event_handler(void)
 {
-    stream_in_1ms_event_handler();
+    STREAM_IN_1ms_event_handler();
 }
 
 
