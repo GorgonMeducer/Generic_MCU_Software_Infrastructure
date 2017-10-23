@@ -34,16 +34,24 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
-
-EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
+//! \note define a buffer for output stream
+//! @{
+EXTERN_OUTPUT_STREAM_BUFFER(            STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
                       
-END_EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+END_EXTERN_OUTPUT_STREAM_BUFFER(        STREAM_OUT)
 
-EXTERN_INPUT_STREAM_BUFFER(STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
+//! \note add an adapter for serial port
+EXTERN_STREAM_OUT_SERIAL_PORT_ADAPTER(  STREAM_OUT)
+//! @}
+
+//! \note define a buffer for input stream
+//! @{
+EXTERN_INPUT_STREAM_BUFFER(             STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
                       
-END_EXTERN_INPUT_STREAM_BUFFER(STREAM_OUT)        
-        
-EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN)
+END_EXTERN_INPUT_STREAM_BUFFER(         STREAM_OUT)        
+//! \note add an adapter for serial port
+EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(   STREAM_IN)
+//! @}
         
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

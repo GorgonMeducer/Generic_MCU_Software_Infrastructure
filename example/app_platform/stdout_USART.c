@@ -86,19 +86,32 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
+    
+    
+    
 /*============================ TYPES =========================================*/ 
 
-DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
+//! \note define a buffer for output stream
+//! @{
+DEF_OUTPUT_STREAM_BUFFER(       STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
 
-END_DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+END_DEF_OUTPUT_STREAM_BUFFER(   STREAM_OUT)
 
+//! \note add an adapter for serial port
+STREAM_OUT_SERIAL_PORT_ADAPTER( STREAM_OUT, OUTPUT_STREAM_BLOCK_COUNT)
+//! @}
 
+//! \note define a buffer for input stream
+//! @{
 DEF_INPUT_STREAM_BUFFER(STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
 
 END_DEF_INPUT_STREAM_BUFFER(STREAM_IN)
 
-
+//! \note add an adapter for serial port
 STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN, INPUT_STREAM_BLOCK_COUNT)
+//! @}
+
+
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -107,108 +120,9 @@ extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
 
 /*============================ IMPLEMENTATION ================================*/
 
-extern void serial_port_enable_tx_cpl_interrupt(void);
-extern void serial_port_disbale_tx_cpl_interrupt(void);
-extern void serial_port_fill_byte(uint8_t chByte);
-
-NO_INIT static volatile struct {
-    STREAM_OUT_block_t *ptBlock;
-    uint8_t *pchBuffer;
-    uint_fast16_t hwSize;
-    uint_fast16_t hwIndex;
-    uint_fast16_t hwTimeoutCounter;
-} s_tStreamOutService;
-
-static void request_send(void)
-{
-    s_tStreamOutService.ptBlock = STREAM_OUT.Block.Exchange(s_tStreamOutService.ptBlock);
-    STREAM_OUT_block_t *ptBlock = s_tStreamOutService.ptBlock;
-    if (NULL != ptBlock) {
-
-        s_tStreamOutService.pchBuffer = ptBlock->chBuffer;
-        s_tStreamOutService.hwSize = ptBlock->wSize;
-        s_tStreamOutService.hwIndex = 0;
-        
-        //! enable TX interrupt
-        serial_port_enable_tx_cpl_interrupt();
-        
-        serial_port_fill_byte(s_tStreamOutService.pchBuffer[s_tStreamOutService.hwIndex++]);
-    }
-}
-
-static void output_stream_buffer_req_send_event_handler(stream_buffer_t *ptObj)
-{
-    if (NULL == ptObj) {
-        return ;
-    }
-    
-    request_send();
-}
-
-void insert_serial_port_tx_cpl_event_handler(void)
-{
-    if (NULL == s_tStreamOutService.pchBuffer || 0 == s_tStreamOutService.hwSize) {
-        /* it appears output service is cancelled */
-        //! disable TX Interrupt
-        serial_port_disbale_tx_cpl_interrupt();
-        return ;
-    }
-    
-    if (s_tStreamOutService.hwIndex >= s_tStreamOutService.hwSize) {
-        
-        //! disable TX Interrupt
-        serial_port_disbale_tx_cpl_interrupt();
-        
-        //! current buffer is full
-        request_send();             //! request another read
-    } else {
-        serial_port_fill_byte(s_tStreamOutService.pchBuffer[s_tStreamOutService.hwIndex++]);
-    }
-}
-
-
-
-
-
-
-
-
-
-/* this function is called instead of the original UART0RX_Handler() */
-void USART0_RX_CPL_Handler(void)
-{   
-    //! clear interrupt flag
-    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
-    STREAM_IN_insert_serial_port_rx_cpl_event_handler();
-}
-
-
-/* this function is called instead of the original UART0TX_Handler() */
-void USART0_TX_CPL_Handler(void)
-{   
-    //! clear interrupt flag
-    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
-    //! implement our own version of uart tx interrupt
-    
-    insert_serial_port_tx_cpl_event_handler();
-}
-
-
-void serial_port_enable_tx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;
-}
-
-void serial_port_disbale_tx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;
-}
-
-void serial_port_fill_byte(uint8_t chByte)
-{
-    CMSDK_UART0->DATA = chByte; 
-}
-
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port input interfaces required by STREAM_OUT adapter        *
+ *------------------------------------------------------------------------------*/
 
 void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)
 {
@@ -224,6 +138,53 @@ uint8_t STREAM_IN_serial_port_get_byte(void)
 {
     return CMSDK_UART0->DATA; 
 }
+
+
+
+/* this function is called instead of the original UART0RX_Handler() */
+void USART0_RX_CPL_Handler(void)
+{   
+    //! clear interrupt flag
+    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
+    STREAM_IN_insert_serial_port_rx_cpl_event_handler();
+}
+
+
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port output interfaces required by STREAM_OUT adapter       *
+ *------------------------------------------------------------------------------*/
+
+void STREAM_OUT_serial_port_enable_tx_cpl_interrupt(void)
+{
+    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;
+}
+
+void STREAM_OUT_serial_port_disbale_tx_cpl_interrupt(void)
+{
+    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;
+}
+
+void STREAM_OUT_serial_port_fill_byte(uint8_t chByte)
+{
+    CMSDK_UART0->DATA = chByte; 
+}
+
+/* this function is called instead of the original UART0TX_Handler() */
+void USART0_TX_CPL_Handler(void)
+{   
+    //! clear interrupt flag
+    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
+    //! implement our own version of uart tx interrupt
+    
+    STREAM_OUT_insert_serial_port_tx_cpl_event_handler();
+}
+
+
+
+
+
+
+
 
 
 
@@ -268,19 +229,8 @@ bool stdout_init (void)
             break; 
         }
         
-        do {
-            static NO_INIT STREAM_OUT_stream_buffer_block_t s_tBlocks[OUTPUT_STREAM_BLOCK_COUNT];
-            OUTPUT_STREAM_BUFFER_CFG(
-                STREAM_OUT, 
-                &output_stream_buffer_req_send_event_handler
-            );
-            
-            STREAM_OUT.AddBuffer(s_tBlocks, sizeof(s_tBlocks));
-            
-            memset((void *)&s_tStreamOutService, 0, sizeof(s_tStreamOutService));
-        } while(false);
-        
-        STREAM_IN_adapter_init();
+        STREAM_OUT_output_stream_adapter_init();
+        STREAM_IN_input_stream_adapter_init();
         return true;
     } while(false);
 
@@ -288,8 +238,9 @@ bool stdout_init (void)
 }
 
 
- 
-
+    
+    
+    
 /**
   Put a character to the stdout
  

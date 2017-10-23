@@ -153,6 +153,90 @@
 
         
 /*----------------------------------------------------------------------------*
+ * Output stream seraial port adapter template                                *
+ *----------------------------------------------------------------------------*/
+
+#define __EXTERN_STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME)                         \
+            extern void __NAME##_insert_serial_port_tx_cpl_event_handler(void); \
+            extern void __NAME##_output_stream_adapter_init(void); 
+#define EXTERN_STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME)                           \
+            __EXTERN_STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME) 
+ 
+#define __STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME, __BLOCK_COUNT)                 \
+    extern void __NAME##_serial_port_enable_tx_cpl_interrupt(void);             \
+    extern void __NAME##_serial_port_disbale_tx_cpl_interrupt(void);            \
+    extern void __NAME##_serial_port_fill_byte(uint8_t chByte);                 \
+                                                                                \
+    NO_INIT static volatile struct {                                            \
+        __NAME##_block_t *ptBlock;                                              \
+        uint8_t *pchBuffer;                                                     \
+        uint_fast16_t hwSize;                                                   \
+        uint_fast16_t hwIndex;                                                  \
+        uint_fast16_t hwTimeoutCounter;                                         \
+    } s_t##__NAME##StreamOutService;                                            \
+    static void __NAME##_request_send(void)                                     \
+    {                                                                           \
+        s_t##__NAME##StreamOutService.ptBlock = STREAM_OUT.Block.Exchange(      \
+                                        s_t##__NAME##StreamOutService.ptBlock); \
+        __NAME##_block_t *ptBlock = s_t##__NAME##StreamOutService.ptBlock;      \
+        if (NULL != ptBlock) {                                                  \
+            s_t##__NAME##StreamOutService.pchBuffer = ptBlock->chBuffer;        \
+            s_t##__NAME##StreamOutService.hwSize = ptBlock->wSize;              \
+            s_t##__NAME##StreamOutService.hwIndex = 0;                          \
+                                                                                \
+            __NAME##_serial_port_enable_tx_cpl_interrupt();                     \
+                                                                                \
+            __NAME##_serial_port_fill_byte(                                     \
+                s_t##__NAME##StreamOutService.pchBuffer                         \
+                    [s_t##__NAME##StreamOutService.hwIndex++]);                 \
+        }                                                                       \
+    }                                                                           \
+    void __NAME##_insert_serial_port_tx_cpl_event_handler(void)                 \
+    {                                                                           \
+        if (    (NULL == s_t##__NAME##StreamOutService.pchBuffer)               \
+            ||  (0 == s_t##__NAME##StreamOutService.hwSize)) {                  \
+            /* it appears output service is cancelled */                        \
+            __NAME##_serial_port_disbale_tx_cpl_interrupt();                    \
+            return ;                                                            \
+        }                                                                       \
+                                                                                \
+        if (    s_t##__NAME##StreamOutService.hwIndex                           \
+            >=  s_t##__NAME##StreamOutService.hwSize) {                         \
+            __NAME##_serial_port_disbale_tx_cpl_interrupt();                    \
+            __NAME##_request_send();                                            \
+        } else {                                                                \
+            __NAME##_serial_port_fill_byte(                                     \
+                s_t##__NAME##StreamOutService.pchBuffer[                        \
+                    s_t##__NAME##StreamOutService.hwIndex++]);                  \
+        }                                                                       \
+    }                                                                           \
+    static void __NAME##_output_stream_req_send_event_handler(                  \
+                stream_buffer_t *ptObj)                                         \
+    {                                                                           \
+        if (NULL == ptObj) {                                                    \
+            return ;                                                            \
+        }                                                                       \
+                                                                                \
+        __NAME##_request_send();                                                \
+    }                                                                           \
+    void __NAME##_output_stream_adapter_init(void)                              \
+    {                                                                           \
+        static NO_INIT __NAME##_stream_buffer_block_t                           \
+                        s_tBlocks[__BLOCK_COUNT];                               \
+        OUTPUT_STREAM_BUFFER_CFG(                                               \
+            __NAME,                                                             \
+            &__NAME##_output_stream_req_send_event_handler                      \
+        );                                                                      \
+                                                                                \
+        __NAME.AddBuffer(s_tBlocks, sizeof(s_tBlocks));                         \
+        memset((void *)&s_t##__NAME##StreamOutService, 0,                       \
+            sizeof(s_t##__NAME##StreamOutService));                             \
+    }
+    
+#define STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME, __BLOCK_COUNT)                   \
+            __STREAM_OUT_SERIAL_PORT_ADAPTER(__NAME, (__BLOCK_COUNT))
+        
+/*----------------------------------------------------------------------------*
  * Input stream template                                                      *
  *----------------------------------------------------------------------------*/
 #define INPUT_STREAM_BUFFER_CFG(__NAME, ...)                                    \
@@ -223,7 +307,8 @@
  *----------------------------------------------------------------------------*/
 #define __EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(__NAME)                          \
     extern void __NAME##_1ms_event_handler(void);                               \
-    extern void __NAME##_insert_serial_port_rx_cpl_event_handler(void);         
+    extern void __NAME##_insert_serial_port_rx_cpl_event_handler(void);         \
+    extern void __NAME##_input_stream_adapter_init(void);                       
     
 #define EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(__NAME)                            \
             __EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(__NAME)
@@ -304,7 +389,7 @@
             __NAME##_request_read();                                            \
         }                                                                       \
     }                                                                           \
-    void __NAME##_adapter_init(void)                                            \
+    void __NAME##_input_stream_adapter_init(void)                               \
     {                                                                           \
         static NO_INIT __NAME##_stream_buffer_block_t                           \
                         s_tBlocks[__BLOCK_COUNT];                               \
