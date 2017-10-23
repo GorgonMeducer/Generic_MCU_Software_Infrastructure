@@ -61,6 +61,7 @@
 #define __CLASS(__NAME)             __##__NAME
 #define CLASS(__NAME)               __CLASS(__NAME)
 
+
 //! \brief macro for initializing an event
 #define INIT_DELEGATE(__NAME/*,__ASYN*/)           delegate_init(&(__NAME)/*, (__ASYN)*/)
 
@@ -78,6 +79,7 @@
  *!       END_DEF_CLASS( example_t, WHICH( INHERIT( example_base_t ) IMPLEMENT( i_example_t ) ) )
   */
 #define WHICH(...)                  struct { __VA_ARGS__ };
+
 
 #define DECLARE_CLASS(__NAME)                   \
      typedef union __NAME __NAME;                
@@ -204,7 +206,58 @@
 
 #define REF_INTERFACE(__INTERFACE)      const __INTERFACE *ptMethod;
            
+/*----------------------------------------------------------------------------*          
+ * new standard (lower case)                                                  *
+ *----------------------------------------------------------------------------*/
+#define declare_class(__NAME)               DECLARE_CLASS(__NAME)
+#define class(__NAME)                       CLASS(__NAME)
+#define def_class(__NAME,...)               DEF_CLASS(__NAME, __VA_ARGS__)
+#define end_def_class(__NAME,...)           END_DEF_CLASS(__NAME, __VA_ARGS__)
+#define extern_class(__NAME,...)            EXTERN_CLASS(__NAME, __VA_ARGS__)
+#define end_extern_class(__NAME,...)        END_EXTERN_CLASS(__NAME, __VA_ARGS__)
+#define inherit(__TYPE)                     INHERIT(__TYPE)
+#define implement(__TYPE)                   IMPLEMENT(__TYPE)
+#define inherit_ex(__TYPE, __NAME)          INHERIT_EX(__TYPE, __NAME)
+#define which(...)                          WHICH(__VA_ARGS__)
+#define ref_interface(__NAME)               REF_INTERFACE(__NAME)
+#define convert_obj_as(__OBJ, __TYPE)       OBJ_CONVERT_AS(__OBJ, __TYPE)
+#define obj_convert_as(__OBJ, __TYPE)       OBJ_CONVERT_AS(__OBJ, __TYPE)       /*  obsolete */
+#define ref_obj_as(__OBJ, __TYPE)           REF_OBJ_AS(__OBJ, __TYPE)
+#define type_convert(__ADDR, __TYPE)        TYPE_CONVERT(__ADDR, __TYPE)
+#define def_interface(__NAME, ...)          DEF_INTERFACE(__NAME, __VA_ARGS__)
+#define end_def_interface(__NAME)           END_DEF_INTERFACE(__NAME)
+#define def_structure(__NAME, ...)          DEF_STRUCTURE(__NAME, __VA_ARGS__)
+#define end_def_structure(__NAME)           END_DEF_STRUCTURE(__NAME)
 
+#define def_protected(__BELONGS_TO, ...)            DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
+#define end_def_protected(__BELONGS_TO, ...)        END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
+#define extern_protected(__BELONGS_TO, ...)         EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
+#define end_extern_protected(__BELONGS_TO, ...)     END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
+#define protected(__BELONGS_TO)                     PROTECTED             (__BELONGS_TO)
+    
+
+#define __class_internal(__SRC, __DES, __TYPE)                      \
+            CLASS(__TYPE) *(__DES) = (CLASS(__TYPE) *)(__SRC)   
+#define class_internal(__SRC, __DES, __TYPE)                        \
+            __class_internal(__SRC, __DES, __TYPE)                    
+
+#define __extern_class_method(__CLASS, __METHOD, ...)               \
+        __METHOD (__CLASS *ptObj __VA_ARGS__);                   
+#define extern_class_method(__CLASS, __METHOD, ...)                 \
+            __extern_class_method(__CLASS, __METHOD, __VA_ARGS__)
+
+#define __class_method(__CLASS, __METHOD, ...)                      \
+        __METHOD (__CLASS *ptObj __VA_ARGS__)                       \
+        {                                                           \
+            class_internal(ptObj, ptThis, __CLASS)
+            
+#define class_method(__CLASS, __METHOD, ...)                        \
+            __class_method(__CLASS, __METHOD, __VA_ARGS__)                      
+            
+#define method_body(...)                                            \
+            __VA_ARGS__;                                            \
+        }
+        
 /*============================ TYPES =========================================*/
 
 

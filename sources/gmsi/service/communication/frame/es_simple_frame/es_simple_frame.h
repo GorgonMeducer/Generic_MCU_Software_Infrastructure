@@ -38,21 +38,28 @@
 
 
 /*============================ TYPES =========================================*/
-DECLARE_CLASS(es_simple_frame_t)
+extern_simple_fsm(es_simple_frame_parser,
+        def_params(
+            i_byte_pipe_t *ptPipe;          //!< pipe
+            frame_parser_t *fnParser;       //!< parser
+            uint8_t *pchBuffer;
+            uint16_t hwSize;
+            uint16_t hwLength;
+            uint16_t hwCounter;
+            uint16_t hwCheckSUM;
+        )
+    )
+
+declare_class(es_simple_frame_t)
+
 //! \name class: e-snail simple frame
 //! @{
-EXTERN_CLASS(es_simple_frame_t)
-    i_byte_pipe_t *ptPipe;          //!< pipe
-    frame_parser_t *fnParser;       //!< parser
-    
-    uint8_t chStatus;
-    uint8_t *pchBuffer;
-    uint16_t hwSize;
-    uint16_t hwLength;
-    uint16_t hwCounter;
-    uint16_t hwCheckSUM;
+extern_class(es_simple_frame_t)
 
-END_EXTERN_CLASS(es_simple_frame_t)
+    //uint_fast8_t chState;
+    inherit(fsm(es_simple_frame_parser))
+
+end_extern_class(es_simple_frame_t)
 //! @}
 
 //! \name es-simple frame configuration structure
@@ -67,10 +74,10 @@ typedef struct {
 
 //! \name frame interface
 //! @{
-DEF_INTERFACE(i_es_simple_frame_t)
+def_interface(i_es_simple_frame_t)
     bool (*Init)(es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
     fsm_rt_t (*Task)(es_simple_frame_t *ptFrame);
-END_DEF_INTERFACE(i_es_simple_frame_t)
+end_def_interface(i_es_simple_frame_t)
 //! @}
 
 

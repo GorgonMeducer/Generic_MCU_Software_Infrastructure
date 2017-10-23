@@ -63,11 +63,14 @@
 #define extern_fsm_initialiser(__NAME, ...)                                     \
         extern fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__);
 
-#define __extern_fsm_implementation(__NAME, ...)                                \
-        fsm_rt_t __NAME( fsm(__NAME) *ptFSM __VA_ARGS__ )
+        
+#define __extern_fsm_implementation_ex(__NAME,__TYPE, ...)                      \
+        fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )
+#define extern_fsm_implementation_ex(__NAME,__TYPE, ...)                        \
+            __extern_fsm_implementation_ex(__NAME, __TYPE, __VA_ARGS__)
 
 #define extern_fsm_implementation(__NAME, ...)                                  \
-        __extern_fsm_implementation(__NAME, __VA_ARGS__)
+        __extern_fsm_implementation_ex(__NAME, fsm(__NAME), __VA_ARGS__)
 
 #define call_fsm(__NAME, __FSM, ...)                                            \
         __NAME((__FSM) __VA_ARGS__)
@@ -81,7 +84,7 @@
 
 #define reset_fsm()         do { ptThis->chState = 0; } while(0);
 #define fsm_cpl()           do {reset_fsm(); return fsm_rt_cpl;} while(0);
-#define fsm_report(__CODE)  return (__ERROR);
+#define fsm_report(__ERROR) return (fsm_rt_t)(__ERROR);
 #define fsm_on_going()      return fsm_rt_on_going;
 
 
@@ -92,15 +95,19 @@
          { update_state_to(__STATE); fsm_on_going() } 
 
 
-#define fsm_initialiser(__NAME, ...)                                            \
+#define __fsm_initialiser(__NAME, ...)                                          \
         fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__)              \
         {                                                                       \
-            CLASS(fsm_##__NAME##_t) *ptThis = ( CLASS(fsm_##__NAME##_t) *)ptFSM;\
+            CLASS(fsm(__NAME)) *ptThis = ( CLASS(fsm(__NAME)) *)ptFSM;          \
             if (NULL == ptThis) {                                               \
                 return NULL;                                                    \
             }                                                                   \
             ptThis->chState = 0;
-
+            
+#define fsm_initialiser(__NAME, ...)                                            \
+            __fsm_initialiser(__NAME, __VA_ARGS__)
+            
+            
 #define abort_init()     return NULL;
 
 #define init_body(...)                                                          \
@@ -115,14 +122,14 @@
 #define fsm_implementation(__NAME, ...)                                         \
         implement_fsm(__NAME, __VA_ARGS__)
 
-#define implement_fsm(__NAME, ...)                                              \
-    fsm_rt_t __NAME( fsm(__NAME) *ptFSM __VA_ARGS__ )                           \
-    {                                                                           \
-        CLASS(fsm_##__NAME##_t) *ptThis = (CLASS(fsm_##__NAME##_t) *)ptFSM;     \
-        if (NULL == ptThis) {                                                   \
-            return fsm_rt_err;                                                  \
-        }                                                           
-
+#define fsm_implementation_ex(__NAME, __TYPE, ...)                              \
+        implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
+        
+#define __implement_fsm(__NAME, ...)                                            \
+            implement_fsm_ex(__NAME, fsm(__NAME), __VA_ARGS__)
+                                                               
+#define implement_fsm(__NAME, ...)      __implement_fsm(__NAME, __VA_ARGS__)
+        
 #define body(...)                                                               \
         switch (ptThis->chState) {                                              \
             case 0:                                                             \
@@ -132,8 +139,17 @@
                                                                                 \
         return fsm_rt_on_going;                                                 \
     }
-
-
+    
+#define __implement_fsm_ex(__NAME, __TYPE, ...)                                 \
+    fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )                                \
+    {                                                                           \
+        CLASS(__TYPE) *ptThis = (CLASS(__TYPE) *)ptFSM;                         \
+        if (NULL == ptThis) {                                                   \
+            return fsm_rt_err;                                                  \
+        }                                                           
+#define implement_fsm_ex(__NAME, __TYPE, ...)                                   \
+            __implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
+        
 /*============================ TYPES =========================================*/
 
 #ifndef __FSM_RT_TYPE__
