@@ -85,91 +85,59 @@
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+    
+    
+    
 /*============================ TYPES =========================================*/ 
 
-DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
+//! \note define a buffer for output stream
+//! @{
+DEF_OUTPUT_STREAM_BUFFER(       STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
 
-END_DEF_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+END_DEF_OUTPUT_STREAM_BUFFER(   STREAM_OUT)
 
+//! \note add an adapter for serial port
+STREAM_OUT_SERIAL_PORT_ADAPTER( STREAM_OUT, OUTPUT_STREAM_BLOCK_COUNT)
+//! @}
 
+//! \note define a buffer for input stream
+//! @{
 DEF_INPUT_STREAM_BUFFER(STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
 
-END_DEF_OUTPUT_STREAM_BUFFER(STREAM_IN)
+END_DEF_INPUT_STREAM_BUFFER(STREAM_IN)
 
+//! \note add an adapter for serial port
+STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN, INPUT_STREAM_BLOCK_COUNT)
+//! @}
 
 
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-
-static STREAM_OUT_block_t *s_ptWriteBuffer = NULL;
-static STREAM_IN_block_t *s_ptReadBuffer = NULL;
-
-NO_INIT static volatile struct {
-    uint8_t *pchBuffer;
-    uint_fast16_t hwSize;
-    uint_fast16_t hwIndex;
-    uint_fast16_t hwTimeoutCounter;
-} s_tStreamInRXService;
-
 /*============================ PROTOTYPES ====================================*/
-
- 
 extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
-
-
 
 /*============================ IMPLEMENTATION ================================*/
 
-static void request_read(void)
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port input interfaces required by STREAM_OUT adapter        *
+ *------------------------------------------------------------------------------*/
+
+void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)
 {
-#if true
-    if (NULL != s_ptReadBuffer) {
-        STREAM_IN.Block.Return(s_ptReadBuffer);
-    }
-    s_ptReadBuffer = STREAM_IN.Block.GetNext();
-#else
-    s_ptReadBuffer = STREAM_IN.Block.Exchange(s_ptReadBuffer);
-#endif
-    if (NULL != s_ptReadBuffer) {
-        if (NULL == s_ptReadBuffer->chBuffer || 0 == s_ptReadBuffer->wSize) {
-            return ;            //!< this should not happen
-        }
-        s_tStreamInRXService.pchBuffer = s_ptReadBuffer->chBuffer;
-        s_tStreamInRXService.hwSize = s_ptReadBuffer->wSize;
-        s_tStreamInRXService.hwIndex = 0;
-        
-        //! enable RX interrupt
-        CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_RXIRQEN_Msk;
-    }
+    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_RXIRQEN_Msk;
 }
 
-
-static void reset_stream_in_rx_timer(void)
+void STREAM_IN_serial_port_disable_rx_cpl_interrupt(void)
 {
-    SAFE_ATOM_CODE (
-        s_tStreamInRXService.hwTimeoutCounter = STREAM_IN_RCV_TIMEOUT;
-    )
+    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk;
 }
 
-/* \note please put it into a 1ms timer handler
- */
-void stream_in_1ms_event_handler(void)
+uint8_t STREAM_IN_serial_port_get_byte(void)
 {
-    if (s_tStreamInRXService.hwTimeoutCounter) {
-        s_tStreamInRXService.hwTimeoutCounter--;
-        if (0 == s_tStreamInRXService.hwTimeoutCounter) {
-            /*! timeout! */
-            if (0 != s_tStreamInRXService.hwIndex) {
-                s_ptReadBuffer->wSize = s_tStreamInRXService.hwIndex;
-                request_read();
-            } /* else {
-                //nothing is received, so we keep waiting...
-            } */
-        }
-    }
+    return CMSDK_UART0->DATA; 
 }
-
 
 
 
@@ -178,73 +146,48 @@ void USART0_RX_CPL_Handler(void)
 {   
     //! clear interrupt flag
     CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
-    //! implement our own version of uart rx interrupt
-    reset_stream_in_rx_timer();
-    
-    if (NULL == s_tStreamInRXService.pchBuffer || 0 == s_tStreamInRXService.hwSize) {
-        /* it appears receive service is cancelled */
-        //! disable RX Interrupt
-        CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk;
-        return ;
-    }
-    
-    s_tStreamInRXService.pchBuffer[s_tStreamInRXService.hwIndex++] = CMSDK_UART0->DATA;
-    if (s_tStreamInRXService.hwIndex >= s_tStreamInRXService.hwSize) {
-        
-        //! disable RX Interrupt
-        CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk;
-        //! current buffer is full
-        request_read();             //! request another read
-    }
+    STREAM_IN_insert_serial_port_rx_cpl_event_handler();
 }
 
 
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port output interfaces required by STREAM_OUT adapter       *
+ *------------------------------------------------------------------------------*/
 
-static void request_send(void)
+void STREAM_OUT_serial_port_enable_tx_cpl_interrupt(void)
 {
-#if false 
-    if (NULL != s_ptWriteBuffer) {
-        STREAM_OUT.Block.Return(s_ptWriteBuffer);
-    }
-    s_ptWriteBuffer = STREAM_OUT.Block.GetNext();
-#else
-    s_ptWriteBuffer = STREAM_OUT.Block.Exchange(s_ptWriteBuffer);
-#endif
-    if (NULL != s_ptWriteBuffer) {
-        while(ARM_DRIVER_OK != Driver_USART0.Send(s_ptWriteBuffer->chBuffer, s_ptWriteBuffer->wSize));
-    }
+    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;
 }
 
-
-
-
-static void UART0_Signal_Handler (uint32_t wEvent)
+void STREAM_OUT_serial_port_disbale_tx_cpl_interrupt(void)
 {
-    if (wEvent == ARM_USART_EVENT_SEND_COMPLETE) {
-        request_send();
-    } /*else if (wEvent == ARM_USART_EVENT_RECEIVE_COMPLETE) {
-        request_read();
-    } */
+    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;
 }
-static void output_stream_req_transaction_event_handler(stream_buffer_t *ptObj)
+
+void STREAM_OUT_serial_port_fill_byte(uint8_t chByte)
 {
-    if (NULL == ptObj) {
-        return ;
-    }
+    CMSDK_UART0->DATA = chByte; 
+}
+
+/* this function is called instead of the original UART0TX_Handler() */
+void USART0_TX_CPL_Handler(void)
+{   
+    //! clear interrupt flag
+    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
+    //! implement our own version of uart tx interrupt
     
-    request_send();
+    STREAM_OUT_insert_serial_port_tx_cpl_event_handler();
 }
 
-static void output_stream_req_read_event_handler(stream_buffer_t *ptObj)
-{
-    if (NULL == ptObj) {
-        return ;
-    }
-    
-    request_read();
-}
 
- 
+
+
+
+
+
+
+
+
 /*! \note initialize usart for stdout
  *  \param none
  *  \retval true    initialization succeeded.
@@ -256,7 +199,7 @@ bool stdout_init (void)
     do {
         int32_t status;
 
-        status = ptrUSART->Initialize(&UART0_Signal_Handler);
+        status = ptrUSART->Initialize(NULL /*&UART0_Signal_Handler*/);
         if (status != ARM_DRIVER_OK) { 
             break; 
         }
@@ -286,44 +229,18 @@ bool stdout_init (void)
             break; 
         }
         
-        do {
-            static NO_INIT STREAM_OUT_stream_buffer_block_t s_tBlocks[OUTPUT_STREAM_BLOCK_COUNT];
-            OUTPUT_STREAM_BUFFER_CFG(
-                STREAM_OUT, 
-                &output_stream_req_transaction_event_handler
-            );
-            
-            STREAM_OUT.AddBuffer(s_tBlocks, sizeof(s_tBlocks));
-        } while(false);
-        
-        do {
-            static NO_INIT STREAM_IN_stream_buffer_block_t s_tBlocks[INPUT_STREAM_BLOCK_COUNT];
-            INPUT_STREAM_BUFFER_CFG(
-                STREAM_IN,
-                &output_stream_req_read_event_handler
-            );
-            
-            STREAM_IN.AddBuffer(s_tBlocks, sizeof(s_tBlocks));
-            
-            memset((void *)&s_tStreamInRXService, 0, sizeof(s_tStreamInRXService));
-        } while(false);
+        STREAM_OUT_output_stream_adapter_init();
+        STREAM_IN_input_stream_adapter_init();
         return true;
     } while(false);
 
     return false;
 }
 
-/*! \note transfer spcified stream via uart
- *! \param chStr  the start address of the target memory
- *! \param hwSize the size of the target memory
- *! \return none
- */
-void transfer_string(const char *pchStr, uint_fast16_t hwSize)
-{
-    while(ARM_DRIVER_OK != Driver_USART0.Send(pchStr, hwSize));
-}
- 
 
+    
+    
+    
 /**
   Put a character to the stdout
  
@@ -332,40 +249,8 @@ void transfer_string(const char *pchStr, uint_fast16_t hwSize)
 */
 int stdout_putchar (int ch) 
 {
-    /*
-    if (ptrUSART->Send((uint8_t *)&ch, 1) != ARM_DRIVER_OK) {
-        return (-1);
-    }
-    while (ptrUSART->GetTxCount() != 1);
-    return (ch);
-    */
     while(!STREAM_OUT.Stream.Write(ch));
     
     return ch;
 }
 
-
-/*! \note send one char directly to usart
- *  \param chByte target byte
- *  \retval true  access succeed 
- *  \retval false access failed
- */ 
-bool serial_out(uint8_t chByte)
-{
-    return (ptrUSART->Send(&chByte, 1) == ARM_DRIVER_OK); 
-}
-
-
-/*! \note read one char directly from usart
- *  \param pchByte the address of a byte buffer
- *  \retval true  access succeed 
- *  \retval false access failed
- */
-bool serial_in(uint8_t *pchByte)
-{
-    if (NULL == pchByte) {
-        return false;
-    }
-    
-    return (ARM_DRIVER_OK == ptrUSART->Receive(pchByte, 1));
-}

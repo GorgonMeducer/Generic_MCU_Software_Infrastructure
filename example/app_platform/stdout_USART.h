@@ -33,30 +33,29 @@
 #endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
-
-#define LOG(__STR)                                                              \
-        do {                                                                    \
-            static char chBuffer[] = {__STR};                                   \
-            transfer_string(chBuffer, sizeof(chBuffer));                        \
-        } while(false)
-
 /*============================ TYPES =========================================*/
-
-EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
+//! \note define a buffer for output stream
+//! @{
+EXTERN_OUTPUT_STREAM_BUFFER(            STREAM_OUT, OUTPUT_STREAM_BLOCK_SIZE)
                       
-END_EXTERN_OUTPUT_STREAM_BUFFER(STREAM_OUT)
+END_EXTERN_OUTPUT_STREAM_BUFFER(        STREAM_OUT)
 
-EXTERN_INPUT_STREAM_BUFFER(STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
+//! \note add an adapter for serial port
+EXTERN_STREAM_OUT_SERIAL_PORT_ADAPTER(  STREAM_OUT)
+//! @}
+
+//! \note define a buffer for input stream
+//! @{
+EXTERN_INPUT_STREAM_BUFFER(             STREAM_IN, INPUT_STREAM_BLOCK_SIZE)
                       
-END_EXTERN_INPUT_STREAM_BUFFER(STREAM_OUT)        
+END_EXTERN_INPUT_STREAM_BUFFER(         STREAM_OUT)        
+//! \note add an adapter for serial port
+EXTERN_STREAM_IN_SERIAL_PORT_ADAPTER(   STREAM_IN)
+//! @}
         
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-/*============================ PROTOTYPES ====================================*/
-        
-/* \note please put it into a 1ms timer handler
- */
-extern void stream_in_1ms_event_handler(void);        
+/*============================ PROTOTYPES ====================================*/    
         
 /*! \note initialize usart for stdout
  *  \param none
@@ -64,27 +63,5 @@ extern void stream_in_1ms_event_handler(void);
  *  \retval false   initialization failed
  */  
 extern bool stdout_init (void);
-
-/*! \note transfer spcified stream via uart
- *! \param chStr  the start address of the target memory
- *! \param hwSize the size of the target memory
- *! \return none
- */
-extern void transfer_string(const char *pchStr, uint_fast16_t hwSize);
-
-/*! \note send one char directly to usart
- *  \param chByte target byte
- *  \retval true  access succeed 
- *  \retval false access failed
- */ 
-extern bool serial_out(uint8_t chByte);
-
-/*! \note read one char directly from usart
- *  \param pchByte the address of a byte buffer
- *  \retval true  access succeed 
- *  \retval false access failed
- */
-extern bool serial_in(uint8_t *pchByte);
-
 
 #endif
