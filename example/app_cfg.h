@@ -38,7 +38,7 @@
 
 //      <o>Block Input Timeout in ms <0-65535>
 //      <i>When timeout, all received bytes will be imported to input stream (STREAM_IN), 0 means disabling the timeout feature.
-#define STREAM_IN_RCV_TIMEOUT               (20)
+#define STREAM_IN_RCV_TIMEOUT               (5)
 
 //      <h> Output Stream (STREAM_OUT)
 //          <o>The size of output buffer block <8-4096> 
@@ -56,6 +56,12 @@
 //          <i>All input blocks are allocated from a dedicated heap, the size of the heap is defined here.
 #define INPUT_STREAM_BLOCK_COUNT            (8)
 //      </h>
+//  </h>
+
+//  <h> Simple Frame Encoding / Decodign configuration
+//      <o>Frame Buffer Size in byte <1-65536>
+//      <i>The frame buffer is only used to store the data decoded from a valid frame. Reply data can also be stored in this buffer.
+#define FRAME_BUFFER_SIZE                   (1024)
 //  </h>
 
 
