@@ -55,22 +55,48 @@
             __VA_ARGS__                                             \
         END_EXTERN_CLASS(__FSM_TYPE)                                
 
+#define __declare_simple_fsm(__FSM_TYPE)                            \
+        DECLARE_CLASS(__FSM_TYPE)
+#define declare_simple_fsm(__NAME)  __declare_simple_fsm(fsm(__NAME))
 
 
 #define extern_simple_fsm(__NAME, ...)                                          \
         __extern_simple_fsm(fsm(__NAME), __VA_ARGS__)  
 
+/*! \brief extern fsm initialisation function and provide function prototye 
+           as <__NAME>_fn, E.g
+           extern_fsm_initialiser( demo_fsm );
+           we extern a function called:
+           extern fsm_demo_fsm_t *demo_fsm_init( fsm_demo_fsm_t *ptFSM );
+           and a prototype definition:
+           typedef fsm_demo_fsm_t *demo_fsm_init_fn( fsm_demo_fsm_t *ptFSM );
+           We can then use demo_fsm_init_fn to define function pointer
+ */
+#define __extern_fsm_initialiser(__NAME, ...)                                   \
+        typedef fsm(__NAME) *__NAME##_init_fn(fsm(__NAME) *ptFSM __VA_ARGS__);  \
+        extern  fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__);
 #define extern_fsm_initialiser(__NAME, ...)                                     \
-        extern fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__);
+            __extern_fsm_initialiser(__NAME, __VA_ARGS__)
 
-        
+/*! \brief extern fsm task function and provide function prototye as <__NAME>_fn, E.g
+           extern_fsm_implementation( demo_fsm );
+           we extern a function called:
+           fsm_rt_t demo_fsm( fsm_demo_fsm_t *ptFSM )
+           and a prototype definition:
+           typedef fsm_rt_t demo_fsm_fn (fsm_demo_fsm_t *ptFSM);
+           We can then use demo_fsm_fn to define function pointer
+ */
+ //! @{
 #define __extern_fsm_implementation_ex(__NAME,__TYPE, ...)                      \
+        typedef fsm_rt_t __NAME##_fn( __TYPE *ptFSM __VA_ARGS__ );              \
         fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )
+        
 #define extern_fsm_implementation_ex(__NAME,__TYPE, ...)                        \
             __extern_fsm_implementation_ex(__NAME, __TYPE, __VA_ARGS__)
 
 #define extern_fsm_implementation(__NAME, ...)                                  \
         __extern_fsm_implementation_ex(__NAME, fsm(__NAME), __VA_ARGS__)
+//! @}
 
 #define call_fsm(__NAME, __FSM, ...)                                            \
         __NAME((__FSM) __VA_ARGS__)
@@ -86,6 +112,7 @@
 #define fsm_cpl()           do {reset_fsm(); return fsm_rt_cpl;} while(0);
 #define fsm_report(__ERROR) return (fsm_rt_t)(__ERROR);
 #define fsm_on_going()      return fsm_rt_on_going;
+#define fsm_continue()      break
 
 
 #define update_state_to(__STATE)                                                \
@@ -149,6 +176,33 @@
         }                                                           
 #define implement_fsm_ex(__NAME, __TYPE, ...)                                   \
             __implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
+        
+
+#define __privilege_state(__STATE, ...)                                         \
+            do {                                                                \
+                state(__STATE, __VA_ARGS__)                                     \
+                                                                                \
+                if (this.chState != (__STATE)) {                                \
+                    break;                                                      \
+                }                                                               \
+            } while(1);
+#define privilege_state(__STATE, ...)                                           \
+            __privilege_state((__STATE), __VA_ARGS__)                                      
+            
+#define privilege_group(...)  {while(1) {__VA_ARGS__;} break;}
+
+#define privilege_body(...)                                                     \
+        do {                                                                    \
+            switch (ptThis->chState) {                                          \
+                case 0:                                                         \
+                    ptThis->chState++;                                          \
+                __VA_ARGS__                                                     \
+            }                                                                   \
+        while(1);                                                               \
+                                                                                \
+        return fsm_rt_on_going;                                                 \
+    }
+
         
 /*============================ TYPES =========================================*/
 

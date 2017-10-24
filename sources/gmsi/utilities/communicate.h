@@ -26,8 +26,12 @@
 //! \name stream
 //! @{
 typedef struct {
-    uint8_t *pchSrc;        //!< stream buffer
-    uint16_t hwSize;        //!< stream size
+    union {
+        uint8_t *pchBuffer;         //!< stream buffer
+        uint8_t *pchSrc;
+        void *pObj;
+    };
+    uint_fast16_t hwSize;       //!< stream size
 } mem_block_t;
 //! @}
 

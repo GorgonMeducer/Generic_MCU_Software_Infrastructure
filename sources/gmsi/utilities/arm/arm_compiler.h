@@ -209,6 +209,7 @@ typedef __istate_t   istate_t;
 #   define SET_GLOBAL_INTERRUPT_STATE(__STATE) if (!__STATE) { __enable_irq(); }
 typedef int   istate_t;
 #elif __IS_COMPILER_GCC__
+typedef int   istate_t;
 #   define GET_GLOBAL_INTERRUPT_STATE()         __get_PRIMASK()
 
 /**

@@ -32,33 +32,54 @@
 #define ES_SIMPLE_FRAME_CFG(__FRAME__, ...)                                     \
             do {                                                                \
                 es_simple_frame_cfg_t tCFG = {__VA_ARGS__};                     \
-                es_simple_frame_init((__FRAME__),&tCFG);                        \
+                ES_SIMPLE_FRAME.Init((__FRAME__),&tCFG);                        \
             } while(false)
 
 
 
 /*============================ TYPES =========================================*/
-extern_simple_fsm(es_simple_frame_parser,
-        def_params(
-            i_byte_pipe_t *ptPipe;          //!< pipe
-            frame_parser_t *fnParser;       //!< parser
-            uint8_t *pchBuffer;
-            uint16_t hwSize;
-            uint16_t hwLength;
-            uint16_t hwCounter;
-            uint16_t hwCheckSUM;
-        )
-    )
+def_structure(__es_simple_frame_fsm_internal)
+    inherit(mem_block_t)
+    
+    uint16_t hwLength;
+    uint16_t hwCounter;
+    uint16_t hwCheckSUM;
+end_def_structure(__es_simple_frame_fsm_internal)
+
+extern_simple_fsm(es_simple_frame_decoder,
+    def_params(
+        i_byte_pipe_t *ptPipe;          //!< pipe
+        frame_parser_t *fnParser;       //!< parser
+        inherit(__es_simple_frame_fsm_internal)
+    ))
+    
+extern_simple_fsm(es_simple_frame_encoder,
+    def_params(
+        i_byte_pipe_t *ptPipe;          //!< pipe
+        inherit(__es_simple_frame_fsm_internal)
+    ))
 
 declare_class(es_simple_frame_t)
 
+extern_simple_fsm(es_simple_frame_decoder_wrapper,
+    def_params(
+        es_simple_frame_t *ptFrame;
+    ))
+    
+
+extern_simple_fsm(es_simple_frame_encoder_wrapper,
+    def_params(
+        es_simple_frame_t *ptFrame;
+    ))
+    
 //! \name class: e-snail simple frame
 //! @{
 extern_class(es_simple_frame_t)
-
-    //uint_fast8_t chState;
-    inherit(fsm(es_simple_frame_parser))
-
+    locker_t tMutex;
+    inherit(fsm(es_simple_frame_decoder))
+    inherit(fsm(es_simple_frame_decoder_wrapper))
+    inherit(fsm(es_simple_frame_encoder))
+    inherit(fsm(es_simple_frame_encoder_wrapper))
 end_extern_class(es_simple_frame_t)
 //! @}
 
@@ -66,20 +87,63 @@ end_extern_class(es_simple_frame_t)
 //! @{
 typedef struct {
     i_byte_pipe_t   *ptPipe; 
-    uint8_t         *pchBuffer;
-    uint_fast16_t   hwSize;
+    inherit(mem_block_t)
     frame_parser_t  *fnParser;
 }es_simple_frame_cfg_t;
 //! @}
 
+/*============================ PROTOTYPES ====================================*/
+
+extern_fsm_initialiser(es_simple_frame_decoder,
+    args(
+        i_byte_pipe_t *ptPipe, 
+        frame_parser_t *fnParser,
+        mem_block_t tMemory
+    ))
+
+extern_fsm_initialiser(es_simple_frame_encoder,
+    args(
+        i_byte_pipe_t *ptPipe
+    ))
+
+extern_fsm_implementation(es_simple_frame_encoder,
+        args(
+            uint8_t *pchData, uint_fast16_t hwSize
+        ));
+        
+        
+extern_fsm_initialiser(es_simple_frame_decoder_wrapper,
+    args(
+        es_simple_frame_t *ptFrame
+    ))
+    
+extern_fsm_initialiser(es_simple_frame_encoder_wrapper,
+    args(
+        es_simple_frame_t *ptFrame
+    ))
+        
+        
+extern_fsm_implementation(es_simple_frame_encoder_wrapper,
+    args(
+        uint8_t *pchBuffer, uint_fast16_t hwSize
+    ));
+
+extern_fsm_implementation(es_simple_frame_decoder_wrapper);
+
+
+
+/*============================ TYPES Part Two ================================*/
 //! \name frame interface
 //! @{
 def_interface(i_es_simple_frame_t)
     bool (*Init)(es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-    fsm_rt_t (*Task)(es_simple_frame_t *ptFrame);
+    union {
+        es_simple_frame_decoder_wrapper_fn *Decoder;
+        es_simple_frame_decoder_wrapper_fn *Task;
+    };
+    es_simple_frame_encoder_wrapper_fn *Encoder;
 end_def_interface(i_es_simple_frame_t)
 //! @}
-
 
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -88,23 +152,6 @@ extern const i_es_simple_frame_t ES_SIMPLE_FRAME;
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-#if  !defined(__LIB_REFERENCE__)
-/*! \brief initlialize es_simple_frame
- *! \param ptFrame es_simple_frame object
- *! \param ptCFG configuration object
- *! \retval true initliazation is successful
- *! \retval false failed in initialization
- */
-extern bool es_simple_frame_init(  
-    es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-
-/*! \brief es simple frame task
- *! \param ptFrame es_simple_frame object
- *! \return FSM status
- */
-extern fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
-
-#endif
 
 #endif
 

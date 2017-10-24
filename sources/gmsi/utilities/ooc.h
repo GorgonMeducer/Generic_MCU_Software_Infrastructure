@@ -53,7 +53,10 @@
 
 
 #ifndef this
-#   define this        (*ptThis)
+#   define this         (*ptThis)
+#endif
+#ifndef base
+#   define base         (*ptBase)
 #endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -137,17 +140,19 @@
 /*! \note Support for protected members
  */
 //! @{
-#define __DEF_PROTECTED(__BELONGS_TO, ...)          DEF_CLASS               (__##__BELONGS_TO, __VA_ARGS__ )
-#define __END_DEF_PROTECTED(__BELONGS_TO, ...)      END_DEF_CLASS           ( __##__BELONGS_TO, __VA_ARGS__ )
-#define __EXTERN_PROTECTED(__BELONGS_TO, ...)       EXTERN_CLASS            (__##__BELONGS_TO, __VA_ARGS__ )
-#define __END_EXTERN_PROTECTED(__BELONGS_TO, ...)   END_EXTERN_CLASS        ( __##__BELONGS_TO, __VA_ARGS__ )
-#define __PROTECTED(__BELONGS_TO)                   CLASS                   (__##__BELONGS_TO)
+#define __DEF_PROTECTED(__BELONGS_TO, ...)          DEF_CLASS               (__p_##__BELONGS_TO, __VA_ARGS__ )
+#define __END_DEF_PROTECTED(__BELONGS_TO, ...)      END_DEF_CLASS           (__p_##__BELONGS_TO, __VA_ARGS__ )
+#define __EXTERN_PROTECTED(__BELONGS_TO, ...)       EXTERN_CLASS            (__p_##__BELONGS_TO, __VA_ARGS__ )
+#define __END_EXTERN_PROTECTED(__BELONGS_TO, ...)   END_EXTERN_CLASS        (__p_##__BELONGS_TO, __VA_ARGS__ )
+#define __PROTECTED(__BELONGS_TO)                   __p_##__BELONGS_TO
+#define __INTERNAL_PROTECTED(__BELONGS_TO)          CLASS                   (__p_##__BELONGS_TO)
 
 #define DEF_PROTECTED(__BELONGS_TO, ...)            __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
 #define END_DEF_PROTECTED(__BELONGS_TO, ...)        __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
 #define EXTERN_PROTECTED(__BELONGS_TO, ...)         __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
 #define END_EXTERN_PROTECTED(__BELONGS_TO, ...)     __END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
 #define PROTECTED(__BELONGS_TO)                     __PROTECTED             (__BELONGS_TO)
+#define INTERNAL_PROTECTED(__BELONGS_TO)            __INTERNAL_PROTECTED    (__BELONGS_TO)
 //! @}
 
 //! \name interface definition
@@ -234,6 +239,7 @@
 #define extern_protected(__BELONGS_TO, ...)         EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
 #define end_extern_protected(__BELONGS_TO, ...)     END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
 #define protected(__BELONGS_TO)                     PROTECTED             (__BELONGS_TO)
+#define internal_protected(__BELONGS_TO)            INTERNAL_PROTECED     (__BELONGS_TO)
     
 
 #define __class_internal(__SRC, __DES, __TYPE)                      \
