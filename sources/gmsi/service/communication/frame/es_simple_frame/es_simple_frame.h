@@ -87,8 +87,8 @@ end_extern_class(es_simple_frame_t)
 //! @{
 typedef struct {
     i_byte_pipe_t   *ptPipe; 
-    inherit(mem_block_t)
     frame_parser_t  *fnParser;
+    inherit(mem_block_t)
 }es_simple_frame_cfg_t;
 //! @}
 
@@ -110,38 +110,17 @@ extern_fsm_implementation(es_simple_frame_encoder,
         args(
             uint8_t *pchData, uint_fast16_t hwSize
         ));
-        
-        
-extern_fsm_initialiser(es_simple_frame_decoder_wrapper,
-    args(
-        es_simple_frame_t *ptFrame
-    ))
-    
-extern_fsm_initialiser(es_simple_frame_encoder_wrapper,
-    args(
-        es_simple_frame_t *ptFrame
-    ))
-        
-        
-extern_fsm_implementation(es_simple_frame_encoder_wrapper,
-    args(
-        uint8_t *pchBuffer, uint_fast16_t hwSize
-    ));
-
-extern_fsm_implementation(es_simple_frame_decoder_wrapper);
-
-
+       
+extern_fsm_implementation(es_simple_frame_decoder);
 
 /*============================ TYPES Part Two ================================*/
 //! \name frame interface
 //! @{
 def_interface(i_es_simple_frame_t)
     bool (*Init)(es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-    union {
-        es_simple_frame_decoder_wrapper_fn *Decoder;
-        es_simple_frame_decoder_wrapper_fn *Task;
-    };
-    es_simple_frame_encoder_wrapper_fn *Encoder;
+    fsm_rt_t (*Task)(es_simple_frame_t *ptFrame);
+    fsm_rt_t (*Decoder)(es_simple_frame_t *ptFrame);
+    fsm_rt_t (*Encoder)(es_simple_frame_t *ptFrame, uint8_t *pchData, uint_fast16_t hwSize);
 end_def_interface(i_es_simple_frame_t)
 //! @}
 

@@ -42,7 +42,7 @@ DEF_INTERFACE(i_byte_pipe_t)
     //!< read a byte
     bool (*ReadByte)(uint8_t *pchByte);
     //!< write a byte
-    bool (*WriteByte)(uint_fast8_t chByte);
+    bool (*WriteByte)(uint8_t chByte);
 END_DEF_INTERFACE(i_byte_pipe_t)
 //! @}
 
@@ -52,7 +52,7 @@ DEF_INTERFACE(i_pipe_t)
     //!< read a byte
     bool (*ReadByte)(uint8_t *pchByte);
     //!< write a byte
-    bool (*WriteByte)(uint_fast8_t chByte);
+    bool (*WriteByte)(uint8_t chByte);
     
     struct {
         //! read a block

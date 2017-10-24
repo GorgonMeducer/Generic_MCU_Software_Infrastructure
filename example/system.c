@@ -19,11 +19,18 @@
 #include ".\app_platform\app_platform.h"
 
 /*============================ MACROS ========================================*/
+
+#ifndef FRAME_BUFFER_SIZE
+#   warning No defined FRAME_BUFFER_SIZE, default value 512 is used
+#define FRAME_BUFFER_SIZE               (512)
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 static volatile uint32_t s_wMSTicks = 0;   
+NO_INIT static es_simple_frame_t s_tFrame;
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
@@ -52,30 +59,56 @@ void SysTick_Handler (void)
 
 
 
-static void System_Init(void)
+static void system_init(void)
 {
     app_platform_init();
 
     SysTick_Config(SystemCoreClock  / 1000);  //!< Generate interrupt every 1 ms 
 }
 
+static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
+{
+    return hwSize;
+}
+
+static void app_init(void)
+{
+    
+    NO_INIT static uint8_t s_chFrameBuffer[FRAME_BUFFER_SIZE];
+    NO_INIT static i_byte_pipe_t s_tPipe;
+    s_tPipe.ReadByte = (STREAM_IN.Stream.Read);
+    s_tPipe.WriteByte = (STREAM_OUT.Stream.Write);
+
+    //! initialise simple frame service
+    ES_SIMPLE_FRAME_CFG(&s_tFrame, 
+                        &s_tPipe,
+                        &frame_parser,
+                        s_chFrameBuffer,
+                        sizeof(s_chFrameBuffer));
+
+}
 
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
 int main (void) 
 {
-    System_Init();
+    system_init();
+    app_init();
     
     while (true) {
-        
-        //! software loopback 
+    #if true
+        if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
+            STREAM_OUT.Stream.Flush();
+        }
+    #else
         uint8_t chByte;
         if (STREAM_IN.Stream.Read(&chByte)) {
-            while(!STREAM_OUT.Stream.Write(chByte));
+            STREAM_OUT.Stream.Write(chByte);
         } else {
             STREAM_OUT.Stream.Flush();
         }
+    #endif
     }
 }
 
