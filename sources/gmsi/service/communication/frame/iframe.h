@@ -26,7 +26,7 @@
 /*============================ TYPES =========================================*/
 
 //! \brief prototype for frame parser
-typedef uint_fast16_t frame_parser_t(uint8_t *pchStream, uint_fast16_t hwSize);
+typedef uint_fast16_t frame_parser_t(mem_block_t tMemory, uint_fast16_t hwSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

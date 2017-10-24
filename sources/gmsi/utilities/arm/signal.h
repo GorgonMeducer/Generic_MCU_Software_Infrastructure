@@ -92,6 +92,9 @@
 #define LEAVE_LOCK(__LOCKER)    \
                         leave_lock(__LOCKER)
 
+#define INIT_LOCK(__LOCKER)     \
+                        init_lock(__LOCKER)
+                        
 //! \brief exit lock checker structure
 #define EXIT_LOCK_CHECKER() EXIT_SAFE_ATOM_CODE()
 
@@ -126,4 +129,11 @@ extern bool enter_lock(locker_t *ptLock);
  *! \return none
  */
 extern void leave_lock(locker_t *ptLock);
+            
+            
+/*! \brief initialize a locker
+ *! \param ptLock locker object
+ *! \return none
+ */
+extern void init_lock(locker_t *ptLock);
 #endif

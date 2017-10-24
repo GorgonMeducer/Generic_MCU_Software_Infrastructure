@@ -160,7 +160,7 @@
 #endif     
      
 #define IS_FSM_ERR(__FSM_RT)        ((__FSM_RT) < fsm_rt_cpl)
-
+#define is_fsm_err(__FSM_RT)        IS_FSM_ERR(__FSM_RT)
 /*============================ TYPES =========================================*/
 #ifndef __FSM_RT_TYPE__
 #define __FSM_RT_TYPE__

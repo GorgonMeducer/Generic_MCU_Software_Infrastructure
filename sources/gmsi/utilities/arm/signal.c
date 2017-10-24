@@ -31,6 +31,20 @@
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
+/*! \brief initialize a locker
+ *! \param ptLock locker object
+ *! \return none
+ */
+void init_lock(locker_t *ptLock)
+{
+    if (NULL == ptLock) {
+        return ;
+    }
+    SAFE_ATOM_CODE (
+        (*ptLock) = UNLOCKED;
+    )
+}
+
 /*! \brief try to enter a section
  *! \param ptLock locker object
  *! \retval lock section is entered

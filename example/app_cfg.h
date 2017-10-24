@@ -60,7 +60,7 @@
 
 
 #define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
-
+#define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
