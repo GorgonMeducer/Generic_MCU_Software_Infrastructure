@@ -140,6 +140,7 @@
 /*! \note Support for protected members
  */
 //! @{
+#define __DECLARE_PROTECTED(__BELONGS_TO)           DECLARE_CLASS           (__p_##__BELONGS_TO)
 #define __DEF_PROTECTED(__BELONGS_TO, ...)          DEF_CLASS               (__p_##__BELONGS_TO, __VA_ARGS__ )
 #define __END_DEF_PROTECTED(__BELONGS_TO, ...)      END_DEF_CLASS           (__p_##__BELONGS_TO, __VA_ARGS__ )
 #define __EXTERN_PROTECTED(__BELONGS_TO, ...)       EXTERN_CLASS            (__p_##__BELONGS_TO, __VA_ARGS__ )
@@ -147,6 +148,7 @@
 #define __PROTECTED(__BELONGS_TO)                   __p_##__BELONGS_TO
 #define __INTERNAL_PROTECTED(__BELONGS_TO)          CLASS                   (__p_##__BELONGS_TO)
 
+#define DECLARE_PROTECTED(__BELONGS_TO)             __DECLARE_PROTECTED     (__BELONGS_TO) 
 #define DEF_PROTECTED(__BELONGS_TO, ...)            __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
 #define END_DEF_PROTECTED(__BELONGS_TO, ...)        __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
 #define EXTERN_PROTECTED(__BELONGS_TO, ...)         __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
