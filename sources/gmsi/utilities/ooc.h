@@ -239,8 +239,8 @@
 #define extern_protected(__BELONGS_TO, ...)         EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
 #define end_extern_protected(__BELONGS_TO, ...)     END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
 #define protected(__BELONGS_TO)                     PROTECTED             (__BELONGS_TO)
-#define internal_protected(__BELONGS_TO)            INTERNAL_PROTECED     (__BELONGS_TO)
-    
+#define internal_protected(__BELONGS_TO)            INTERNAL_PROTECTED    (__BELONGS_TO)
+#define declare_protected(__BELONGS_TO)             DECLARE_PROTECTED     (__BELONGS_TO)
 
 #define __class_internal(__SRC, __DES, __TYPE)                      \
             CLASS(__TYPE) *(__DES) = (CLASS(__TYPE) *)(__SRC)   
