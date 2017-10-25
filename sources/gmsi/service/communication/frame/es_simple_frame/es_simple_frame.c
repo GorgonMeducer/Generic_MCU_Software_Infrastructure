@@ -604,7 +604,9 @@ static fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fas
         fsm_report(GSF_ERR_INVALID_PTR);
     }
     
-    return call_fsm(es_simple_frame_encoder_wrapper, ref_obj_as(this, fsm(es_simple_frame_encoder_wrapper)), args(pchBuffer, hwSize));
+    return call_fsm(es_simple_frame_encoder_wrapper, 
+                    &base_obj(fsm(es_simple_frame_encoder_wrapper)), 
+                    args(pchBuffer, hwSize));
 }         
         
 fsm_implementation(es_simple_frame_encoder_wrapper,

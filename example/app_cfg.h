@@ -67,7 +67,7 @@
 
 #define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
 #define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
-
+#define USE_SERVICE_MULTIPLE_DELAY          ENABLED
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/

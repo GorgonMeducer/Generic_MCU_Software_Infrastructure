@@ -180,12 +180,14 @@
 
 #define __privilege_state(__STATE, ...)                                         \
             do {                                                                \
-                state(__STATE, __VA_ARGS__)                                     \
-                                                                                \
+                do {                                                            \
+                    state(__STATE, __VA_ARGS__)                                 \
+                } while(0); /* add extra while(0) to catch the fsm_continue()*/ \
                 if (this.chState != (__STATE)) {                                \
                     break;                                                      \
                 }                                                               \
-            } while(1);
+            } while(1);                                                         
+            
 #define privilege_state(__STATE, ...)                                           \
             __privilege_state((__STATE), __VA_ARGS__)                                      
             

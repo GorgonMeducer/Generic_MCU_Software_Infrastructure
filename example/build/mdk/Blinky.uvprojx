@@ -590,6 +590,36 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1354,6 +1384,36 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1981,6 +2041,36 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2610,6 +2700,36 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
             </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3237,6 +3357,36 @@
               <FileName>template.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -58,6 +58,10 @@
 #ifndef base
 #   define base         (*ptBase)
 #endif
+#ifndef target
+#   define target       (*ptTarget)
+#endif
+
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
@@ -254,18 +258,18 @@
 #define class_internal(__SRC, __DES, __TYPE)                        \
             __class_internal(__SRC, __DES, __TYPE)                    
 
-#define __extern_class_method(__CLASS, __METHOD, ...)               \
-        __METHOD (__CLASS *ptObj __VA_ARGS__);                   
-#define extern_class_method(__CLASS, __METHOD, ...)                 \
-            __extern_class_method(__CLASS, __METHOD, __VA_ARGS__)
+#define __declare_method_implementation(__CLASS, __METHOD, ...)      \
+        __METHOD (__CLASS *ptObj __VA_ARGS__)                   
+#define declare_method_implementation(__CLASS, __METHOD, ...)        \
+            __declare_method_implementation(__CLASS, __METHOD, __VA_ARGS__)
 
-#define __class_method(__CLASS, __METHOD, ...)                      \
+#define __method_implementation(__CLASS, __METHOD, ...)             \
         __METHOD (__CLASS *ptObj __VA_ARGS__)                       \
         {                                                           \
-            class_internal(ptObj, ptThis, __CLASS)
+            class_internal(ptObj, ptThis, __CLASS);
             
-#define class_method(__CLASS, __METHOD, ...)                        \
-            __class_method(__CLASS, __METHOD, __VA_ARGS__)                      
+#define method_implementation(__CLASS, __METHOD, ...)               \
+            __method_implementation(__CLASS, __METHOD, __VA_ARGS__)                      
             
 #define method_body(...)                                            \
             __VA_ARGS__;                                            \
