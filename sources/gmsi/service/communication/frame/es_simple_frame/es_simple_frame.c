@@ -178,7 +178,8 @@ const i_es_simple_frame_t ES_SIMPLE_FRAME = {
 bool es_simple_frame_init(  
     es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG)
 {
-    CLASS(es_simple_frame_t) *ptThis = (CLASS(es_simple_frame_t) *)ptFrame;
+    class_internal(ptFrame, ptThis, es_simple_frame_t);
+    
     if (NULL == ptFrame || NULL == ptCFG) {
         return false;
     } else if (    
@@ -403,7 +404,7 @@ static fsm_rt_t task(es_simple_frame_t *ptFrame)
         fsm_report(GSF_ERR_INVALID_PTR);
     }
     
-    return call_fsm(es_simple_frame_decoder_wrapper, ref_obj_as(this, fsm(es_simple_frame_decoder_wrapper)));
+    return call_fsm(es_simple_frame_decoder_wrapper, &base_obj(fsm(es_simple_frame_decoder_wrapper)));
 } 
                 
 fsm_implementation(es_simple_frame_decoder_wrapper)
