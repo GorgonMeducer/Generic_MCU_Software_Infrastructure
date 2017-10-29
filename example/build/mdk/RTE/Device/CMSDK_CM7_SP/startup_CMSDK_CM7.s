@@ -92,8 +92,8 @@ __Vectors       DCD     __initial_sp               ;     Top of Stack
                 DCD     USART0_RX_CPL_Handler      ;DCD     UART0RX_Handler            ;   0 UART 0 receive interrupt   
                 DCD     USART0_TX_CPL_Handler      ;DCD     UART0TX_Handler            ;   1 UART 0 transmit interrupt
                     
-                DCD     UART1RX_Handler            ;   2 UART 1 receive interrupt
-                DCD     UART1TX_Handler            ;   3 UART 1 transmit interrupt
+                DCD     USART1_RX_CPL_Handler      ;DCD     UART0RX_Handler            ;   2 UART 1 receive interrupt   
+                DCD     USART1_TX_CPL_Handler      ;DCD     UART0TX_Handler            ;   3 UART 1 transmit interrupt
                 DCD     UART2RX_Handler            ;   4 UART 2 receive interrupt
                 DCD     UART2TX_Handler            ;   5 UART 2 transmit interrupt
                 DCD     GPIO0ALL_Handler           ;   6 GPIO 0 combined interrupt
@@ -192,7 +192,9 @@ Default_Handler PROC
                 EXPORT UART0TX_Handler            [WEAK]
                 EXPORT USART0_TX_CPL_Handler      [WEAK]        ; we add this to bypass the one used by MPS2 system driver
                 EXPORT UART1RX_Handler            [WEAK]
+                EXPORT USART1_RX_CPL_Handler      [WEAK]        ; we add this to bypass the one used by MPS2 system driver
                 EXPORT UART1TX_Handler            [WEAK]
+                EXPORT USART1_TX_CPL_Handler      [WEAK]        ; we add this to bypass the one used by MPS2 system driver
                 EXPORT UART2RX_Handler            [WEAK]
                 EXPORT UART2TX_Handler            [WEAK]
                 EXPORT GPIO0ALL_Handler           [WEAK]
@@ -227,7 +229,9 @@ USART0_RX_CPL_Handler
 UART0TX_Handler
 USART0_TX_CPL_Handler
 UART1RX_Handler
+USART1_RX_CPL_Handler
 UART1TX_Handler
+USART1_TX_CPL_Handler
 UART2RX_Handler
 UART2TX_Handler
 GPIO0ALL_Handler

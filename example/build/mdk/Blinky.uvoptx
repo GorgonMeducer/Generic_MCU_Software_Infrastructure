@@ -299,43 +299,6 @@
         <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>7</CpuCode>
-      <Books>
-        <Book>
-          <Number>0</Number>
-          <Title>Application Note AN382: ARM Cortex-M0 SMM on V2M-MPS2 (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DAI0382C_cortex_m0_on_v2m_mps2.pdf</Path>
-        </Book>
-        <Book>
-          <Number>1</Number>
-          <Title>Application Note AN383: ARM Cortex-M0+ SMM on V2M-MPS2 (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DAI0383C_cortex_m0plus_on_v2m_mps2.pdf</Path>
-        </Book>
-        <Book>
-          <Number>2</Number>
-          <Title>Application Note AN385: ARM Cortex-M3 SMM on V2M-MPS2 (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DAI0385C_cortex_m3_on_v2m_mps2.pdf</Path>
-        </Book>
-        <Book>
-          <Number>3</Number>
-          <Title>Application Note AN386: ARM Cortex-M4 SMM on V2M-MPS2 (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DAI0386C_cortex_m4_on_v2m_mps2.pdf</Path>
-        </Book>
-        <Book>
-          <Number>4</Number>
-          <Title>Application Note AN399: ARM Cortex-M7 SMM on V2M-MPS2 (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DAI0399C_cortex_m7_on_v2m_mps2.pdf</Path>
-        </Book>
-        <Book>
-          <Number>5</Number>
-          <Title>Cortex-M System Design Kit Technical Reference Manual (V2M-MPS2)</Title>
-          <Path>C:\Keil\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.4.0-RC4\Boards\ARM\V2M-MPS2\Documents\DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf</Path>
-        </Book>
-        <Book>
-          <Number>6</Number>
-          <Title>Cortex-M Prototyping System (web page) (V2M-MPS2)</Title>
-          <Path>http://www.arm.com/products/tools/development-boards/versatile-express/cortex-m-prototyping-system.php</Path>
-        </Book>
-      </Books>
       <DebugOpt>
         <uSim>0</uSim>
         <uTrg>1</uTrg>
@@ -553,7 +516,7 @@
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
         <bEvRecOn>1</bEvRecOn>
-        <nTsel>1</nTsel>
+        <nTsel>4</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -564,9 +527,14 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile>.\Dbg_MPS2.ini</tIfile>
-        <pMon>BIN\ULP2CM3.DLL</pMon>
+        <pMon>BIN\DbgFM.DLL</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>CMSIS_AGDI</Key>
+          <Name>-X"MPS2 CMSIS-DAP" -U000000000000 -O207 -S8 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -TO18 -TC25000000 -TP20 -TDS8013 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN0</Name>
+        </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>ULP2CM3</Key>
@@ -595,7 +563,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>(105=-1,-1,-1,-1,0)(106=-1,-1,-1,-1,0)(107=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -1144,7 +1112,7 @@
 
   <Group>
     <GroupName>gmsi</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

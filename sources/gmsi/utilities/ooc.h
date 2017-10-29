@@ -248,7 +248,7 @@
 #define protected_content(__BELONGS_TO)             PROTECTED_CONTENT     (__BELONGS_TO)
 #define declare_protected(__BELONGS_TO)             DECLARE_PROTECTED     (__BELONGS_TO)
 
-#define this_protected(__TYPE)          type_convert(ref_obj_as(this, __TYPE), protected_content(__TYPE))
+#define this_protected(__TYPE)          type_convert(ref_obj_as(this, protected(__TYPE)), protected_content(__TYPE))
 #define this_interface(__INTERFACE)     convert_obj_as(this, __INTERFACE)
 #define base_obj(__TYPE)                convert_obj_as(this, __TYPE)
 

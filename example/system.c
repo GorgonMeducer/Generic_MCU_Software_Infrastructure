@@ -97,7 +97,7 @@ int main (void)
     app_init();
     
     while (true) {
-    #if true
+    #if false
         if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
             STREAM_OUT.Stream.Flush();
         }
