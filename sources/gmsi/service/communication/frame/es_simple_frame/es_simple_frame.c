@@ -377,7 +377,9 @@ fsm_implementation(es_simple_frame_decoder)
                     this.pchBuffer[0] = ES_SIMPLE_FRAME_ERROR;
                 } else {
                     //! call parser
-                    this.hwLength = this.fnParser(obj_convert_as(this, mem_block_t), this.hwLength);
+                    this.hwLength = 
+                        this.fnParser(  obj_convert_as(this, mem_block_t), 
+                                        this.hwLength);
                 }
                 fsm_cpl();
             )
@@ -404,7 +406,8 @@ static fsm_rt_t task(es_simple_frame_t *ptFrame)
         fsm_report(GSF_ERR_INVALID_PTR);
     }
     
-    return call_fsm(es_simple_frame_decoder_wrapper, &base_obj(fsm(es_simple_frame_decoder_wrapper)));
+    return call_fsm(es_simple_frame_decoder_wrapper, 
+                    &base_obj(fsm(es_simple_frame_decoder_wrapper)));
 } 
                 
 fsm_implementation(es_simple_frame_decoder_wrapper)

@@ -69,7 +69,7 @@ END_EXTERN_CLASS(__NAME##_pool_t)                                               
                                                                                 \
 extern bool __NAME##_pool_init(__NAME##_pool_t *ptPool);                        \
 extern bool __NAME##_pool_add_heap(                                             \
-    __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptBuffer, uint16_t tSize);   \
+    __NAME##_pool_t *ptPool, void *ptBuffer, uint16_t tSize);                   \
 extern __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool);                      \
 extern void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem);        \
 extern uint16_t __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool);\
@@ -95,9 +95,9 @@ bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                
 }                                                                               \
                                                                                 \
 bool __NAME##_pool_add_heap(                                                    \
-    __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptBuffer, uint16_t tSize)    \
+    __NAME##_pool_t *ptPool, void *ptBuffer, uint16_t tSize)                    \
 {                                                                               \
-    return pool_add_heap(   (pool_t *)ptPool, (void *)ptBuffer,                 \
+    return pool_add_heap(   (pool_t *)ptPool, ptBuffer,                         \
                             tSize, sizeof(__NAME##_pool_item_t));               \
 }                                                                               \
                                                                                 \

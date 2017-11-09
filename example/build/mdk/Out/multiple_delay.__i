@@ -1,0 +1,10 @@
+--c99 -c --cpu Cortex-M7.fp.sp -D__MICROLIB -g -O3 -Otime --apcs=interwork --split_sections --diag_suppress=1
+-I.\RTE\Device\CMSDK_CM7_SP
+-I.\RTE\_V2M-MPS2
+-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Driver\Include
+-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include
+-IC:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.4.1\Board
+-IC:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.6.0\Boards\ARM\V2M-MPS2\Common
+-IC:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.6.0\Device\CMSDK_CM7\Include
+-D__UVISION_VERSION="524" -D_RTE_ -DCMSDK_CM7_SP -D__USE_LCD -D__USE_TIMER0 -D__USE_FPGA -D__USER_DEFINED_APP_CFG_H__
+-o .\out\multiple_delay.o --omf_browse .\out\multiple_delay.crf --depend .\out\multiple_delay.d "..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c"
