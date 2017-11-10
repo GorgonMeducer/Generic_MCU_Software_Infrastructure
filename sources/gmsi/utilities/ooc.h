@@ -253,27 +253,11 @@
 #define base_obj(__TYPE)                convert_obj_as(this, __TYPE)
 
 
-#define __class_internal(__SRC, __DES, __TYPE)                      \
+#define __class_internal(__SRC, __DES, __TYPE)                                  \
             class(__TYPE) *(__DES) = (CLASS(__TYPE) *)(__SRC)   
-#define class_internal(__SRC, __DES, __TYPE)                        \
+#define class_internal(__SRC, __DES, __TYPE)                                    \
             __class_internal(__SRC, __DES, __TYPE)                    
 
-#define __declare_method_implementation(__CLASS, __METHOD, ...)      \
-        __METHOD (__CLASS *ptObj __VA_ARGS__)                   
-#define declare_method_implementation(__CLASS, __METHOD, ...)        \
-            __declare_method_implementation(__CLASS, __METHOD, __VA_ARGS__)
-
-#define __method_implementation(__CLASS, __METHOD, ...)             \
-        __METHOD (__CLASS *ptObj __VA_ARGS__)                       \
-        {                                                           \
-            class_internal(ptObj, ptThis, __CLASS);
-            
-#define method_implementation(__CLASS, __METHOD, ...)               \
-            __method_implementation(__CLASS, __METHOD, __VA_ARGS__)                      
-            
-#define method_body(...)                                            \
-            __VA_ARGS__;                                            \
-        }
         
 /*============================ TYPES =========================================*/
 

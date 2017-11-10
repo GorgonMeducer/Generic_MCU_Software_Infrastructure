@@ -47,12 +47,13 @@ typedef void pool_item_init_event_handler_t(void *pItem, uint_fast16_t hwItemSiz
 
 bool pool_init(pool_t *ptPool)
 {
+    class_internal(ptPool, ptThis, pool_t);
     if (NULL == ptPool) {
         return false;
     }
 
-    ((CLASS(pool_t) *)ptPool)->ptFreeList = NULL;
-    ((CLASS(pool_t) *)ptPool)->tCounter   = 0;
+    this.ptFreeList = NULL;
+    this.tCounter   = 0;
 
     return true;
 }
@@ -65,7 +66,7 @@ bool pool_add_heap_ex( pool_t *ptPool,
                     uint16_t hwItemSize,
                     pool_item_init_event_handler_t *fnHandler)
 {
-    CLASS(pool_t) *ptThis = (CLASS(pool_t) *)ptPool;
+    class_internal(ptPool, ptThis, pool_t);
     
     if ((NULL == ptPool)
     ||  (NULL == ptBuffer)

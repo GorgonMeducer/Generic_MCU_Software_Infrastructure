@@ -73,7 +73,7 @@ extern bool __NAME##_pool_add_heap(                                             
 extern __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool);                      \
 extern void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem);        \
 extern uint16_t __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool);\
-extern __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);        \
+extern __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);        
 
 #define DEF_EPOOL(__NAME, __TYPE)                                               \
 DECLARE_CLASS(__NAME##_pool_item_t)                                             \
