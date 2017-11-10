@@ -23,8 +23,9 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 #include ".\frame\frame.h"
-//#include ".\xmodem\xmodem.h"
+#include ".\xmodem\xmodem.h"
 #include ".\crc\crc.h"
+#include ".\telegraph_engine\telegraph_engine.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/

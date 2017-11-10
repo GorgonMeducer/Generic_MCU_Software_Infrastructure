@@ -15,35 +15,22 @@
 *                                                                           *
 ****************************************************************************/
 
+//! \note do not move this pre-processor statement to other places
+#include "..\app_cfg.h"
 
-
-#ifndef __USE_SERVICE_H__
-#define __USE_SERVICE_H__
+#ifndef __TELEGRAPH_ENGINE_APP_CFG_H__
+#define __TELEGRAPH_ENGINE_APP_CFG_H__
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
-#include ".\scheduler\scheduler.h"
-#include ".\communication\communication.h"
-#include ".\encryption\encryption.h"
-#include ".\memory\memory.h"
-#include ".\gui\gui.h"
-#include ".\time\time.h"
+
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-/*! \brief initialize all services
- *! \param none
- *! \retval TRUE initialize services succeed.
- *! \retval FALSE initialize services failed.
- */
-extern bool service_init(void);
-
-
-
+  
 
 #endif
+/* EOF */

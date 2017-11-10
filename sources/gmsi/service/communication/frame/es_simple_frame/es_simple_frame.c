@@ -78,7 +78,6 @@ simple_fsm(es_simple_frame_encoder_wrapper,
 //! @{
 def_class(es_simple_frame_t)
     locker_t tMutex;
-    
     inherit(fsm(es_simple_frame_decoder))
     inherit(fsm(es_simple_frame_decoder_wrapper))
     inherit(fsm(es_simple_frame_encoder))
@@ -196,6 +195,8 @@ bool es_simple_frame_init(
     init_lock(&this.tMutex);
     
     do {
+
+        
         if (!init_fsm(es_simple_frame_decoder, 
                         ref_obj_as( this, fsm(es_simple_frame_decoder)), 
                         args(ptCFG->ptPipe, ptCFG->fnParser),
@@ -238,7 +239,7 @@ fsm_initialiser(es_simple_frame_decoder,
         } else if ((NULL == ptPipe->ReadByte) || (NULL == ptPipe->WriteByte)) {
             abort_init();
         }
-        memset(ref_obj_as(this, __es_simple_frame_fsm_internal), 0, sizeof(this));
+        memset(ref_obj_as(this, __es_simple_frame_fsm_internal), 0, sizeof(__es_simple_frame_fsm_internal));
         obj_convert_as(this, mem_block_t) = tMemory;
         this.ptPipe = ptPipe;
         this.fnParser = fnParser;
@@ -377,7 +378,9 @@ fsm_implementation(es_simple_frame_decoder)
                     this.pchBuffer[0] = ES_SIMPLE_FRAME_ERROR;
                 } else {
                     //! call parser
-                    this.hwLength = this.fnParser(obj_convert_as(this, mem_block_t), this.hwLength);
+                    this.hwLength = 
+                        this.fnParser(  obj_convert_as(this, mem_block_t), 
+                                        this.hwLength);
                 }
                 fsm_cpl();
             )
@@ -404,7 +407,8 @@ static fsm_rt_t task(es_simple_frame_t *ptFrame)
         fsm_report(GSF_ERR_INVALID_PTR);
     }
     
-    return call_fsm(es_simple_frame_decoder_wrapper, &base_obj(fsm(es_simple_frame_decoder_wrapper)));
+    return call_fsm(es_simple_frame_decoder_wrapper, 
+                    &base_obj(fsm(es_simple_frame_decoder_wrapper)));
 } 
                 
 fsm_implementation(es_simple_frame_decoder_wrapper)
@@ -487,7 +491,7 @@ fsm_initialiser(es_simple_frame_encoder,
         } else if ((NULL == ptPipe->ReadByte) || (NULL == ptPipe->WriteByte)) {
             abort_init();
         }
-        memset(ref_obj_as(this, __es_simple_frame_fsm_internal), 0, sizeof(this));
+        memset(ref_obj_as(this, __es_simple_frame_fsm_internal), 0, sizeof(__es_simple_frame_fsm_internal));
         this.ptPipe = ptPipe;
     )
 
@@ -604,7 +608,9 @@ static fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fas
         fsm_report(GSF_ERR_INVALID_PTR);
     }
     
-    return call_fsm(es_simple_frame_encoder_wrapper, ref_obj_as(this, fsm(es_simple_frame_encoder_wrapper)), args(pchBuffer, hwSize));
+    return call_fsm(es_simple_frame_encoder_wrapper, 
+                    &base_obj(fsm(es_simple_frame_encoder_wrapper)), 
+                    args(pchBuffer, hwSize));
 }         
         
 fsm_implementation(es_simple_frame_encoder_wrapper,

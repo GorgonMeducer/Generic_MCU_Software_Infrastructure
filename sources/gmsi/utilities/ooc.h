@@ -58,6 +58,10 @@
 #ifndef base
 #   define base         (*ptBase)
 #endif
+#ifndef target
+#   define target       (*ptTarget)
+#endif
+
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
@@ -244,32 +248,16 @@
 #define protected_content(__BELONGS_TO)             PROTECTED_CONTENT     (__BELONGS_TO)
 #define declare_protected(__BELONGS_TO)             DECLARE_PROTECTED     (__BELONGS_TO)
 
-#define this_protected(__TYPE)          type_convert(ref_obj_as(this, __TYPE), protected_content(__TYPE))
+#define this_protected(__TYPE)          type_convert(ref_obj_as(this, protected(__TYPE)), protected_content(__TYPE))
 #define this_interface(__INTERFACE)     convert_obj_as(this, __INTERFACE)
 #define base_obj(__TYPE)                convert_obj_as(this, __TYPE)
 
 
-#define __class_internal(__SRC, __DES, __TYPE)                      \
+#define __class_internal(__SRC, __DES, __TYPE)                                  \
             class(__TYPE) *(__DES) = (CLASS(__TYPE) *)(__SRC)   
-#define class_internal(__SRC, __DES, __TYPE)                        \
+#define class_internal(__SRC, __DES, __TYPE)                                    \
             __class_internal(__SRC, __DES, __TYPE)                    
 
-#define __extern_class_method(__CLASS, __METHOD, ...)               \
-        __METHOD (__CLASS *ptObj __VA_ARGS__);                   
-#define extern_class_method(__CLASS, __METHOD, ...)                 \
-            __extern_class_method(__CLASS, __METHOD, __VA_ARGS__)
-
-#define __class_method(__CLASS, __METHOD, ...)                      \
-        __METHOD (__CLASS *ptObj __VA_ARGS__)                       \
-        {                                                           \
-            class_internal(ptObj, ptThis, __CLASS)
-            
-#define class_method(__CLASS, __METHOD, ...)                        \
-            __class_method(__CLASS, __METHOD, __VA_ARGS__)                      
-            
-#define method_body(...)                                            \
-            __VA_ARGS__;                                            \
-        }
         
 /*============================ TYPES =========================================*/
 

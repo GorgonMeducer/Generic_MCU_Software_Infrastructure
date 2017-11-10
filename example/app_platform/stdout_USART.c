@@ -86,8 +86,63 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
+#define __USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                          \
+                                                                        \
+void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)                \
+{                                                                       \
+    CMSDK_UART##__NUM->CTRL |= CMSDK_UART_CTRL_RXIRQEN_Msk;             \
+}                                                                       \
+                                                                        \
+void STREAM_IN_serial_port_disable_rx_cpl_interrupt(void)               \
+{                                                                       \
+    CMSDK_UART##__NUM->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk;            \
+}                                                                       \
+                                                                        \
+uint8_t STREAM_IN_serial_port_get_byte(void)                            \
+{                                                                       \
+    return CMSDK_UART##__NUM->DATA;                                     \
+}                                                                       \
+/* this function is called instead of the original UART0RX_Handler() */ \
+void USART##__NUM##_RX_CPL_Handler(void)                                \
+{                                                                       \
+    /*! clear interrupt flag */                                         \
+    CMSDK_UART##__NUM->INTCLEAR = CMSDK_UART##__NUM->INTSTATUS;         \
+    STREAM_IN_insert_serial_port_rx_cpl_event_handler();                \
+}                           
+
+#define USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                \
+            __USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)  
     
-    
+#define __USE_SERIAL_PORT_OUTPUT_ADAPTER(__NUM)                         \
+                                                                        \
+void STREAM_OUT_serial_port_enable_tx_cpl_interrupt(void)               \
+{                                                                       \
+    CMSDK_UART##__NUM->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;             \
+}                                                                       \
+                                                                        \
+void STREAM_OUT_serial_port_disbale_tx_cpl_interrupt(void)              \
+{                                                                       \
+    CMSDK_UART##__NUM->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;            \
+}                                                                       \
+                                                                        \
+void STREAM_OUT_serial_port_fill_byte(uint8_t chByte)                   \
+{                                                                       \
+    CMSDK_UART##__NUM->DATA = chByte;                                   \
+}                                                                       \
+                                                                        \
+/* this function is called instead of the original UART0TX_Handler() */ \
+void USART##__NUM##_TX_CPL_Handler(void)                                \
+{                                                                       \
+    /*! clear interrupt flag  */                                        \
+    CMSDK_UART##__NUM->INTCLEAR = CMSDK_UART##__NUM->INTSTATUS;         \
+    /*! implement our own version of uart tx interrupt */               \
+                                                                        \
+    STREAM_OUT_insert_serial_port_tx_cpl_event_handler();               \
+}
+
+
+#define USE_SERIAL_PORT_OUTPUT_ADAPTER(__NUM)                           \
+            __USE_SERIAL_PORT_OUTPUT_ADAPTER(__NUM)                  
     
 /*============================ TYPES =========================================*/ 
 
@@ -112,6 +167,16 @@ STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN, INPUT_STREAM_BLOCK_COUNT)
 //! @}
 
 
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port input interfaces required by STREAM_OUT adapter        *
+ *------------------------------------------------------------------------------*/
+USE_SERIAL_PORT_INPUT_ADAPTER(USART_DRV_NUM)
+
+
+/*------------------------------------------------------------------------------*
+ * Implement Serial Port output interfaces required by STREAM_OUT adapter       *
+ *------------------------------------------------------------------------------*/
+USE_SERIAL_PORT_OUTPUT_ADAPTER(USART_DRV_NUM)
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -119,72 +184,6 @@ STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN, INPUT_STREAM_BLOCK_COUNT)
 extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
 
 /*============================ IMPLEMENTATION ================================*/
-
-/*------------------------------------------------------------------------------*
- * Implement Serial Port input interfaces required by STREAM_OUT adapter        *
- *------------------------------------------------------------------------------*/
-
-void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_RXIRQEN_Msk;
-}
-
-void STREAM_IN_serial_port_disable_rx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk;
-}
-
-uint8_t STREAM_IN_serial_port_get_byte(void)
-{
-    return CMSDK_UART0->DATA; 
-}
-
-
-
-/* this function is called instead of the original UART0RX_Handler() */
-void USART0_RX_CPL_Handler(void)
-{   
-    //! clear interrupt flag
-    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
-    STREAM_IN_insert_serial_port_rx_cpl_event_handler();
-}
-
-
-/*------------------------------------------------------------------------------*
- * Implement Serial Port output interfaces required by STREAM_OUT adapter       *
- *------------------------------------------------------------------------------*/
-
-void STREAM_OUT_serial_port_enable_tx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;
-}
-
-void STREAM_OUT_serial_port_disbale_tx_cpl_interrupt(void)
-{
-    CMSDK_UART0->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;
-}
-
-void STREAM_OUT_serial_port_fill_byte(uint8_t chByte)
-{
-    CMSDK_UART0->DATA = chByte; 
-}
-
-/* this function is called instead of the original UART0TX_Handler() */
-void USART0_TX_CPL_Handler(void)
-{   
-    //! clear interrupt flag
-    CMSDK_UART0->INTCLEAR = CMSDK_UART0->INTSTATUS;
-    //! implement our own version of uart tx interrupt
-    
-    STREAM_OUT_insert_serial_port_tx_cpl_event_handler();
-}
-
-
-
-
-
-
-
 
 
 

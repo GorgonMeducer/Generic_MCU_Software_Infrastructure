@@ -15,19 +15,12 @@
 *                                                                           *
 ****************************************************************************/
 
-
-
-#ifndef __USE_SERVICE_H__
-#define __USE_SERVICE_H__
+#ifndef __SERVICE_TIME_H__
+#define __SERVICE_TIME_H__
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-#include ".\scheduler\scheduler.h"
-#include ".\communication\communication.h"
-#include ".\encryption\encryption.h"
-#include ".\memory\memory.h"
-#include ".\gui\gui.h"
-#include ".\time\time.h"
+#include ".\multiple_delay\multiple_delay.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -36,14 +29,6 @@
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-/*! \brief initialize all services
- *! \param none
- *! \retval TRUE initialize services succeed.
- *! \retval FALSE initialize services failed.
- */
-extern bool service_init(void);
-
-
-
 
 #endif
+/* EOF */

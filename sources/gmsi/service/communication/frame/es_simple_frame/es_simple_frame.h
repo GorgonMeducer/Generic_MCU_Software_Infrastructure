@@ -36,7 +36,9 @@
             } while(false)
 
 
-
+#define es_simple_frame_cfg(__FRAME__, ...)                                     \
+            ES_SIMPLE_FRAME_CFG(__FRAME__, __VA_ARGS__)
+            
 /*============================ TYPES =========================================*/
 def_structure(__es_simple_frame_fsm_internal)
     inherit(mem_block_t)
@@ -50,6 +52,7 @@ extern_simple_fsm(es_simple_frame_decoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
         frame_parser_t *fnParser;       //!< parser
+        bool bUnsupportFrame;
         inherit(__es_simple_frame_fsm_internal)
     ))
     

@@ -25,7 +25,7 @@
 /*============================ LOCAL VARIABLES ===============================*/
 
 //! \brief random seed
-static uint16_t s_hwRandomSeed SECTION( ".app_ram_noinit" ) = 0xAA55;
+static uint16_t s_hwRandomSeed = 0xAA55;
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/

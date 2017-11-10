@@ -64,10 +64,16 @@
 #define FRAME_BUFFER_SIZE                   (1024)
 //  </h>
 
+//  <h> Multiple Delay Service Configuration
+//      <o>Maximum number of delay objects supported <1-65536>
+//      <i>A dedicated pool is provided to hold all the delay objects. The pool size determined the maximum allowed delay tasks supported at the same time.
+#define DELAY_OBJ_POOL_SIZE                 8
+//  </h>
+
 
 #define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
 #define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
-
+#define USE_SERVICE_MULTIPLE_DELAY          ENABLED
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/

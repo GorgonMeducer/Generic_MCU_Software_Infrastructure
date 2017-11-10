@@ -104,7 +104,7 @@
 #   define NO_INIT              __no_init
 #   define ROOT                 __root
 #   define INLINE               inline
-#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __weak
 #   define RAMFUNC              __ramfunc
 #   define __asm__              __asm
@@ -121,8 +121,8 @@
 #   define EEPROM               const
 #   define NO_INIT              __attribute__(( section( ".bss.noinit"))
 #   define ROOT                 __attribute__((used))    
-#   define INLINE              inline
-#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define INLINE               inline
+#   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
@@ -139,8 +139,8 @@
 #   define EEPROM               const
 #   define NO_INIT              __attribute__( ( section( ".bss.noinit"),zero_init) )
 #   define ROOT                 __attribute__((used))    
-#   define INLINE              __inline
-#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define INLINE               __inline
+#   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
@@ -158,8 +158,8 @@
 #   define EEPROM               const
 #   define NO_INIT              __attribute__( ( section( ".bss.noinit")) )
 #   define ROOT                 __attribute__((used))    
-#   define INLINE              __inline
-#   define ALWAYS_IN_LINE       __attribute__((always_inline))
+#   define INLINE               __inline
+#   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
