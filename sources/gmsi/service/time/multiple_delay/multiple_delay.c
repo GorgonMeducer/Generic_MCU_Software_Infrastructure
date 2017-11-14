@@ -282,7 +282,10 @@ static void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
         } else {
 
             do {
-                class_internal(this.ptHighPriorityDelayList, ptTarget, multiple_delay_item_t);
+                class_internal( this.ptHighPriorityDelayList, 
+                                ptTarget, 
+                                multiple_delay_item_t);
+                                
                 if (target.wTargetTime <= this.wCounter) {
                     //! timeout detected
                     LIST_STACK_POP(this.ptHighPriorityDelayList, ptTarget);
@@ -338,7 +341,7 @@ static bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG )
         
         
         
-        return init_fsm(multiple_delay_task, 
+        return NULL != init_fsm(multiple_delay_task, 
                         &base_obj(fsm(multiple_delay_task)), 
                         args(ptObj));
     } while(false);
@@ -381,7 +384,7 @@ fsm_implementation(multiple_delay_task)
             target.wOldCounter = target.wSavedCounter;
         )
             
-        case CHECK_LIST: {
+        state( CHECK_LIST,
             do {
                 if (NULL == target.ptDelayList) {
                     break;
@@ -414,12 +417,10 @@ fsm_implementation(multiple_delay_task)
                     }
                 } while(true);
                 
-                
-                
             } while(false);
                 
             update_state_to(RAISE_NORMAL_PRIORITY_EVENT);
-        }
+        )
             
         privilege_state(RAISE_NORMAL_PRIORITY_EVENT,
             do {

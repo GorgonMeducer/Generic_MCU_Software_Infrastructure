@@ -93,11 +93,11 @@ typedef struct {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 //! buffer pointer
-NO_INIT uint8_t *s_pchBuffer;
+NO_INIT static uint8_t *s_pchBuffer;
 //! receiver package header
-NO_INIT uint8_t s_chHead;
+NO_INIT static uint8_t s_chHead;
 //! receiver package size
-NO_INIT uint16_t s_hwBufferSize;
+NO_INIT static uint16_t s_hwBufferSize;
 /*============================ PROTOTYPES ====================================*/
 
 /*----------------------------------------------------------------------------*

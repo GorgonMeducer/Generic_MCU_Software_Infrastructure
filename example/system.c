@@ -99,7 +99,7 @@ static void app_2000ms_delay_timeout_event_handler(multiple_delay_report_status_
     
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                2000,                                           //!< request delay 1s
+                                2000,                                           //!< request delay 2000ms
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
                                 NULL,                                           //!< no tag
                                 &app_2000ms_delay_timeout_event_handler);       //!< timout event handler
@@ -116,7 +116,7 @@ static void app_3000ms_delay_timeout_event_handler(multiple_delay_report_status_
     
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                3000,                                           //!< request delay 1s
+                                3000,                                           //!< request delay 3000ms
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
                                 NULL,                                           //!< no tag
                                 &app_3000ms_delay_timeout_event_handler);       //!< timout event handler
@@ -132,7 +132,7 @@ static void app_1500ms_delay_timeout_event_handler(multiple_delay_report_status_
     
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                1500,                                           //!< request delay 1s
+                                1500,                                           //!< request delay 1500ms
                                 MULTIPLE_DELAY_NORMAL_PRIORITY,                 //!< priority is normal
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
@@ -157,21 +157,21 @@ static void app_init(void)
     } while(false);
     
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                2000,                                           //!< request delay 1s
+                                2000,                                           //!< request delay 2000ms
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
                                 NULL,                                           //!< no tag
                                 &app_2000ms_delay_timeout_event_handler);           //!< timout event handler
                                 
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                3000,                                           //!< request delay 1s
+                                3000,                                           //!< request delay 3000ns
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
                                 NULL,                                           //!< no tag
                                 &app_3000ms_delay_timeout_event_handler);        //!< timout event handler
                                 
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                1500,                                           //!< request delay 1s
+                                1500,                                           //!< request delay 1500ms
                                 MULTIPLE_DELAY_NORMAL_PRIORITY,                 //!< priority is normal
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler

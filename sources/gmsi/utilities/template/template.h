@@ -34,7 +34,7 @@
         } while(0)                                
 #define LIST_STACK_PUSH(__P_TOP, __P_NODE)                                      \
             __LIST_STACK_PUSH((__P_TOP), (__P_NODE))
-#define LIST_INSERT_AFTER(__P_TARGET, __P_NODE)                                  \
+#define LIST_INSERT_AFTER(__P_TARGET, __P_NODE)                                 \
             __LIST_STACK_PUSH((__P_TARGET), (__P_NODE))
         
 #define __LIST_STACK_POP(__P_TOP, __P_NODE)                                     \
