@@ -46,6 +46,8 @@
             ((__single_list_node_t *)(__P_NODE))->ptNext = NULL;                \
         } while(0)                                 
 #define LIST_STACK_POP(__P_TOP, __P_NODE)    __LIST_STACK_POP((__P_TOP), (__P_NODE))
+#define LIST_REMOVE_AFTER(__P_TARGET, __P_NODE)                                 \
+            LIST_STACK_POP((__P_TARGET), (__P_NODE))
         
         
 #define __LIST_QUEUE_ENQUEUE(__HEAD, __TAIL, __ITEM)                            \
