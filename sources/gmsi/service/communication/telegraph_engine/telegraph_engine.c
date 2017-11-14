@@ -27,10 +27,10 @@ declare_class(telegraph_t)
 //! \name telegraph report status
 //! @{
 typedef enum {
-    TELEGRAPH_ERROR     = -1,                   //!< error detected during checking
-    TELEGRAPH_RECEIVED  = 0,                    //!< expected telegraph is received
-    TELEGRAPH_TIMEOUT,                          //!< timeout
-    TELEGRAPH_CANCELLED,                        //!< telegraph is cancelled by user
+    TELEGRAPH_ERROR     = -1,                                                   //!< error detected during checking
+    TELEGRAPH_RECEIVED  = 0,                                                    //!< expected telegraph is received
+    TELEGRAPH_TIMEOUT,                                                          //!< timeout
+    TELEGRAPH_CANCELLED,                                                        //!< telegraph is cancelled by user
 } telegraph_report_t;
 //! @}
 

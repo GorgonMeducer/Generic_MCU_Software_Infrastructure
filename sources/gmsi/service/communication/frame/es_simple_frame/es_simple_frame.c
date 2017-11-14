@@ -197,23 +197,23 @@ bool es_simple_frame_init(
     do {
 
         
-        if (!init_fsm(es_simple_frame_decoder, 
+        if (NULL != init_fsm(es_simple_frame_decoder, 
                         ref_obj_as( this, fsm(es_simple_frame_decoder)), 
                         args(ptCFG->ptPipe, ptCFG->fnParser),
                         obj_convert_as((*ptCFG), mem_block_t))) {
             break;
         }
-        if (!init_fsm(es_simple_frame_encoder, 
+        if (NULL != init_fsm(es_simple_frame_encoder, 
                     ref_obj_as( this, fsm(es_simple_frame_encoder)), 
                     args(ptCFG->ptPipe))) {
             break;
         }             
-        if (!init_fsm(es_simple_frame_encoder_wrapper, 
+        if (NULL != init_fsm(es_simple_frame_encoder_wrapper, 
                     ref_obj_as( this, fsm(es_simple_frame_encoder_wrapper)), 
                     args(ptFrame))) {
             break;
         } 
-        if (!init_fsm(es_simple_frame_decoder_wrapper, 
+        if (NULL != init_fsm(es_simple_frame_decoder_wrapper, 
                     ref_obj_as( this, fsm(es_simple_frame_decoder_wrapper)), 
                     args(ptFrame))) {
             break;

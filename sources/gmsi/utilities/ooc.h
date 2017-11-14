@@ -88,21 +88,23 @@
 #define WHICH(...)                  struct { __VA_ARGS__ };
 
 
-#define DECLARE_CLASS(__NAME)                   \
+#define DECLARE_CLASS(__NAME)                                                   \
      typedef union __NAME __NAME;                
 
-#define __DEF_CLASS(__NAME,...)                 \
-    typedef struct __##__NAME __##__NAME;       \
-    struct __##__NAME {                         \
+#define __DEF_CLASS(__NAME,...)                                                 \
+    typedef struct __##__NAME __##__NAME;                                       \
+    struct __##__NAME {                                                         \
         __VA_ARGS__
 #define DEF_CLASS(__NAME, ...)      __DEF_CLASS(__NAME, __VA_ARGS__)
 
           
-#define __END_DEF_CLASS(__NAME, ...)            \
-    };                                          \
-    union __NAME {                              \
-        __VA_ARGS__                             \
-        uint_fast8_t __NAME##__chMask[(sizeof(__##__NAME) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];\
+#define __END_DEF_CLASS(__NAME, ...)                                            \
+    };                                                                          \
+    union __NAME {                                                              \
+        __VA_ARGS__                                                             \
+        uint_fast8_t __NAME##__chMask[                                          \
+                (sizeof(__##__NAME) + sizeof(uint_fast8_t) - 1)                 \
+            /   sizeof(uint_fast8_t)];                                          \
     };
 #define END_DEF_CLASS(__NAME, ...)  __END_DEF_CLASS(__NAME, __VA_ARGS__)
 
@@ -111,34 +113,34 @@
  *! \param __OBJ target object
  *! \param ... initialization list
  */
-#define __INIT_CLASS_OBJ(__TYPE, __OBJ, ...)        \
-            union {               \
-                CLASS(__TYPE) __##__OBJ;            \
-                __TYPE;                     \
-            } __OBJ = {                             \
-                .__##__OBJ = __VA_ARGS__            \
+#define __INIT_CLASS_OBJ(__TYPE, __OBJ, ...)                                    \
+            union {                                                             \
+                CLASS(__TYPE) __##__OBJ;                                        \
+                __TYPE;                                                         \
+            } __OBJ = {                                                         \
+                .__##__OBJ = __VA_ARGS__                                        \
             }
-#define INIT_CLASS_OBJ(__TYPE, __OBJ, ...)          \
+#define INIT_CLASS_OBJ(__TYPE, __OBJ, ...)                                      \
             __INIT_CLASS_OBJ(__TYPE, __OBJ, __VA_ARGS__)
 
-#define __EXTERN_CLASS_OBJ( __TYPE, __OBJ )         \
-            extern union {                          \
-                CLASS(__TYPE) __##__OBJ;            \
-                __TYPE;                             \
+#define __EXTERN_CLASS_OBJ( __TYPE, __OBJ )                                     \
+            extern union {                                                      \
+                CLASS(__TYPE) __##__OBJ;                                        \
+                __TYPE;                                                         \
             }__OBJ;
-#define EXTERN_CLASS_OBJ(__TYPE, __OBJ)             \
+#define EXTERN_CLASS_OBJ(__TYPE, __OBJ)                                         \
             __EXTERN_CLASS_OBJ( __TYPE, __OBJ )
 
 
-#define __EXTERN_CLASS(__NAME,...)                  \
-    union __NAME {                                  \
-        __VA_ARGS__                                 \
-        uint_fast8_t __NAME##__chMask[(sizeof(struct{\
+#define __EXTERN_CLASS(__NAME,...)                                              \
+    union __NAME {                                                              \
+        __VA_ARGS__                                                             \
+        uint_fast8_t __NAME##__chMask[(sizeof(struct{                           \
         __VA_ARGS__
 #define EXTERN_CLASS(__NAME, ...)   __EXTERN_CLASS(__NAME, __VA_ARGS__)
 
-#define END_EXTERN_CLASS(__NAME, ...)               \
-        }) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];\
+#define END_EXTERN_CLASS(__NAME, ...)                                           \
+        }) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];                 \
     };
 
 /*! \note Support for protected members
@@ -163,33 +165,33 @@
 
 //! \name interface definition
 //! @{
-#define DEF_INTERFACE(__NAME,...)                   \
-            typedef struct __NAME __NAME;           \
-            __VA_ARGS__                             \
+#define DEF_INTERFACE(__NAME,...)                                               \
+            typedef struct __NAME __NAME;                                       \
+            __VA_ARGS__                                                         \
             struct __NAME {
 
-#define END_DEF_INTERFACE(__NAME)                   \
+#define END_DEF_INTERFACE(__NAME)                                               \
             };
 //! @}
 
 //! \name structure definition
 //! @{
-#define DEF_STRUCTURE(__NAME,...)                   \
-            typedef struct __NAME __NAME;           \
-            __VA_ARGS__                             \
+#define DEF_STRUCTURE(__NAME,...)                                               \
+            typedef struct __NAME __NAME;                                       \
+            __VA_ARGS__                                                         \
             struct __NAME {
 
-#define END_DEF_STRUCTURE(__NAME)                   \
+#define END_DEF_STRUCTURE(__NAME)                                               \
             };
 //! @}
 
 
 //! \brief macro for inheritance
 
-#define INHERIT_EX(__TYPE, __NAME)  \
-            union {                 \
-                __TYPE  __NAME;     \
-                __TYPE;             \
+#define INHERIT_EX(__TYPE, __NAME)                                              \
+            union {                                                             \
+                __TYPE  __NAME;                                                 \
+                __TYPE;                                                         \
             };
 
 /*! \note When deriving a new class from a base class, you should use INHERIT 
@@ -268,9 +270,9 @@ DECLARE_CLASS( DELEGATE_HANDLE )
 //! \name general event handler
 //! @{
 EXTERN_CLASS( DELEGATE_HANDLE )
-    DELEGATE_HANDLE_FUNC   *fnHandler;      //!< event handler
-    void                   *pArg;           //!< Argument
-    DELEGATE_HANDLE        *ptNext;         //!< next 
+    DELEGATE_HANDLE_FUNC   *fnHandler;                                          //!< event handler
+    void                   *pArg;                                               //!< Argument
+    DELEGATE_HANDLE        *ptNext;                                             //!< next 
 END_EXTERN_CLASS(DELEGATE_HANDLE)
 //! @}
 

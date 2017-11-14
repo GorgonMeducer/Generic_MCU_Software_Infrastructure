@@ -129,10 +129,8 @@ def_interface(i_multiple_delay_t)
     
 end_def_interface(i_multiple_delay_t)
 
-/*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-
+/*============================ GLOBAL VARIABLES ==============================*/
 extern const i_multiple_delay_t MULTIPLE_DELAY;
     
 #endif
