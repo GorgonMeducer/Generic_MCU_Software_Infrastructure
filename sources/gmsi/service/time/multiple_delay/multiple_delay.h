@@ -118,11 +118,15 @@ typedef struct {
 def_interface(i_multiple_delay_t)
     bool        (*Init)            (multiple_delay_t *, multiple_delay_cfg_t *);
     fsm_rt_t    (*Task)            (multiple_delay_t *);
-    bool        (*RequestDelay)    (multiple_delay_t *                         , 
+    
+    multiple_delay_item_t * 
+                (*RequestDelay)    (multiple_delay_t *                         , 
                                     uint32_t wDelay                            ,
                                     multiple_delay_request_priority_t tPriority,//!< request priority
                                     void *pTag                                 ,//!< object passed to timeout event handler
                                     timeout_event_handler_t *fnHandler);
+    void        (*Cancel)          (multiple_delay_t *ptObj, 
+                                    multiple_delay_item_t *ptItem);
     struct {
         void    (*TimerTickService)(multiple_delay_t *);
     } Dependent;
