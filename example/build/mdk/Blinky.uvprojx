@@ -620,6 +620,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
             </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1414,6 +1424,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
             </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2071,6 +2091,16 @@
               <FileName>multiple_delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2730,6 +2760,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
             </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3387,6 +3427,16 @@
               <FileName>multiple_delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
             </File>
           </Files>
         </Group>
