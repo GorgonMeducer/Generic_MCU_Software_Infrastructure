@@ -19,9 +19,15 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_STREAM_TO_BLOCK == ENABLED
-#include "..\epool\epool.h"
+#include "..\block_queue\block_queue.h"
 
+#include <string.h>
 /*============================ MACROS ========================================*/
+
+#if USE_SERVICE_BLOCK_QUEUE != ENABLED
+#error The Stream2Block service requires the Block Queue Service, please set USE_SERVICE_BLOCK_QUEUE to ENABLED in top app_cfg.h
+#endif
+
 
 #ifndef __SB_ATOM_ACCESS
 #   define __SB_ATOM_ACCESS(...)            SAFE_ATOM_CODE(__VA_ARGS__)
@@ -30,54 +36,34 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-//! \brief fixed memory block used as stream buffer
-//! @{
-DECLARE_CLASS(stream_buffer_block_t)
-DEF_CLASS(stream_buffer_block_t)
-    INHERIT(__single_list_node_t)
-    uint32_t wBlockSize;
-    union {
-        uint32_t wSize;                                 //!< memory block
-        uint32_t wBuffer;
-    };
-END_DEF_CLASS(stream_buffer_block_t);
-//! @}
-
-
-DEF_EPOOL(StreamBufferBlock, stream_buffer_block_t)
-
-END_DEF_EPOOL(StreamBufferBlock)
 
 //! \note no thread safe queue is required
 DEF_QUEUE_U8(StreamBufferQueue, uint_fast16_t, bool)
     
 END_DEF_QUEUE_U8(StreamBufferQueue)
 
-
-
 //! \brief stream buffer control block
 //! @{
-DECLARE_CLASS(stream_buffer_t)
+declare_class(stream_buffer_t)
 
 typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 
-DEF_CLASS(stream_buffer_t, 
-    WHICH(   
-        INHERIT(pool_t)                                                 //!< inherit from pool StreamBufferBlock
-        INHERIT(QUEUE(StreamBufferQueue))                               //!< inherit from queue StreamBufferQueue
+def_class(stream_buffer_t, 
+    which(   
+        inherit(block_queue_t)                                          //!< inherit from block_queue_t
+        inherit(QUEUE(StreamBufferQueue))                               //!< inherit from queue StreamBufferQueue
     )) 
 
     bool                                    bIsOutput;                  //!< direction
     bool                                    bIsQueueInitialised;        //!< Indicate whether the queue has been inialised or not
-    stream_buffer_block_t                  *ptListHead;                 //!< Queue Head
-    stream_buffer_block_t                  *ptListTail;                 //!< Queue Tail
-    stream_buffer_block_t                  *ptUsedByQueue;              //!< buffer block used by queue
-    stream_buffer_block_t                  *ptUsedByOutside;            //!< buffer block lent out  
+    
+    block_t                                *ptUsedByQueue;              //!< buffer block used by queue
+    block_t                                *ptUsedByOutside;            //!< buffer block lent out  
     stream_buffer_req_event_t              *fnRequestSend;              //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
 
-END_DEF_CLASS(stream_buffer_t)
+end_def_class(stream_buffer_t)
 //! @}
 
 typedef struct {
@@ -90,7 +76,7 @@ typedef struct {
     
 }stream_buffer_cfg_t;
 
-DEF_INTERFACE(i_stream_buffer_t)
+def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
@@ -107,7 +93,7 @@ DEF_INTERFACE(i_stream_buffer_t)
         void    (*Return)       (stream_buffer_t *, void *);
     } Block;
 
-END_DEF_INTERFACE(i_stream_buffer_t)
+end_def_interface(i_stream_buffer_t)
     
 
 /*============================ LOCAL VARIABLES ===============================*/
@@ -156,7 +142,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
 {
     bool bResult = false;
     do {
-        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
+        class_internal(ptObj, ptThis, stream_buffer_t);
         
         if (NULL == ptObj || NULL == ptCFG) {
             break;
@@ -166,8 +152,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
             do {
                 this.bIsOutput = (ptCFG->tDirection == OUTPUT_STREAM);
                 this.bIsQueueInitialised = false;
-                this.ptListHead = NULL;
-                this.ptListTail = NULL;
+
                 this.ptUsedByQueue = NULL;
                 this.ptUsedByOutside = NULL;
                 if (this.bIsOutput) {
@@ -175,10 +160,8 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
                 } else {
                     this.fnRequestReceive = ptCFG->fnRequestHandler;
                 }
-                //! initialise pool
-                if (!pool_init(REF_OBJ_AS(this, pool_t))) {
-                    break;
-                }                
+                               
+                block_queue_init(ref_obj_as(this, block_queue_t));
                 
                 bResult = true;
             } while(false);
@@ -187,31 +170,55 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
     
     return bResult;
 }
+#if false
+
+static bool block_queue_init(block_queue_t *ptObj)
+{
+    class_internal(ptObj, ptThis, block_queue_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        
+        memset(ptThis, 0, sizeof(block_queue_t));
+        
+        //! initialise pool
+        if (!pool_init(REF_OBJ_AS(this, pool_t))) {
+            break;
+        } 
+        
+        return true;
+    } while(false);
+    
+    return false;
+    
+}
 
 static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
 {
-    CLASS(stream_buffer_block_t) *ptThis = (CLASS(stream_buffer_block_t) *)ptItem;
+    CLASS(block_t) *ptThis = (CLASS(block_t) *)ptItem;
     if (NULL == ptItem) {
         return;
     }
     
-    this.wBlockSize = hwItemSize - sizeof(stream_buffer_block_t);
+    this.wBlockSize = hwItemSize - sizeof(block_t);
     this.wSize = hwItemSize;
 }
 
-static bool stream_buffer_add_heap( stream_buffer_t *ptObj, 
+static bool block_queue_add_heap(   block_queue_t *ptObj, 
                                     void *pBuffer, 
                                     uint_fast16_t hwSize, 
                                     uint_fast16_t hwItemSize)
 {
     bool bResult = false;
+    class_internal(ptObj, ptThis, block_queue_t);
+    
     do {
-        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-        
-        if (    (NULL == ptObj) 
+        if (    (NULL == ptThis) 
             ||  (NULL == pBuffer)
             ||  (hwSize < hwItemSize) 
-            ||  (hwItemSize < sizeof(stream_buffer_block_t))
+            ||  (hwItemSize < sizeof(block_t))
             ||  (0 == hwItemSize)) {
             break;
         } 
@@ -229,30 +236,27 @@ static bool stream_buffer_add_heap( stream_buffer_t *ptObj,
     return bResult;
 }
 
-static void append_item_to_list(stream_buffer_t *ptObj, stream_buffer_block_t *ptItem)
+static void append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
 {
-    CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
+    class_internal(ptObj, ptThis, block_queue_t);
     
-#if false
-    if (NULL == ptObj || NULL == ptItem) {
+    if (NULL == ptThis || NULL == ptItem) {
         return;
     }
-#endif
+
     __SB_ATOM_ACCESS (
         LIST_QUEUE_ENQUEUE(this.ptListHead, this.ptListTail, ptItem);
     )
 }
 
-static stream_buffer_block_t *get_item_from_list(stream_buffer_t *ptObj)
+static block_t *get_item_from_list(block_queue_t *ptObj)
 {
-    CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-    stream_buffer_block_t *ptResult;
-#if false
-    if (NULL == ptObj) {
-        return;
+    class_internal(ptObj, ptThis, block_queue_t);
+    block_t *ptResult;
+
+    if (NULL == ptThis) {
+        return NULL;
     }
-#endif
-    
 
     __SB_ATOM_ACCESS (
         LIST_QUEUE_DEQUEUE(this.ptListHead, this.ptListTail, ptResult);
@@ -261,35 +265,58 @@ static stream_buffer_block_t *get_item_from_list(stream_buffer_t *ptObj)
     return ptResult;
 }
 
+#endif
+
+static bool stream_buffer_add_heap( stream_buffer_t *ptObj, 
+                                    void *pBuffer, 
+                                    uint_fast16_t hwSize, 
+                                    uint_fast16_t hwItemSize)
+{
+    class_internal(ptObj, ptThis, stream_buffer_t);
+    
+    if (NULL == ptThis) {
+        return false;
+    }
+    
+    return block_queue_add_heap(    ref_obj_as(this, block_queue_t), 
+                                    pBuffer, 
+                                    hwSize, 
+                                    hwItemSize );
+}
+
+
+
 static void *get_next_block(stream_buffer_t *ptObj)
 {
     void *pBlock = NULL;
+    class_internal(ptObj, ptThis, stream_buffer_t);
     
     do {
-        if (NULL == ptObj) {
+        
+        if (NULL == ptThis) {
             break;
         }
-        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-        stream_buffer_block_t *ptItem = NULL;
+
+        block_t *ptItem = NULL;
         
         if (this.bIsOutput) {
             //! find the next block from the list
-            ptItem = get_item_from_list(ptObj);
+            ptItem = get_item_from_list( ref_obj_as(this, block_queue_t));
         } else {
             
             //! get a new block
-            ptItem = (stream_buffer_block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+            ptItem = (block_t *)pool_new( REF_OBJ_AS(this, pool_t));
             
             if (NULL != ptItem) {
                 //! reset block size
-                TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wSize = 
-                    TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wBlockSize;
+                reset_block_size(ptItem);
+                
             }
         }
         
         this.ptUsedByOutside = ptItem;
         if (NULL != ptItem) {
-            pBlock = (void *)&(((CLASS(stream_buffer_block_t) *)ptItem)->wBuffer);
+            pBlock = get_block_buffer(ptItem);
         }
     } while(false);
 
@@ -298,20 +325,20 @@ static void *get_next_block(stream_buffer_t *ptObj)
 
 static void return_block(stream_buffer_t *ptObj, void *ptOld)
 {
+    class_internal(ptObj, ptThis, stream_buffer_t);
     do {
-        if (NULL == ptObj || NULL == ptOld) {
+        if (NULL == ptThis || NULL == ptOld) {
             break;
         }
-        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-        stream_buffer_block_t *ptPrevious = 
-                            (stream_buffer_block_t *)((size_t)ptOld -                   //!< get the block header
-                            (sizeof(stream_buffer_block_t) - sizeof(uint32_t)));        //!< calculate offset for stream_buffer_block_t
+        
+        block_t *ptPrevious = 
+                            (block_t *)((size_t)ptOld -                   //!< get the block header
+                            (sizeof(block_t) - sizeof(uint32_t)));        //!< calculate offset for block_t
             
         if (this.bIsOutput) {
             
             //! reset block size
-            TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wSize = 
-                TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wBlockSize;
+            reset_block_size(ptPrevious);
             //! stream is used for output
             pool_free(REF_OBJ_AS(this, pool_t), ptPrevious);
             
@@ -319,7 +346,7 @@ static void return_block(stream_buffer_t *ptObj, void *ptOld)
 
             //! stream is used for input
             //! add block to the list
-            append_item_to_list(ptObj, ptPrevious);
+            append_item_to_list( ref_obj_as(this, block_queue_t), ptPrevious);
         }
     } while(false);
 
@@ -328,17 +355,18 @@ static void return_block(stream_buffer_t *ptObj, void *ptOld)
 static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
 {
     void *pBlock = NULL;
+    class_internal(ptObj, ptThis, stream_buffer_t);
     
     do {
-        if (NULL == ptObj) {
+        if (NULL == ptThis) {
             break;
         }
-        CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-        stream_buffer_block_t *ptItem = NULL;
-        stream_buffer_block_t *ptPrevious;
+        
+        block_t *ptItem = NULL;
+        block_t *ptPrevious;
         if (NULL != ptOld) {
-            ptPrevious = (stream_buffer_block_t *)((size_t)ptOld -                      //!< get the block header
-                            (sizeof(stream_buffer_block_t) - sizeof(uint32_t)));        //!< calculate offset for stream_buffer_block_t
+            ptPrevious = (block_t *)((size_t)ptOld -                      //!< get the block header
+                            (sizeof(block_t) - sizeof(uint32_t)));        //!< calculate offset for block_t
             
         }
         
@@ -346,32 +374,30 @@ static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
             
             if (NULL != ptOld) {
                 //! reset block size
-                TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wSize = 
-                    TYPE_CONVERT( ptPrevious, CLASS(stream_buffer_block_t) ).wBlockSize;
+                reset_block_size(ptPrevious);
                 //! stream is used for output
                 pool_free(REF_OBJ_AS(this, pool_t), ptPrevious);
             }
             //! find the next block from the list
-            ptItem = get_item_from_list(ptObj);
+            ptItem = get_item_from_list( ref_obj_as(this, block_queue_t));
         } else {
             if (NULL != ptOld) {
                 //! stream is used for input
                 //! add block to the list
-                append_item_to_list(ptObj, ptPrevious);
+                append_item_to_list(ref_obj_as(this, block_queue_t), ptPrevious);
             }
             //! get a new block
-            ptItem = (stream_buffer_block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+            ptItem = (block_t *)pool_new( REF_OBJ_AS(this, pool_t));
             
             if (NULL != ptItem) {
                 //! reset block size
-                TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wSize = 
-                    TYPE_CONVERT( ptItem, CLASS(stream_buffer_block_t) ).wBlockSize;
+                reset_block_size(ptItem);
             }
         }
         
         this.ptUsedByOutside = ptItem;
         if (NULL != ptItem) {
-            pBlock = (void *)&(((CLASS(stream_buffer_block_t) *)ptItem)->wBuffer);
+            pBlock = get_block_buffer(ptItem);
         }
     } while(false);
 
@@ -380,18 +406,18 @@ static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
 
 static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
 {
-    CLASS(stream_buffer_t) *ptThis = (CLASS(stream_buffer_t) *)ptObj;
-    CLASS(stream_buffer_block_t) *ptBlock;
+    class_internal(ptObj, ptThis, stream_buffer_t);
+    block_t *ptBlock;
     
     if (bIsStreamForRead) {
         
         if (NULL != this.ptUsedByQueue) {
-            TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wSize = 
-                    TYPE_CONVERT( this.ptUsedByQueue, CLASS(stream_buffer_block_t) ).wBlockSize;
+            reset_block_size(this.ptUsedByQueue);
+
             pool_free( REF_OBJ_AS(this, pool_t), this.ptUsedByQueue);
         }
         //! fetch a block from list, and initialise it as a full queue
-        ptBlock = (CLASS(stream_buffer_block_t) *)get_item_from_list(ptObj);
+        ptBlock = get_item_from_list( ref_obj_as(this, block_queue_t) );
         
         if ( NULL == this.ptUsedByOutside) {
             if (NULL != this.fnRequestReceive) {
@@ -407,10 +433,12 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             }
             
             //! use queue count as actual size
-            TYPE_CONVERT(this.ptUsedByQueue, CLASS(stream_buffer_block_t)).wSize = 
-                GET_QUEUE_COUNT( StreamBufferQueue, REF_OBJ_AS(this, QUEUE(StreamBufferQueue)));
-    
-            append_item_to_list( ptObj, this.ptUsedByQueue);
+            set_block_size( this.ptUsedByQueue, 
+                            GET_QUEUE_COUNT( StreamBufferQueue, 
+                                             REF_OBJ_AS(this, 
+                                                QUEUE(StreamBufferQueue))));
+            
+            append_item_to_list( ref_obj_as(this, block_queue_t), this.ptUsedByQueue);
             
             
             if (NULL == this.ptUsedByOutside ) {
@@ -423,10 +451,11 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         
         
         //! get a new block from heap and initialise it as an empty queue
-        ptBlock = (CLASS(stream_buffer_block_t) *)pool_new( REF_OBJ_AS(this, pool_t));
+        ptBlock = pool_new( REF_OBJ_AS(this, pool_t));
+        
         if (NULL != ptBlock) {
             //! reset block size
-            ptBlock->wSize = ptBlock->wBlockSize;
+            reset_block_size(ptBlock);
         }
         
     }
@@ -436,13 +465,13 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         return false;
     }
     
-    this.ptUsedByQueue = (stream_buffer_block_t *)ptBlock;
+    this.ptUsedByQueue = (block_t *)ptBlock;
     
-    QUEUE_INIT_EX(  StreamBufferQueue,                              //!< queue name
-                    REF_OBJ_AS(this, QUEUE(StreamBufferQueue)),     //!< queue obj
-                    (uint8_t *)(&(ptBlock->wBuffer)+1),             //!< buffer
-                    ptBlock->wSize,                                 //!< buffer size
-                    bIsStreamForRead);                              //!< intialize method (initialise as full or initialise as empty)
+    QUEUE_INIT_EX(  StreamBufferQueue,                                          //!< queue name
+                    REF_OBJ_AS(this, QUEUE(StreamBufferQueue)),                 //!< queue obj
+                    (uint8_t *)((uint32_t *)get_block_buffer(ptBlock)+1),       //!< buffer
+                    get_block_size(ptBlock),                                    //!< buffer size
+                    bIsStreamForRead);                                          //!< intialize method (initialise as full or initialise as empty)
     
     
     this.bIsQueueInitialised = true;
@@ -465,7 +494,7 @@ static void stream_flush(stream_buffer_t *ptObj)
             //! queue is empty
             this.bIsQueueInitialised = false;
         }
-        while( NULL != TYPE_CONVERT( &(this.ptUsedByOutside), stream_buffer_block_t * volatile));
+        while( NULL != TYPE_CONVERT( &(this.ptUsedByOutside), block_t * volatile));
     }
 }
 

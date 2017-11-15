@@ -23,6 +23,7 @@
 
 #if USE_SERVICE_STREAM_TO_BLOCK == ENABLED
 #include "..\epool\epool.h"
+#include "..\block_queue\block_queue.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -32,9 +33,9 @@
  *----------------------------------------------------------------------------*/
 #define __STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                            \
     DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    DEF_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))   \
+    DEF_CLASS(__NAME##_stream_buffer_block_t, INHERIT(block_t))                 \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    END_DEF_CLASS(__NAME##_stream_buffer_block_t,INHERIT(stream_buffer_block_t))\
+    END_DEF_CLASS(__NAME##_stream_buffer_block_t,INHERIT(block_t))              \
     typedef struct {                                                            \
         uint32_t wSize;                                                         \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
@@ -69,10 +70,10 @@
     
 #define __EXTERN_STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                     \
     DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(stream_buffer_block_t))\
+    EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(block_t))              \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
     END_EXTERN_CLASS(__NAME##_stream_buffer_block_t,                            \
-                        INHERIT(stream_buffer_block_t))                         \
+                        INHERIT(block_t))                                       \
     typedef struct {                                                            \
         uint32_t wSize;                                                         \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
@@ -408,52 +409,36 @@
     
 /*============================ TYPES =========================================*/
 
-//! \brief fixed memory block used as stream buffer
-//! @{
-DECLARE_CLASS(stream_buffer_block_t)
-EXTERN_CLASS(stream_buffer_block_t)
-    INHERIT(__single_list_node_t)
-    uint32_t wBlockSize;
-    union {
-        uint32_t wSize;                                 //!< memory block
-        uint32_t wBuffer;
-    };
-END_EXTERN_CLASS(stream_buffer_block_t)
-//! @}
-
-
-EXTERN_EPOOL(StreamBufferBlock, stream_buffer_block_t)
-
-END_EXTERN_EPOOL(StreamBufferBlock)
 
 //! \note no thread safe queue is required
 EXTERN_QUEUE_U8(StreamBufferQueue, uint_fast16_t, bool)
     
 END_EXTERN_QUEUE_U8(StreamBufferQueue)
 
+
+
 //! \brief stream buffer control block
 //! @{
-DECLARE_CLASS(stream_buffer_t)
+declare_class(stream_buffer_t)
 
 typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 
-EXTERN_CLASS(stream_buffer_t, 
-    WHICH(   
-        INHERIT(pool_t)                                                 //!< inherit from pool StreamBufferBlock
-        INHERIT(QUEUE(StreamBufferQueue))                               //!< inherit from queue StreamBufferQueue
+extern_class(stream_buffer_t, 
+    which(   
+        inherit(block_queue_t)                                                  //!< inherit from block_queue_t
+        inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
     )) 
 
-    bool                                    bIsOutput;                  //!< direction
-    bool                                    bIsQueueInitialised;        //!< Indicate whether the queue has been inialised or not
-    stream_buffer_block_t                  *ptListHead;                 //!< Queue Head
-    stream_buffer_block_t                  *ptListTail;                 //!< Queue Tail
-    stream_buffer_block_t                  *ptUsedByQueue;              //!< buffer block used by queue
-    stream_buffer_block_t                  *ptUsedByOutside;            //!< buffer block lent out  
-    stream_buffer_req_event_t              *fnRequestSend;              //!< callback for triggering the first output transaction
-    stream_buffer_req_event_t              *fnRequestReceive;    
+    bool                                    bIsOutput;                          //!< direction
+    bool                                    bIsQueueInitialised;                //!< Indicate whether the queue has been inialised or not
+    
+    block_t                                *ptUsedByQueue;                      //!< buffer block used by queue
+    block_t                                 *ptUsedByOutside;                   //!< buffer block lent out  
+    stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
+    stream_buffer_req_event_t              *fnRequestReceive; 
 
-END_EXTERN_CLASS(stream_buffer_t)
+end_extern_class(stream_buffer_t)
 //! @}
 
 typedef struct {
@@ -466,14 +451,14 @@ typedef struct {
     
 }stream_buffer_cfg_t;
 
-DEF_INTERFACE(i_stream_buffer_t)
+def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
         
     struct {
         bool    (*Read)         (stream_buffer_t *, uint8_t *);
-        bool    (*Write)         (stream_buffer_t *, uint8_t);
+        bool    (*Write)        (stream_buffer_t *, uint8_t);
         void    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
@@ -483,7 +468,7 @@ DEF_INTERFACE(i_stream_buffer_t)
         void    (*Return)       (stream_buffer_t *, void *);
     } Block;
 
-END_DEF_INTERFACE(i_stream_buffer_t)
+end_def_interface(i_stream_buffer_t)
     
 /*============================ GLOBAL VARIABLES ==============================*/
     

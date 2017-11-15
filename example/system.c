@@ -155,7 +155,7 @@ static void app_init(void)
                                 sizeof(s_chFrameBuffer)
                             );
     } while(false);
-    
+#if 0
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
                                 2000,                                           //!< request delay 2000ms
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
@@ -175,6 +175,7 @@ static void app_init(void)
                                 MULTIPLE_DELAY_NORMAL_PRIORITY,                 //!< priority is normal
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
+#endif
 }
 
 /*----------------------------------------------------------------------------
@@ -184,8 +185,6 @@ int main (void)
 {
     system_init();
     app_init();
-    
-            
     
     while (true) {
     #if false
@@ -201,7 +200,7 @@ int main (void)
         }
     #endif
         
-        MULTIPLE_DELAY.Task(&s_tDelayService);
+        //MULTIPLE_DELAY.Task(&s_tDelayService);
     }
 }
 
