@@ -630,6 +630,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
             </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1434,6 +1444,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
             </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2101,6 +2121,16 @@
               <FileName>block_queue.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2770,6 +2800,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
             </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3437,6 +3477,16 @@
               <FileName>block_queue.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
             </File>
           </Files>
         </Group>

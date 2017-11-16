@@ -52,6 +52,7 @@ typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 def_class(stream_buffer_t, 
     which(   
         inherit(block_queue_t)                                          //!< inherit from block_queue_t
+        inherit(block_pool_t)
         inherit(QUEUE(StreamBufferQueue))                               //!< inherit from queue StreamBufferQueue
     )) 
 
@@ -162,7 +163,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
                 }
                                
                 block_queue_init(ref_obj_as(this, block_queue_t));
-                
+                block_pool_init(ref_obj_as(this, block_pool_t));
                 bResult = true;
             } while(false);
         )
@@ -170,102 +171,6 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
     
     return bResult;
 }
-#if false
-
-static bool block_queue_init(block_queue_t *ptObj)
-{
-    class_internal(ptObj, ptThis, block_queue_t);
-    
-    do {
-        if (NULL == ptThis) {
-            break;
-        }
-        
-        memset(ptThis, 0, sizeof(block_queue_t));
-        
-        //! initialise pool
-        if (!pool_init(REF_OBJ_AS(this, pool_t))) {
-            break;
-        } 
-        
-        return true;
-    } while(false);
-    
-    return false;
-    
-}
-
-static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
-{
-    CLASS(block_t) *ptThis = (CLASS(block_t) *)ptItem;
-    if (NULL == ptItem) {
-        return;
-    }
-    
-    this.wBlockSize = hwItemSize - sizeof(block_t);
-    this.wSize = hwItemSize;
-}
-
-static bool block_queue_add_heap(   block_queue_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize)
-{
-    bool bResult = false;
-    class_internal(ptObj, ptThis, block_queue_t);
-    
-    do {
-        if (    (NULL == ptThis) 
-            ||  (NULL == pBuffer)
-            ||  (hwSize < hwItemSize) 
-            ||  (hwItemSize < sizeof(block_t))
-            ||  (0 == hwItemSize)) {
-            break;
-        } 
-        
-        bResult =   pool_add_heap_ex (
-                        REF_OBJ_AS(this, pool_t), 
-                        pBuffer, 
-                        hwSize, 
-                        hwItemSize,
-                        &pool_item_init_event_handler
-                    );
-        
-    } while(false);
-    
-    return bResult;
-}
-
-static void append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
-{
-    class_internal(ptObj, ptThis, block_queue_t);
-    
-    if (NULL == ptThis || NULL == ptItem) {
-        return;
-    }
-
-    __SB_ATOM_ACCESS (
-        LIST_QUEUE_ENQUEUE(this.ptListHead, this.ptListTail, ptItem);
-    )
-}
-
-static block_t *get_item_from_list(block_queue_t *ptObj)
-{
-    class_internal(ptObj, ptThis, block_queue_t);
-    block_t *ptResult;
-
-    if (NULL == ptThis) {
-        return NULL;
-    }
-
-    __SB_ATOM_ACCESS (
-        LIST_QUEUE_DEQUEUE(this.ptListHead, this.ptListTail, ptResult);
-    )
-    
-    return ptResult;
-}
-
-#endif
 
 static bool stream_buffer_add_heap( stream_buffer_t *ptObj, 
                                     void *pBuffer, 
@@ -278,7 +183,7 @@ static bool stream_buffer_add_heap( stream_buffer_t *ptObj,
         return false;
     }
     
-    return block_queue_add_heap(    ref_obj_as(this, block_queue_t), 
+    return block_pool_add_heap(    ref_obj_as(this, block_pool_t), 
                                     pBuffer, 
                                     hwSize, 
                                     hwItemSize );
@@ -305,7 +210,7 @@ static void *get_next_block(stream_buffer_t *ptObj)
         } else {
             
             //! get a new block
-            ptItem = (block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+            ptItem = new_block( ref_obj_as(this, block_pool_t));
             
             if (NULL != ptItem) {
                 //! reset block size
@@ -340,7 +245,7 @@ static void return_block(stream_buffer_t *ptObj, void *ptOld)
             //! reset block size
             reset_block_size(ptPrevious);
             //! stream is used for output
-            pool_free(REF_OBJ_AS(this, pool_t), ptPrevious);
+            free_block(ref_obj_as(this, block_pool_t), ptPrevious);
             
         } else {
 
@@ -376,7 +281,7 @@ static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
                 //! reset block size
                 reset_block_size(ptPrevious);
                 //! stream is used for output
-                pool_free(REF_OBJ_AS(this, pool_t), ptPrevious);
+                free_block(ref_obj_as(this, block_pool_t), ptPrevious);
             }
             //! find the next block from the list
             ptItem = get_item_from_list( ref_obj_as(this, block_queue_t));
@@ -387,7 +292,7 @@ static void *request_next_buffer_block(stream_buffer_t *ptObj, void *ptOld)
                 append_item_to_list(ref_obj_as(this, block_queue_t), ptPrevious);
             }
             //! get a new block
-            ptItem = (block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+            ptItem = new_block( ref_obj_as(this, block_pool_t));
             
             if (NULL != ptItem) {
                 //! reset block size
@@ -414,7 +319,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         if (NULL != this.ptUsedByQueue) {
             reset_block_size(this.ptUsedByQueue);
 
-            pool_free( REF_OBJ_AS(this, pool_t), this.ptUsedByQueue);
+            free_block( ref_obj_as(this, block_pool_t), this.ptUsedByQueue);
         }
         //! fetch a block from list, and initialise it as a full queue
         ptBlock = get_item_from_list( ref_obj_as(this, block_queue_t) );
@@ -451,7 +356,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         
         
         //! get a new block from heap and initialise it as an empty queue
-        ptBlock = pool_new( REF_OBJ_AS(this, pool_t));
+        ptBlock = new_block( ref_obj_as(this, block_pool_t));
         
         if (NULL != ptBlock) {
             //! reset block size
