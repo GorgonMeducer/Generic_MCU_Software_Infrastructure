@@ -26,7 +26,7 @@
 #endif
 
 #ifndef DELAY_OBJ_POOL_SIZE
-#   warninig No defined DELAY_OBJ_POOL_SIZE, default value 4 is used
+#   warning No defined DELAY_OBJ_POOL_SIZE, default value 4 is used
 #   define DELAY_OBJ_POOL_SIZE              (4)
 #endif
 
