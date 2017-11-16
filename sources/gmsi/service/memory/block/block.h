@@ -15,42 +15,50 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __BLOCK_QUEUE_H__
-#define __BLOCK_QUEUE_H__
+#ifndef __BLOCK_H__
+#define __BLOCK_H__
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_BLOCK_QUEUE == ENABLED
-#include "..\block\block.h"
+#include "..\epool\epool.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
     
 /*============================ TYPES =========================================*/
 
-//! \brief stream buffer control block
+//! \brief fixed memory block used as stream buffer
 //! @{
-declare_class(stream_buffer_t)
+declare_class(block_t)
+extern_class(block_t)
+    inherit(__single_list_node_t)
+    uint32_t wBlockSize;
+    union {
+        uint32_t wSize;                                                         //!< memory block
+        uint32_t wBuffer;
+    };
+end_extern_class(block_t)
+//! @}
 
-declare_class(block_queue_t)
-extern_class(block_queue_t)                   //!< inherit from pool StreamBufferBlock
-    block_t                  *ptListHead;                                       //!< Queue Head
-    block_t                  *ptListTail;                                       //!< Queue Tail
-end_extern_class(block_queue_t)
+declare_class(block_pool_t)
+
+extern_class(block_pool_t, which( inherit(pool_t) ))
+    // nothing here...
+end_extern_class(block_pool_t, which( inherit(pool_t) ))
 
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern bool block_queue_init(block_queue_t *ptObj);
-extern bool block_pool_add_heap(   block_pool_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize);
-extern void append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
-extern block_t *get_item_from_list(block_queue_t *ptObj);
-
+extern void reset_block_size(block_t *ptObj);
+extern void *get_block_buffer(block_t *ptObj);
+extern void set_block_size(block_t *ptObj, uint32_t wSize);
+extern uint32_t get_block_size(block_t *ptObj);
+extern bool block_pool_init(block_pool_t *ptObj);
+extern block_t *new_block(block_pool_t *ptObj);
+extern void free_block(block_pool_t *ptObj, block_t *ptItem);
 #endif
 #endif
 /* EOF */

@@ -427,6 +427,7 @@ typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 extern_class(stream_buffer_t, 
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
+        inherit(block_pool_t)
         inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
     )) 
 

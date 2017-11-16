@@ -19,7 +19,7 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_BLOCK_QUEUE == ENABLED
-#include "..\epool\epool.h"
+#include "..\block\block.h"
 #include <string.h>
 /*============================ MACROS ========================================*/
 
@@ -30,30 +30,11 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-//! \brief fixed memory block used as stream buffer
-//! @{
-declare_class(block_t)
-def_class(block_t)
-    INHERIT(__single_list_node_t)
-    uint32_t wBlockSize;
-    union {
-        uint32_t wSize;                                 //!< memory block
-        uint32_t wBuffer;
-    };
-end_def_class(block_t);
-//! @}
-
-
-DEF_EPOOL(StreamBufferBlock, block_t)
-
-END_DEF_EPOOL(StreamBufferBlock)
-
-
 declare_class(block_queue_t)
-def_class(block_queue_t,    which( inherit(pool_t)))                            //!< inherit from pool StreamBufferBlock
+def_class(block_queue_t)                            //!< inherit from pool StreamBufferBlock
     block_t                  *ptListHead;                 //!< Queue Head
     block_t                  *ptListTail;                 //!< Queue Tail
-end_def_class(block_queue_t,which( inherit(pool_t)))
+end_def_class(block_queue_t)
 
 
 /*============================ LOCAL VARIABLES ===============================*/
@@ -61,50 +42,6 @@ end_def_class(block_queue_t,which( inherit(pool_t)))
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 
-void reset_block_size(block_t *ptObj)
-{
-    class_internal(ptObj, ptThis, block_t);
-    
-    if (NULL == ptThis) {
-        return ;
-    }
-    
-    this.wSize = this.wBlockSize;
-}
-
-void *get_block_buffer(block_t *ptObj)
-{
-    class_internal(ptObj, ptThis, block_t);
-    
-    if (NULL == ptThis) {
-        return NULL;
-    }
-    
-    return &this.wBuffer;
-}
-
-void set_block_size(block_t *ptObj, uint32_t wSize)
-{
-    class_internal(ptObj, ptThis, block_t);
-    
-    if (NULL == ptThis) {
-        return ;
-    }
-    
-    this.wSize = wSize;
-}
-
-
-uint32_t get_block_size(block_t *ptObj)
-{
-    class_internal(ptObj, ptThis, block_t);
-    
-    if (NULL == ptThis) {
-        return 0;
-    }
-    
-    return this.wSize;
-}
 
 
 bool block_queue_init(block_queue_t *ptObj)
@@ -118,11 +55,6 @@ bool block_queue_init(block_queue_t *ptObj)
         
         memset(ptThis, 0, sizeof(block_queue_t));
         
-        //! initialise pool
-        if (!pool_init(REF_OBJ_AS(this, pool_t))) {
-            break;
-        } 
-        
         return true;
     } while(false);
     
@@ -130,46 +62,6 @@ bool block_queue_init(block_queue_t *ptObj)
     
 }
 
-static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
-{
-    class_internal(ptItem, ptThis, block_t);
-    if (NULL == ptThis) {
-        return;
-    }
-    
-    this.wBlockSize = hwItemSize - sizeof(block_t);
-    this.wSize = hwItemSize;
-}
-
-bool block_queue_add_heap(   block_queue_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize)
-{
-    bool bResult = false;
-    class_internal(ptObj, ptThis, block_queue_t);
-    
-    do {
-        if (    (NULL == ptThis) 
-            ||  (NULL == pBuffer)
-            ||  (hwSize < hwItemSize) 
-            ||  (hwItemSize < sizeof(block_t))
-            ||  (0 == hwItemSize)) {
-            break;
-        } 
-        
-        bResult =   pool_add_heap_ex (
-                        REF_OBJ_AS(this, pool_t), 
-                        pBuffer, 
-                        hwSize, 
-                        hwItemSize,
-                        &pool_item_init_event_handler
-                    );
-        
-    } while(false);
-    
-    return bResult;
-}
 
 
 void append_item_to_list(block_queue_t *ptObj, block_t *ptItem)

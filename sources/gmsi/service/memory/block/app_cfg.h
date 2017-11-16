@@ -15,42 +15,22 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef __BLOCK_QUEUE_H__
-#define __BLOCK_QUEUE_H__
+//! \note do not move this pre-processor statement to other places
+#include "..\app_cfg.h"
+
+#ifndef __BLOCK_APP_CFG_H__
+#define __BLOCK_APP_CFG_H__
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
 
-#if USE_SERVICE_BLOCK_QUEUE == ENABLED
-#include "..\block\block.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
-    
 /*============================ TYPES =========================================*/
-
-//! \brief stream buffer control block
-//! @{
-declare_class(stream_buffer_t)
-
-declare_class(block_queue_t)
-extern_class(block_queue_t)                   //!< inherit from pool StreamBufferBlock
-    block_t                  *ptListHead;                                       //!< Queue Head
-    block_t                  *ptListTail;                                       //!< Queue Tail
-end_extern_class(block_queue_t)
-
-
 /*============================ GLOBAL VARIABLES ==============================*/
+/*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+ 
 
-extern bool block_queue_init(block_queue_t *ptObj);
-extern bool block_pool_add_heap(   block_pool_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize);
-extern void append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
-extern block_t *get_item_from_list(block_queue_t *ptObj);
-
-#endif
 #endif
 /* EOF */
