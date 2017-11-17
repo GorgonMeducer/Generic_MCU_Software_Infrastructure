@@ -28,6 +28,7 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 
+#if 0
 //! \brief task locker
 #if SAFE_TASK_USE_RESERVED_SYSTEM_RAM == ENABLED
 #   if __IS_COMPILER_IAR__
@@ -35,6 +36,7 @@
 #   endif
 #endif
 NO_INIT locker_t s_TaskLocker;
+#endif
 
 #if SAFE_TASK_USE_RESERVED_SYSTEM_RAM == ENABLED
 #   if __IS_COMPILER_IAR__
@@ -67,7 +69,7 @@ bool task_push_ex(
             void *pArg) {
 
     if (    (NULL == pTask)
-        ||(NULL == pTask->pStack)
+        ||  (NULL == pTask->pStack)
         ||  (s_chTaskKey != pTask->pchKey)
         ||  (pTask->chSP >= pTask->chStackSize)
         ||  (NULL == fnRoutine)) {

@@ -19,6 +19,11 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_BLOCK_QUEUE == ENABLED
+
+#if USE_SERVICE_BLOCK != ENABLED
+#error The block_queue service requires the Block Service, please set USE_SERVICE_BLOCK to ENABLED in top app_cfg.h
+#endif
+
 #include "..\block\block.h"
 #include <string.h>
 /*============================ MACROS ========================================*/

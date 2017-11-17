@@ -25,6 +25,8 @@
 #include "..\iframe.h"
 
 #if USE_SERVICE_ES_SIMPLE_FRAME == ENABLED
+#include "..\..\..\memory\block\block.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
@@ -42,7 +44,6 @@
 /*============================ TYPES =========================================*/
 def_structure(__es_simple_frame_fsm_internal)
     inherit(mem_block_t)
-    
     uint16_t hwLength;
     uint16_t hwCounter;
     uint16_t hwCheckSUM;
@@ -53,6 +54,7 @@ extern_simple_fsm(es_simple_frame_decoder,
         i_byte_pipe_t *ptPipe;          //!< pipe
         frame_parser_t *fnParser;       //!< parser
         bool bUnsupportFrame;
+        block_t *ptBlock;
         inherit(__es_simple_frame_fsm_internal)
     ))
     
@@ -83,6 +85,7 @@ extern_class(es_simple_frame_t)
     inherit(fsm(es_simple_frame_decoder_wrapper))
     inherit(fsm(es_simple_frame_encoder))
     inherit(fsm(es_simple_frame_encoder_wrapper))
+    bool            bDynamicBufferMode;
 end_extern_class(es_simple_frame_t)
 //! @}
 
@@ -91,7 +94,13 @@ end_extern_class(es_simple_frame_t)
 typedef struct {
     i_byte_pipe_t   *ptPipe; 
     frame_parser_t  *fnParser;
-    inherit(mem_block_t)
+    union {
+        inherit(mem_block_t)
+        struct {
+            bool        bStaticBufferMode;
+            block_t *   ptBlock;
+        };
+    };
 }es_simple_frame_cfg_t;
 //! @}
 
@@ -101,7 +110,8 @@ extern_fsm_initialiser(es_simple_frame_decoder,
     args(
         i_byte_pipe_t *ptPipe, 
         frame_parser_t *fnParser,
-        mem_block_t tMemory
+        mem_block_t tMemory,
+        block_t *ptBlock
     ))
 
 extern_fsm_initialiser(es_simple_frame_encoder,

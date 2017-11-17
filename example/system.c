@@ -146,11 +146,15 @@ static void app_init(void)
         NO_INIT static i_byte_pipe_t s_tPipe;
         s_tPipe.ReadByte = (STREAM_IN.Stream.Read);
         s_tPipe.WriteByte = (STREAM_OUT.Stream.Write);
-
+        //block_t tBlock;
         //! initialise simple frame service
         es_simple_frame_cfg(    &s_tFrame, 
                                 &s_tPipe,
                                 &frame_parser,
+                                //.bStaticBufferMode = false,
+                                //.ptBlock = &tBlock
+                                //.pchBuffer = s_chFrameBuffer,
+                                //.hwSize = sizeof(s_chFrameBuffer)
                                 s_chFrameBuffer,
                                 sizeof(s_chFrameBuffer)
                             );
@@ -176,6 +180,10 @@ static void app_init(void)
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
 #endif
+
+
+    //printf("\r\n GMSI Example \r\n");
+    //STREAM_OUT.Stream.Flush();
 }
 
 /*----------------------------------------------------------------------------
@@ -187,7 +195,7 @@ int main (void)
     app_init();
     
     while (true) {
-    #if false
+    #if true
         if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
             STREAM_OUT.Stream.Flush();
         }

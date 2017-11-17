@@ -496,7 +496,7 @@ bool scheduler( void )
                 /* wait for semaphore object, task is blocked */
                 if (NULL == pTask->ptFlag) {
                     pTask->bSignalRaised = false;
-                    //! wait...this should not be happen!
+                    //! wait...this should not happen!
                     while(!_register_task(pTask));  //!< re-add this task to queue
                     break;
                 }
@@ -560,7 +560,10 @@ event_t *create_event(event_t *pEvent, bool bManualReset, bool bInitialState)
         if (NULL == ptEvent) {
             break;
         }
+        
+    #if 0
         LOCK_INIT(ptEvent->tLocker);            //!< initialize thread locker
+    #endif 
         ptEvent->bSignal = bInitialState;       //!< set initial state
         ptEvent->bManualReset = bManualReset;   //!< manual reset flag
         ptEvent->ptHead = NULL;                
@@ -580,7 +583,7 @@ void set_event(event_t *pEvent)
     if (NULL == ptEvent) {
         return ;
     }
-    
+#if 0
     LOCK( ptEvent->tLocker,
         //! wake up blocked tasks
         safe_task_t *pTask = ptEvent->ptHead;
@@ -605,7 +608,34 @@ void set_event(event_t *pEvent)
 //        } else {
 //            ptEvent->bSignal = false;           //!< set flag
 //        }
-        
+#else
+    SAFE_ATOM_CODE(
+        //! wake up blocked tasks
+        safe_task_t *pTask = ptEvent->ptHead;
+        while(NULL != pTask) {
+            if (pTask->bThreadBlocked) {
+                pTask->bThreadBlocked = false;
+                while (!_register_task(pTask)); //!< register task
+            }
+            
+            pTask->ptFlag = NULL;
+            pTask->bSignalRaised = true;        //!< set task flag
+
+            pTask = pTask->pNext;            
+        }
+
+        ptEvent->ptTail = NULL;
+        ptEvent->ptHead = NULL;                  //!< clear tasks
+
+        ptEvent->bSignal = true;
+//        if (ptEvent->bManualReset) {
+//            ptEvent->bSignal = true;            //!< set flag
+//        } else {
+//            ptEvent->bSignal = false;           //!< set flag
+//        }
+    )
+#endif
+
     )
 }
 
@@ -620,7 +650,7 @@ void leave_critical_section(critical_section_t *ptCritical)
     if (NULL == ptEvent) {
         return ;
     }
-
+#if 0
     LOCK( ptEvent->tLocker,
         if (!ptEvent->bSignal) {
             //! wake up blocked tasks
@@ -647,6 +677,34 @@ void leave_critical_section(critical_section_t *ptCritical)
             }
         }
     )
+#else
+    SAFE_ATOM_CODE(
+        if (!ptEvent->bSignal) {
+            //! wake up blocked tasks
+            safe_task_t *ptTask = ptEvent->ptHead;
+            if (NULL == ptTask) {
+                ptEvent->bSignal = true;
+            } else {
+                ptEvent->bSignal = false;                           //!< set flag
+
+                //! remove task from queue list
+                ptEvent->ptHead = ptTask->pNext;
+                if (NULL == ptEvent->ptHead) {
+                    ptEvent->ptTail = NULL;
+                }
+                ptTask->pNext = NULL;
+
+                //! release critical section for the target task
+                if (ptTask->bThreadBlocked) {
+                    ptTask->bThreadBlocked = false;
+                    while (!_register_task(ptTask));     //!< register task
+                }
+                ptTask->ptFlag = NULL;
+                ptTask->bSignalRaised = true;            //!< set task flag
+            }
+        }
+    )
+#endif
 }
 
 #endif
@@ -661,10 +719,15 @@ void reset_event(event_t *pEvent)
     if (NULL == ptEvent) {
         return ;
     }
-
+#if 0
     LOCK(ptEvent->tLocker,
         ptEvent->bSignal = false;
     )
+#else
+    SAFE_ATOM_CODE(
+        ptEvent->bSignal = false;
+    )
+#endif
 }
 
 /*! \brief wait for a specified task event
@@ -682,6 +745,7 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
         return bResult;                         //!< wait nothing
     }
     
+#if 0
     LOCK(ptEvent->tLocker,
         bResult = ptEvent->bSignal;
         if (!ptEvent->bManualReset) {
@@ -709,6 +773,35 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
             }
         }
     )
+#else
+    SAFE_ATOM_CODE(
+        bResult = ptEvent->bSignal;
+        if (!ptEvent->bManualReset) {
+            ptEvent->bSignal = false;
+        }
+        if (NULL != pTask) {
+            if (bResult) {
+                pTask->bSignalRaised = false;
+            } else if (pTask->bSignalRaised) {
+                pTask->bSignalRaised = false;
+                bResult = true;
+            } else {
+                //! add task to the wait list
+                pTask->pNext = NULL;
+                if (NULL == ptEvent->ptTail) {
+                    ptEvent->ptHead = pTask;
+                } else {
+                    ptEvent->ptTail->pNext = pTask;
+                }
+                ptEvent->ptTail = pTask;
+
+                pTask->ptFlag = ptEvent;  
+                pTask->bThreadBlocked = false;
+                bResult = false;
+            }
+        }
+    )
+#endif
 
     return bResult;
 }
@@ -901,7 +994,9 @@ void *register_task( safe_task_func_t *fnRoutine, void *pArg )
 void scheduler_finish( void )
 {
     //! initialize ciritical locker
+#if 0
     LOCK_INIT(s_TaskLocker);
+#endif
     LOCK_INIT(s_SchedulerLocker);
 #if SAFE_TASK_QUEUE_POOL_SIZE > 1
     s_chIdleFlag = _BV(SAFE_TASK_QUEUE_POOL_SIZE)-1;

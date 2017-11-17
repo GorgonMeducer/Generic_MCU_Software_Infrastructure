@@ -68,10 +68,13 @@
  *----------------------------------------------------------------------------*/
 #define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
 #define USE_SERVICE_XMODEM                  DISABLED
-#define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
 #define USE_SERVICE_MULTIPLE_DELAY          ENABLED
 #define USE_SERVICE_TELEGRAPH_ENGINE        ENABLED
+
+#define USE_SERVICE_BLOCK                   ENABLED
 #define USE_SERVICE_BLOCK_QUEUE             ENABLED
+#define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
+
 
 #define USE_SERVICE_GUI_TGUI                DISABLED
 #if USE_SERVICE_GUI_TGUI == ENABLED

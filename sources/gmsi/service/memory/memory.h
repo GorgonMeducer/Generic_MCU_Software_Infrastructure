@@ -21,6 +21,8 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 #include ".\epool\epool.h"
+#include ".\block\block.h"
+#include ".\block_queue\block_queue.h"
 #include ".\stream2block\stream2block.h"
 
 /*============================ MACROS ========================================*/

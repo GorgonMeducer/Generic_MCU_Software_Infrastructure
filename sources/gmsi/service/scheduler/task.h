@@ -55,7 +55,9 @@ DEF_CLASS(fsm_flag_t)
     safe_task_t       *ptHead;            //!< task item 
     safe_task_t       *ptTail;
     bool            bManualReset;       //!< manual reset flag
+#if 0
     locker_t        tLocker;            //!< thread locker
+#endif
 END_DEF_CLASS(fsm_flag_t)
 //! @}
 
@@ -99,8 +101,11 @@ struct _task
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
+
+#if 0 
 //! \brief task locker
 extern NO_INIT locker_t s_TaskLocker;
+#endif
 extern NO_INIT safe_task_t *s_pFreeList;
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/

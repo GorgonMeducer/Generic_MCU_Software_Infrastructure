@@ -21,7 +21,7 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
-#if USE_SERVICE_BLOCK_QUEUE == ENABLED
+#if USE_SERVICE_BLOCK == ENABLED
 #include "..\epool\epool.h"
 
 /*============================ MACROS ========================================*/
@@ -48,17 +48,33 @@ extern_class(block_pool_t, which( inherit(pool_t) ))
     // nothing here...
 end_extern_class(block_pool_t, which( inherit(pool_t) ))
 
+def_interface(i_block_t)
+    
+    struct {
+        bool        (*Init) (block_pool_t *);
+        bool        (*Add)(block_pool_t *,void *, uint_fast16_t, uint_fast16_t);
+        block_t*    (*New)(block_pool_t *);
+        void        (*Free)(block_pool_t *, block_t *);
+    } Heap;
+    
+    struct {
+        uint32_t    (*Get)(block_t *);
+        void        (*Set)(block_t *, uint32_t);
+        void        (*Reset)(block_t *);
+    } Size;
+    struct {
+        void *      (*Get)(block_t *);
+    } Buffer;
+    
+end_def_interface(i_block_t)
 
 /*============================ GLOBAL VARIABLES ==============================*/
+
+extern i_block_t BLOCK;
+
 /*============================ PROTOTYPES ====================================*/
 
-extern void reset_block_size(block_t *ptObj);
-extern void *get_block_buffer(block_t *ptObj);
-extern void set_block_size(block_t *ptObj, uint32_t wSize);
-extern uint32_t get_block_size(block_t *ptObj);
-extern bool block_pool_init(block_pool_t *ptObj);
-extern block_t *new_block(block_pool_t *ptObj);
-extern void free_block(block_pool_t *ptObj, block_t *ptItem);
+
 #endif
 #endif
 /* EOF */
