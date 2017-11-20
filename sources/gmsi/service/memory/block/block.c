@@ -18,7 +18,7 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
-#if USE_SERVICE_BLOCK_QUEUE == ENABLED
+#if USE_SERVICE_BLOCK == ENABLED
 #include "..\epool\epool.h"
 #include <string.h>
 
@@ -45,12 +45,81 @@ declare_class(block_pool_t)
 def_class(block_pool_t, which( inherit(pool_t) ))
 end_def_class(block_pool_t, which( inherit(pool_t) ))
 
+
+def_interface(i_block_t)
+    
+    struct {
+        bool        (*Init) (block_pool_t *);
+        bool        (*Add)(block_pool_t *,void *, uint_fast16_t, uint_fast16_t);
+        block_t*    (*New)(block_pool_t *);
+        void        (*Free)(block_pool_t *, block_t *);
+    } Heap;
+    block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
+    struct {
+        uint32_t    (*Get)(block_t *);
+        void        (*Set)(block_t *, uint32_t);
+        void        (*Reset)(block_t *);
+    } Size;
+    struct {
+        void *      (*Get)(block_t *);
+    } Buffer;
+    
+end_def_interface(i_block_t)
+
 /*============================ LOCAL VARIABLES ===============================*/
-/*============================ PROTOTYPES ====================================*/                                    
-/*============================ IMPLEMENTATION ================================*/
+/*============================ PROTOTYPES ====================================*/   
+
+static void reset_block_size(block_t *ptObj);
+static void *get_block_buffer(block_t *ptObj);
+static void set_block_size(block_t *ptObj, uint32_t wSize);
+static uint32_t get_block_size(block_t *ptObj);
+static bool block_pool_init(block_pool_t *ptObj);
+static block_t *new_block(block_pool_t *ptObj);
+static void free_block(block_pool_t *ptObj, block_t *ptItem);
+static bool block_pool_add_heap(  block_pool_t *ptObj, 
+                            void *pBuffer, 
+                            uint_fast16_t hwSize, 
+                            uint_fast16_t hwItemSize);
+static block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
 /*============================ GLOBAL VARIABLES ==============================*/
 
-void reset_block_size(block_t *ptObj)
+const i_block_t BLOCK = {
+    .Heap = {
+        .Init =     &block_pool_init,
+        .Add =      &block_pool_add_heap,
+        .New =      &new_block,
+        .Free =     &free_block,
+    },
+    .Init =         &init,
+    .Size = {
+        .Get =      &get_block_size,
+        .Set =      &set_block_size,
+        .Reset =    &reset_block_size,
+    },
+    .Buffer = {
+        .Get =      &get_block_buffer,
+    },
+};
+
+/*============================ IMPLEMENTATION ================================*/
+
+
+static block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
+{
+    class_internal(ptBlock, ptThis, block_t);
+    do {
+        if (NULL == ptBlock || 0 == hwSize) {
+            break;
+        }        
+        this.wBlockSize = hwSize;
+        this.wSize = hwSize;
+    
+    } while(false);
+    
+    return ptBlock;
+}
+
+static void reset_block_size(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -61,7 +130,7 @@ void reset_block_size(block_t *ptObj)
     this.wSize = this.wBlockSize;
 }
 
-void *get_block_buffer(block_t *ptObj)
+static void *get_block_buffer(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -69,10 +138,10 @@ void *get_block_buffer(block_t *ptObj)
         return NULL;
     }
     
-    return &this.wBuffer;
+    return ((uint32_t *)&this.wBuffer)+1;
 }
 
-void set_block_size(block_t *ptObj, uint32_t wSize)
+static void set_block_size(block_t *ptObj, uint32_t wSize)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -80,11 +149,11 @@ void set_block_size(block_t *ptObj, uint32_t wSize)
         return ;
     }
     
-    this.wSize = wSize;
+    this.wSize = MIN(wSize, this.wBlockSize);
 }
 
 
-uint32_t get_block_size(block_t *ptObj)
+static uint32_t get_block_size(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -96,7 +165,7 @@ uint32_t get_block_size(block_t *ptObj)
 }
 
 
-bool block_pool_init(block_pool_t *ptObj)
+static bool block_pool_init(block_pool_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -116,7 +185,7 @@ bool block_pool_init(block_pool_t *ptObj)
     return false;
 }
 
-block_t *new_block(block_pool_t *ptObj)
+static block_t *new_block(block_pool_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -134,7 +203,7 @@ block_t *new_block(block_pool_t *ptObj)
     return ptBlock;
 }
 
-void free_block(block_pool_t *ptObj, block_t *ptItem)
+static void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -159,7 +228,7 @@ static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
     this.wSize = hwItemSize;
 }
 
-bool block_pool_add_heap(  block_pool_t *ptObj, 
+static bool block_pool_add_heap(  block_pool_t *ptObj, 
                             void *pBuffer, 
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize)
@@ -188,6 +257,5 @@ bool block_pool_add_heap(  block_pool_t *ptObj,
     
     return bResult;
 }
-
 #endif
 /* EOF */

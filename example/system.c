@@ -17,6 +17,7 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_platform\app_platform.h"
+#include <string.h>
 
 /*============================ MACROS ========================================*/
 
@@ -84,10 +85,8 @@ static void system_init(void)
     SysTick_Config(SystemCoreClock  / 1000);  //!< Generate interrupt every 1 ms 
 }
 
-static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
-{
-    return hwSize;
-}
+
+#if DEMO_MULTIPLE_DELAY == ENABLED
 
 static void app_2000ms_delay_timeout_event_handler(multiple_delay_report_status_t tStatus, void *pObj)
 {
@@ -138,6 +137,24 @@ static void app_1500ms_delay_timeout_event_handler(multiple_delay_report_status_
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
 }
 
+#endif
+
+#if FRAME_DEMO_USE_BLOCK_MODE == ENABLED
+static block_t * frame_parser(block_t *ptBlock, void *pBlock)
+{
+    uint8_t *pchBuffer = (uint8_t *)BLOCK.Buffer.Get(ptBlock)+1;
+    memcpy(pchBuffer, "Orange", sizeof("Orange"));
+    BLOCK.Size.Set(ptBlock, sizeof("Orange")+1);
+    
+    return ptBlock;
+}
+#else
+static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
+{
+    return hwSize;
+}
+#endif
+
 static void app_init(void)
 {
     //! initialise simple frame service
@@ -146,16 +163,31 @@ static void app_init(void)
         NO_INIT static i_byte_pipe_t s_tPipe;
         s_tPipe.ReadByte = (STREAM_IN.Stream.Read);
         s_tPipe.WriteByte = (STREAM_OUT.Stream.Write);
-
+        
+    #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+        NO_INIT static union {
+            block_t tBlock;
+            uint8_t chBuffer[FRAME_BUFFER_SIZE + sizeof(block_t)];
+        } s_tBuffer;
+        BLOCK.Init(&s_tBuffer.tBlock, sizeof(s_tBuffer) - sizeof(block_t));
+    #endif
         //! initialise simple frame service
         es_simple_frame_cfg(    &s_tFrame, 
                                 &s_tPipe,
                                 &frame_parser,
+                            #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+                                .bStaticBufferMode = false,
+                                .ptBlock = &s_tBuffer.tBlock,
+                                
+                            #else
                                 s_chFrameBuffer,
                                 sizeof(s_chFrameBuffer)
+                            #endif
                             );
     } while(false);
-#if 0
+    
+    
+#if DEMO_MULTIPLE_DELAY == ENABLED
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
                                 2000,                                           //!< request delay 2000ms
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
@@ -176,6 +208,7 @@ static void app_init(void)
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
 #endif
+
 }
 
 /*----------------------------------------------------------------------------
@@ -187,7 +220,8 @@ int main (void)
     app_init();
     
     while (true) {
-    #if false
+    
+    #if true
         if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
             STREAM_OUT.Stream.Flush();
         }
@@ -200,7 +234,7 @@ int main (void)
         }
     #endif
         
-        //MULTIPLE_DELAY.Task(&s_tDelayService);
+        MULTIPLE_DELAY.Task(&s_tDelayService);
     }
 }
 

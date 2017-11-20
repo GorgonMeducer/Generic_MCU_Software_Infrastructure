@@ -212,10 +212,10 @@
           object. 
   \*/
 #define __OBJ_CONVERT_AS(__OBJ, __INTERFACE)    (__OBJ.base__##__INTERFACE)
-#define OBJ_CONVERT_AS(__OBJ, __INTERFACE)      __OBJ_CONVERT_AS(__OBJ, __INTERFACE)          
+#define OBJ_CONVERT_AS(__OBJ, __INTERFACE)      __OBJ_CONVERT_AS((__OBJ), __INTERFACE)          
 
 #define __REF_OBJ_AS(__OBJ, __TYPE)             (&(__OBJ.base__##__TYPE))
-#define REF_OBJ_AS(__OBJ, __TYPE)               __REF_OBJ_AS(__OBJ, __TYPE)
+#define REF_OBJ_AS(__OBJ, __TYPE)               __REF_OBJ_AS((__OBJ), __TYPE)
 
 #define REF_INTERFACE(__INTERFACE)      const __INTERFACE *ptMethod;
            

@@ -71,11 +71,21 @@
 //  </h>
 
 
-#define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
+
 #define USE_SERVICE_ES_SIMPLE_FRAME         ENABLED
+
+
+
 #define USE_SERVICE_MULTIPLE_DELAY          ENABLED
 #define USE_SERVICE_TELEGRAPH_ENGINE        ENABLED
+#define USE_SERVICE_BLOCK                   ENABLED
 #define USE_SERVICE_BLOCK_QUEUE             ENABLED
+#define USE_SERVICE_STREAM_TO_BLOCK         ENABLED
+
+
+#define DEMO_MULTIPLE_DELAY                 DISABLED
+#define DEMO_FRAME_USE_BLOCK_MODE           ENABLED
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

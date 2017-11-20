@@ -61,6 +61,7 @@
 //! @}
 
 //! \note critical code section protection
+//! \note LOCKER could be only used among FSMs and there should be no ISR involved.
 //! \param __LOCKER ES_LOCKER variable
 //! \param __CODE   target code segment
 #define LOCK(__LOCKER,...)  \

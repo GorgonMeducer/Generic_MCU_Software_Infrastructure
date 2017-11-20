@@ -25,6 +25,8 @@
 #include "..\iframe.h"
 
 #if USE_SERVICE_ES_SIMPLE_FRAME == ENABLED
+#include "..\..\..\memory\block\block.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
@@ -42,7 +44,6 @@
 /*============================ TYPES =========================================*/
 def_structure(__es_simple_frame_fsm_internal)
     inherit(mem_block_t)
-    
     uint16_t hwLength;
     uint16_t hwCounter;
     uint16_t hwCheckSUM;
@@ -51,8 +52,13 @@ end_def_structure(__es_simple_frame_fsm_internal)
 extern_simple_fsm(es_simple_frame_decoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
-        frame_parser_t *fnParser;       //!< parser
+        union {
+            frame_parser_t *fnParser;       //!< parser
+            frame_block_parser_t *fnBlockParser;
+        };
         bool bUnsupportFrame;
+        block_t *ptBlock;
+        void *pTag;
         inherit(__es_simple_frame_fsm_internal)
     ))
     
@@ -83,6 +89,7 @@ extern_class(es_simple_frame_t)
     inherit(fsm(es_simple_frame_decoder_wrapper))
     inherit(fsm(es_simple_frame_encoder))
     inherit(fsm(es_simple_frame_encoder_wrapper))
+    bool            bDynamicBufferMode;
 end_extern_class(es_simple_frame_t)
 //! @}
 
@@ -90,8 +97,15 @@ end_extern_class(es_simple_frame_t)
 //! @{
 typedef struct {
     i_byte_pipe_t   *ptPipe; 
-    frame_parser_t  *fnParser;
-    inherit(mem_block_t)
+    void  *fnParser;
+    union {
+        inherit(mem_block_t)
+        struct {
+            bool        bStaticBufferMode;
+            block_t *   ptBlock;
+        };
+    };
+    void *pTag;
 }es_simple_frame_cfg_t;
 //! @}
 
@@ -100,8 +114,10 @@ typedef struct {
 extern_fsm_initialiser(es_simple_frame_decoder,
     args(
         i_byte_pipe_t *ptPipe, 
-        frame_parser_t *fnParser,
-        mem_block_t tMemory
+        void *fnParser,
+        mem_block_t tMemory,
+        block_t *ptBlock,
+        void *pTag
     ))
 
 extern_fsm_initialiser(es_simple_frame_encoder,

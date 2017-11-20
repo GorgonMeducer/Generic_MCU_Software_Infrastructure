@@ -193,8 +193,7 @@ extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
  *  \retval false   initialization failed
  */  
 bool stdout_init (void) 
-{
-    
+{    
     do {
         int32_t status;
 

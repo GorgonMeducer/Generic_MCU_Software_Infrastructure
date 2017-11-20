@@ -22,7 +22,6 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_STREAM_TO_BLOCK == ENABLED
-#include "..\epool\epool.h"
 #include "..\block_queue\block_queue.h"
 
 /*============================ MACROS ========================================*/
@@ -32,14 +31,10 @@
  * common template                                                            *
  *----------------------------------------------------------------------------*/
 #define __STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                            \
-    DECLARE_CLASS( __NAME##_stream_buffer_block_t )                             \
-    DEF_CLASS(__NAME##_stream_buffer_block_t, INHERIT(block_t))                 \
+    declare_class( __NAME##_stream_buffer_block_t )                             \
+    def_class(__NAME##_stream_buffer_block_t, inherit(block_t))                 \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    END_DEF_CLASS(__NAME##_stream_buffer_block_t,INHERIT(block_t))              \
-    typedef struct {                                                            \
-        uint32_t wSize;                                                         \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    } __NAME##_block_t;                                                         \
+    end_def_class(__NAME##_stream_buffer_block_t,inherit(block_t))              \
     NO_INIT static stream_buffer_t s_t##__NAME##StreamBuffer;                   \
                                                                                 \
     static bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)         \
@@ -52,20 +47,22 @@
                 &s_t##__NAME##StreamBuffer,                                     \
                 pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
     }                                                                           \
-    static __NAME##_block_t * __NAME##_stream_exchange_block(                   \
-                                            __NAME##_block_t *ptOld)            \
+    static __NAME##_stream_buffer_block_t * __NAME##_stream_exchange_block(     \
+                              __NAME##_stream_buffer_block_t *ptOld)            \
     {                                                                           \
-        return (__NAME##_block_t *)STREAM_BUFFER.Block.Exchange(                \
-                &s_t##__NAME##StreamBuffer, (void *)ptOld);                     \
+        return (__NAME##_stream_buffer_block_t *)STREAM_BUFFER.Block.Exchange(  \
+                &s_t##__NAME##StreamBuffer, ref_obj_as((*ptOld), block_t));     \
     }                                                                           \
-    static __NAME##_block_t * __NAME##_stream_get_next_block(void)              \
+    static __NAME##_stream_buffer_block_t * __NAME##_stream_get_next_block(void)\
     {                                                                           \
-        return (__NAME##_block_t *)STREAM_BUFFER.Block.GetNext(                 \
+        return (__NAME##_stream_buffer_block_t *)STREAM_BUFFER.Block.GetNext(   \
                 &s_t##__NAME##StreamBuffer);                                    \
     }                                                                           \
-    static void __NAME##_stream_return_block(__NAME##_block_t *ptOld)           \
+    static void __NAME##_stream_return_block(                                   \
+            __NAME##_stream_buffer_block_t *ptOld)                              \
     {                                                                           \
-        STREAM_BUFFER.Block.Return(&s_t##__NAME##StreamBuffer, (void *)ptOld);  \
+        STREAM_BUFFER.Block.Return(                                             \
+            &s_t##__NAME##StreamBuffer, ref_obj_as((*ptOld), block_t));         \
     }                                                                           \
     
 #define __EXTERN_STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                     \
@@ -73,11 +70,7 @@
     EXTERN_CLASS(__NAME##_stream_buffer_block_t, INHERIT(block_t))              \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
     END_EXTERN_CLASS(__NAME##_stream_buffer_block_t,                            \
-                        INHERIT(block_t))                                       \
-    typedef struct {                                                            \
-        uint32_t wSize;                                                         \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    } __NAME##_block_t;                                                         
+                        INHERIT(block_t))                                       
 
 
 /*----------------------------------------------------------------------------*
@@ -105,9 +98,10 @@
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
-            __NAME##_block_t *(*Exchange)   ( __NAME##_block_t * );             \
-            __NAME##_block_t *(*GetNext)    (void);                             \
-            void              (*Return)     (__NAME##_block_t *);               \
+            __NAME##_stream_buffer_block_t *(*Exchange)                         \
+                                ( __NAME##_stream_buffer_block_t * );           \
+            __NAME##_stream_buffer_block_t *(*GetNext)    (void);               \
+            void              (*Return)     (__NAME##_stream_buffer_block_t *); \
         } Block;                                                                \
                                                                                 \
     }  __NAME        
@@ -169,7 +163,7 @@
     extern void __NAME##_serial_port_fill_byte(uint8_t chByte);                 \
                                                                                 \
     NO_INIT static volatile struct {                                            \
-        __NAME##_block_t *ptBlock;                                              \
+        __NAME##_stream_buffer_block_t *ptBlock;                                \
         uint8_t *pchBuffer;                                                     \
         uint_fast16_t hwSize;                                                   \
         uint_fast16_t hwIndex;                                                  \
@@ -178,11 +172,14 @@
     static void __NAME##_request_send(void)                                     \
     {                                                                           \
         s_t##__NAME##StreamOutService.ptBlock = STREAM_OUT.Block.Exchange(      \
-                                        s_t##__NAME##StreamOutService.ptBlock); \
-        __NAME##_block_t *ptBlock = s_t##__NAME##StreamOutService.ptBlock;      \
+            s_t##__NAME##StreamOutService.ptBlock);                             \
+        __NAME##_stream_buffer_block_t *ptBlock =                               \
+            s_t##__NAME##StreamOutService.ptBlock;                              \
         if (NULL != ptBlock) {                                                  \
-            s_t##__NAME##StreamOutService.pchBuffer = ptBlock->chBuffer;        \
-            s_t##__NAME##StreamOutService.hwSize = ptBlock->wSize;              \
+            s_t##__NAME##StreamOutService.pchBuffer =                           \
+                (uint8_t *)BLOCK.Buffer.Get(ref_obj_as((*ptBlock), block_t));   \
+            s_t##__NAME##StreamOutService.hwSize =                              \
+                BLOCK.Size.Get(ref_obj_as((*ptBlock), block_t));                \
             s_t##__NAME##StreamOutService.hwIndex = 0;                          \
                                                                                 \
             __NAME##_serial_port_enable_tx_cpl_interrupt();                     \
@@ -260,9 +257,10 @@
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
-            __NAME##_block_t *(*Exchange)( __NAME##_block_t * );                \
-            __NAME##_block_t *(*GetNext) (void);                                \
-            void              (*Return)  (__NAME##_block_t *);                  \
+            __NAME##_stream_buffer_block_t *(*Exchange)                         \
+                            ( __NAME##_stream_buffer_block_t * );               \
+            __NAME##_stream_buffer_block_t *(*GetNext) (void);                  \
+            void              (*Return)  (__NAME##_stream_buffer_block_t *);    \
         } Block;                                                                \
                                                                                 \
     }  __NAME
@@ -319,7 +317,7 @@
     extern void __NAME##_serial_port_disable_rx_cpl_interrupt(void);            \
     extern uint8_t __NAME##_serial_port_get_byte(void);                         \
     NO_INIT static volatile struct {                                            \
-        __NAME##_block_t *ptBlock;                                              \
+        __NAME##_stream_buffer_block_t *ptBlock;                                \
         uint8_t *pchBuffer;                                                     \
         uint_fast16_t hwSize;                                                   \
         uint_fast16_t hwIndex;                                                  \
@@ -328,14 +326,18 @@
     static void __NAME##_request_read(void)                                     \
     {                                                                           \
         s_t##__NAME##StreamInService.ptBlock =                                  \
-            __NAME.Block.Exchange(s_t##__NAME##StreamInService.ptBlock);        \
-        __NAME##_block_t *ptReadBuffer = s_t##__NAME##StreamInService.ptBlock;  \
+            __NAME.Block.Exchange(                                              \
+                s_t##__NAME##StreamInService.ptBlock);                          \
+        __NAME##_stream_buffer_block_t *ptReadBuffer =                          \
+                s_t##__NAME##StreamInService.ptBlock;                           \
         if (NULL != ptReadBuffer) {                                             \
-            if (NULL == ptReadBuffer->chBuffer || 0 == ptReadBuffer->wSize) {   \
+            if (0 == BLOCK.Size.Get(ref_obj_as(*ptReadBuffer, block_t))) {      \
                 return ;                                                        \
             }                                                                   \
-            s_t##__NAME##StreamInService.pchBuffer = ptReadBuffer->chBuffer;    \
-            s_t##__NAME##StreamInService.hwSize = ptReadBuffer->wSize;          \
+            s_t##__NAME##StreamInService.pchBuffer =                            \
+                BLOCK.Buffer.Get(ref_obj_as(*ptReadBuffer, block_t));           \
+            s_t##__NAME##StreamInService.hwSize =                               \
+                BLOCK.Size.Get(ref_obj_as(*ptReadBuffer, block_t));             \
             s_t##__NAME##StreamInService.hwIndex = 0;                           \
             __NAME##_serial_port_enable_rx_cpl_interrupt();                     \
         }                                                                       \
@@ -347,8 +349,9 @@
             if (0 == s_t##__NAME##StreamInService.hwTimeoutCounter) {           \
                 /*! timeout! */                                                 \
                 if (0 != s_t##__NAME##StreamInService.hwIndex) {                \
-                    s_t##__NAME##StreamInService.ptBlock->wSize =               \
-                        s_t##__NAME##StreamInService.hwIndex;                   \
+                    BLOCK.Size.Set(                                             \
+                        ref_obj_as(*s_t##__NAME##StreamInService.ptBlock, block_t), \
+                        s_t##__NAME##StreamInService.hwIndex);                  \
                     __NAME##_request_read();                                    \
                 }                                                               \
             }                                                                   \
@@ -464,9 +467,9 @@ def_interface(i_stream_buffer_t)
     } Stream;
     
     struct {
-        void *  (*Exchange)     (stream_buffer_t *, void *);
-        void *  (*GetNext)      (stream_buffer_t *);
-        void    (*Return)       (stream_buffer_t *, void *);
+        block_t*(*Exchange)    (stream_buffer_t *, block_t *);
+        block_t*(*GetNext)     (stream_buffer_t *);
+        void    (*Return)       (stream_buffer_t *, block_t *);
     } Block;
 
 end_def_interface(i_stream_buffer_t)

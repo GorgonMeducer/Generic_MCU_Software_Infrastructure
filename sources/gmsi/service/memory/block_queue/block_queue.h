@@ -44,10 +44,6 @@ end_extern_class(block_queue_t)
 /*============================ PROTOTYPES ====================================*/
 
 extern bool block_queue_init(block_queue_t *ptObj);
-extern bool block_pool_add_heap(   block_pool_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize);
 extern void append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
 extern block_t *get_item_from_list(block_queue_t *ptObj);
 
