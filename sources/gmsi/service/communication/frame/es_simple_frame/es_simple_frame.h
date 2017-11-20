@@ -52,9 +52,13 @@ end_def_structure(__es_simple_frame_fsm_internal)
 extern_simple_fsm(es_simple_frame_decoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
-        frame_parser_t *fnParser;       //!< parser
+        union {
+            frame_parser_t *fnParser;       //!< parser
+            frame_block_parser_t *fnBlockParser;
+        };
         bool bUnsupportFrame;
         block_t *ptBlock;
+        void *pTag;
         inherit(__es_simple_frame_fsm_internal)
     ))
     
@@ -93,7 +97,7 @@ end_extern_class(es_simple_frame_t)
 //! @{
 typedef struct {
     i_byte_pipe_t   *ptPipe; 
-    frame_parser_t  *fnParser;
+    void  *fnParser;
     union {
         inherit(mem_block_t)
         struct {
@@ -101,6 +105,7 @@ typedef struct {
             block_t *   ptBlock;
         };
     };
+    void *pTag;
 }es_simple_frame_cfg_t;
 //! @}
 
@@ -109,9 +114,10 @@ typedef struct {
 extern_fsm_initialiser(es_simple_frame_decoder,
     args(
         i_byte_pipe_t *ptPipe, 
-        frame_parser_t *fnParser,
+        void *fnParser,
         mem_block_t tMemory,
-        block_t *ptBlock
+        block_t *ptBlock,
+        void *pTag
     ))
 
 extern_fsm_initialiser(es_simple_frame_encoder,

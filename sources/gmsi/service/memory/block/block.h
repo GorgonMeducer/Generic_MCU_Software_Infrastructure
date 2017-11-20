@@ -56,7 +56,7 @@ def_interface(i_block_t)
         block_t*    (*New)(block_pool_t *);
         void        (*Free)(block_pool_t *, block_t *);
     } Heap;
-    
+    block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
     struct {
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);

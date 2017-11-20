@@ -19,7 +19,7 @@
 #define __USE_COMMUNICATION_FRAME_INTERFACE_H__
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
+#include "..\..\memory\block\block.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -27,6 +27,8 @@
 
 //! \brief prototype for frame parser
 typedef uint_fast16_t frame_parser_t(mem_block_t tMemory, uint_fast16_t hwSize);
+
+typedef block_t *frame_block_parser_t(block_t *ptBlock, void *pTag);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

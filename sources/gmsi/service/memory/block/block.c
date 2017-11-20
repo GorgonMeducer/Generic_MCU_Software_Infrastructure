@@ -54,7 +54,7 @@ def_interface(i_block_t)
         block_t*    (*New)(block_pool_t *);
         void        (*Free)(block_pool_t *, block_t *);
     } Heap;
-    
+    block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
     struct {
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);
@@ -80,6 +80,7 @@ static bool block_pool_add_heap(  block_pool_t *ptObj,
                             void *pBuffer, 
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize);
+static block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
 /*============================ GLOBAL VARIABLES ==============================*/
 
 const i_block_t BLOCK = {
@@ -89,6 +90,7 @@ const i_block_t BLOCK = {
         .New =      &new_block,
         .Free =     &free_block,
     },
+    .Init =         &init,
     .Size = {
         .Get =      &get_block_size,
         .Set =      &set_block_size,
@@ -102,7 +104,20 @@ const i_block_t BLOCK = {
 /*============================ IMPLEMENTATION ================================*/
 
 
-
+static block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
+{
+    class_internal(ptBlock, ptThis, block_t);
+    do {
+        if (NULL == ptBlock || 0 == hwSize) {
+            break;
+        }        
+        this.wBlockSize = hwSize;
+        this.wSize = hwSize;
+    
+    } while(false);
+    
+    return ptBlock;
+}
 
 static void reset_block_size(block_t *ptObj)
 {
