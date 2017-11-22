@@ -25,7 +25,7 @@
 #include "..\..\memory\epool\epool.h"
 /*============================ MACROS ========================================*/
 
-#define multiple_delay_cfg(__ADDR, ...)                 \
+#define MULTIPLE_DELAY_CFG(__ADDR, ...)                 \
     do {                                                \
         multiple_delay_cfg_t tCFG = {                   \
             __VA_ARGS__                                 \

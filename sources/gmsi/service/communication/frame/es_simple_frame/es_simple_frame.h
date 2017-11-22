@@ -36,10 +36,6 @@
                 es_simple_frame_cfg_t tCFG = {__VA_ARGS__};                     \
                 ES_SIMPLE_FRAME.Init((__FRAME__),&tCFG);                        \
             } while(false)
-
-
-#define es_simple_frame_cfg(__FRAME__, ...)                                     \
-            ES_SIMPLE_FRAME_CFG(__FRAME__, __VA_ARGS__)
             
 /*============================ TYPES =========================================*/
 def_structure(__es_simple_frame_fsm_internal)

@@ -21,13 +21,125 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 
+#if USE_SERVICE_TELEGRAPH_ENGINE == ENABLED
+#include "..\..\memory\block\block.h"
+#include "..\..\time\multiple_delay\multiple_delay.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+#define TELEGRAPH_ENGINE_CFG(__ADDR, ...)               \
+    do {                                                \
+        telegraph_engine_cfg_t tCFG = {                 \
+            __VA_ARGS__                                 \
+        };                                              \
+                                                        \
+        TELEGRAPH_ENGINE.Init((__ADDR), &tCFG);         \
+    } while(false)
+
 /*============================ TYPES =========================================*/
+
+declare_class(telegraph_t)
+declare_class(telegraph_engine_t)
+
+//! \name telegraph report status
+//! @{
+typedef enum {
+    TELEGRAPH_ERROR     = -1,                                                   //!< error detected during checking
+    TELEGRAPH_RECEIVED  = 0,                                                    //!< expected telegraph is received
+    TELEGRAPH_TIMEOUT,                                                          //!< timeout
+    TELEGRAPH_CANCELLED,                                                        //!< telegraph is cancelled by user
+} telegraph_report_t;
+//! @}
+
+//! \name telegraph report event handler prototype (delegate)
+typedef fsm_rt_t telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTelegraph);
+
+//! \name abstruct class telegraph, user telegraph should inherit from this class
+//! @{
+extern_class(telegraph_t)
+    inherit(__single_list_node_t)    
+    telegraph_engine_t      *ptEngine;
+    telegraph_handler_t     *fnHandler;
+    multiple_delay_item_t   *ptDelayItem;
+    uint32_t                wTimeout;
+    block_t                 *ptData;
+end_extern_class(telegraph_t)
+//! @}
+
+typedef enum {
+    FRAME_UNKNOWN       = -1,
+    FRAME_UNMATCH       = 0,
+    FRAME_RECEIVED      = 1,
+} frame_parsing_report_t;
+
+typedef frame_parsing_report_t telegraph_parser_t(
+                                                    block_t **pptBlock,         //! memory buffer
+                                                    telegraph_t *ptItem);       //! target telegraph 
+
+typedef fsm_rt_t telegraph_engine_low_level_write_io_t(block_t *ptBlock, void *pObj);
+
+
+extern_simple_fsm(telegraph_engine_task,
+    def_params(
+        telegraph_t *ptCurrent;
+    )
+)
+
+
+
+//! \name telegraph engine
+//! @{
+extern_class(telegraph_engine_t,   which(  inherit(fsm(telegraph_engine_task))))
+
+    struct {
+        telegraph_t                             *ptHead;
+        telegraph_t                             *ptTail;
+    } Listener;
+    
+    struct {
+        telegraph_t                             *ptHead;
+        telegraph_t                             *ptTail;
+    } Transmitter; 
+    
+    telegraph_parser_t                      *fnDecoder;
+    multiple_delay_t                        *ptDelayService;
+    telegraph_engine_low_level_write_io_t   *fnWriteIO;
+    void                                    *pIOTag;
+end_extern_class(telegraph_engine_t, which(  inherit(fsm(telegraph_engine_task))))
+//! @}
+
+typedef struct {
+    telegraph_parser_t                      *fnDecoder;
+    multiple_delay_t                        *ptDelayService;
+    telegraph_engine_low_level_write_io_t   *fnWriteIO;
+    void                                    *pIOTag;
+} telegraph_engine_cfg_t;
+
+
+def_interface(i_telegraph_engine_t)
+    bool        (*Init)         (   telegraph_engine_t *ptObj, 
+                                    telegraph_engine_cfg_t *ptCFG);
+    fsm_rt_t    (*Task)         (   telegraph_engine_t *ptObj);
+    struct {
+        block_t *   (*Parse)    (   block_t *ptBlock, telegraph_engine_t *ptObj);
+    } Dependent;
+    
+    struct {
+        bool        (*TryToSend)(   telegraph_engine_t *ptObj, 
+                                    telegraph_t *ptTelegraph,
+                                    bool bPureListener);
+        bool        (*Listen)   (   telegraph_engine_t *ptObj, 
+                                    telegraph_t *ptTelegraph);
+    } Telegraph;
+end_def_interface(i_telegraph_engine_t)
+
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
+extern const i_telegraph_engine_t TELEGRAPH_ENGINE;
+
 /*============================ PROTOTYPES ====================================*/
 
 
+#endif
 #endif
 /* EOF */

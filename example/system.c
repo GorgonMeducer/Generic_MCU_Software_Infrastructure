@@ -35,9 +35,10 @@
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-static volatile uint32_t s_wMSTicks = 0;   
-NO_INIT es_simple_frame_t s_tFrame;
-NO_INIT multiple_delay_t s_tDelayService;
+static volatile uint32_t    s_wMSTicks = 0;   
+NO_INIT es_simple_frame_t   s_tFrame;
+NO_INIT multiple_delay_t    s_tDelayService;
+NO_INIT telegraph_engine_t  s_tTelegraphEngine;
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
@@ -69,13 +70,16 @@ void SysTick_Handler (void)
 
 static void system_init(void)
 {
-    app_platform_init();
-
+    if (!app_platform_init()) {
+        NVIC_SystemReset();
+    }
+        
+    
     //! initialise multiple delay service
     do {
         NO_INIT static multiple_delay_item_t s_tDelayObjPool[DELAY_OBJ_POOL_SIZE];
 
-        multiple_delay_cfg (    &s_tDelayService,
+        MULTIPLE_DELAY_CFG (    &s_tDelayService,
                                 (uint8_t *)s_tDelayObjPool,
                                 sizeof(s_tDelayObjPool)
                                 
@@ -139,24 +143,26 @@ static void app_1500ms_delay_timeout_event_handler(multiple_delay_report_status_
 
 #endif
 
-#if FRAME_DEMO_USE_BLOCK_MODE == ENABLED
-static block_t * frame_parser(block_t *ptBlock, void *pBlock)
-{
-    uint8_t *pchBuffer = (uint8_t *)BLOCK.Buffer.Get(ptBlock)+1;
-    memcpy(pchBuffer, "Orange", sizeof("Orange"));
-    BLOCK.Size.Set(ptBlock, sizeof("Orange")+1);
-    
-    return ptBlock;
-}
-#else
+#if DEMO_FRAME_USE_BLOCK_MODE != ENABLED
 static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
 {
     return hwSize;
 }
 #endif
 
+
+
 static void app_init(void)
 {
+
+    do {
+        TELEGRAPH_ENGINE_CFG(   &s_tTelegraphEngine,
+                                NULL,
+                                &s_tDelayService,                               //! delay service
+                            );
+    
+    } while(false);
+
     //! initialise simple frame service
     do {
         NO_INIT static uint8_t s_chFrameBuffer[FRAME_BUFFER_SIZE];
@@ -165,6 +171,7 @@ static void app_init(void)
         s_tPipe.WriteByte = (STREAM_OUT.Stream.Write);
         
     #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+    
         NO_INIT static union {
             block_t tBlock;
             uint8_t chBuffer[FRAME_BUFFER_SIZE + sizeof(block_t)];
@@ -172,14 +179,16 @@ static void app_init(void)
         BLOCK.Init(&s_tBuffer.tBlock, sizeof(s_tBuffer) - sizeof(block_t));
     #endif
         //! initialise simple frame service
-        es_simple_frame_cfg(    &s_tFrame, 
+        ES_SIMPLE_FRAME_CFG(    &s_tFrame, 
                                 &s_tPipe,
-                                &frame_parser,
+                                
                             #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+                                TELEGRAPH_ENGINE.Dependent.Parse,
                                 .bStaticBufferMode = false,
                                 .ptBlock = &s_tBuffer.tBlock,
-                                
+                                .pTag = &s_tTelegraphEngine
                             #else
+                                &frame_parser,
                                 s_chFrameBuffer,
                                 sizeof(s_chFrameBuffer)
                             #endif
@@ -235,6 +244,7 @@ int main (void)
     #endif
         
         MULTIPLE_DELAY.Task(&s_tDelayService);
+        TELEGRAPH_ENGINE.Task(&s_tTelegraphEngine);
     }
 }
 

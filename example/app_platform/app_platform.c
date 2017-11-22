@@ -66,7 +66,7 @@ bool app_platform_init( void )
         }
     #endif
         
-
+        return true;
     } while(false);
     
     return false;
