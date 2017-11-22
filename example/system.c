@@ -70,8 +70,11 @@ void SysTick_Handler (void)
 
 static void system_init(void)
 {
-    app_platform_init();
-
+    if (!app_platform_init()) {
+        NVIC_SystemReset();
+    }
+        
+    
     //! initialise multiple delay service
     do {
         NO_INIT static multiple_delay_item_t s_tDelayObjPool[DELAY_OBJ_POOL_SIZE];
@@ -180,7 +183,7 @@ static void app_init(void)
                                 &s_tPipe,
                                 
                             #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
-                                TELEGRAPH_ENGINE.Parse,
+                                TELEGRAPH_ENGINE.Dependent.Parse,
                                 .bStaticBufferMode = false,
                                 .ptBlock = &s_tBuffer.tBlock,
                                 .pTag = &s_tTelegraphEngine
@@ -241,6 +244,7 @@ int main (void)
     #endif
         
         MULTIPLE_DELAY.Task(&s_tDelayService);
+        TELEGRAPH_ENGINE.Task(&s_tTelegraphEngine);
     }
 }
 

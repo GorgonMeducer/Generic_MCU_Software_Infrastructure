@@ -37,15 +37,20 @@ declare_class(block_queue_t)
 extern_class(block_queue_t)                   //!< inherit from pool StreamBufferBlock
     block_t                  *ptListHead;                                       //!< Queue Head
     block_t                  *ptListTail;                                       //!< Queue Tail
+    uint32_t                 wCount;
 end_extern_class(block_queue_t)
 
+def_interface(i_block_queue_t)
+    bool        (*Init)     (block_queue_t *ptObj);
+    bool        (*Enqueue)  (block_queue_t *ptObj, block_t *ptItem);
+    block_t *   (*Dequeue)  (block_queue_t *ptObj);
+    uint32_t    (*Count)    (block_queue_t *ptObj);
+end_def_interface(i_block_queue_t)
 
 /*============================ GLOBAL VARIABLES ==============================*/
-/*============================ PROTOTYPES ====================================*/
+extern const i_block_queue_t BLOCK_QUEUE;
 
-extern bool block_queue_init(block_queue_t *ptObj);
-extern void append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
-extern block_t *get_item_from_list(block_queue_t *ptObj);
+/*============================ PROTOTYPES ====================================*/
 
 #endif
 #endif

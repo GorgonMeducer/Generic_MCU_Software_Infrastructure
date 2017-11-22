@@ -197,6 +197,9 @@ bool stdout_init (void)
     do {
         int32_t status;
 
+        STREAM_OUT_output_stream_adapter_init();
+        STREAM_IN_input_stream_adapter_init();
+
         status = ptrUSART->Initialize(NULL /*&UART0_Signal_Handler*/);
         if (status != ARM_DRIVER_OK) { 
             break; 
@@ -227,8 +230,7 @@ bool stdout_init (void)
             break; 
         }
         
-        STREAM_OUT_output_stream_adapter_init();
-        STREAM_IN_input_stream_adapter_init();
+        
         return true;
     } while(false);
 

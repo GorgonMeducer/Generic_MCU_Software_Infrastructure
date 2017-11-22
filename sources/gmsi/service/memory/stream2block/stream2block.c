@@ -165,7 +165,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
                     this.fnRequestReceive = ptCFG->fnRequestHandler;
                 }
                                
-                block_queue_init(ref_obj_as(this, block_queue_t));
+                BLOCK_QUEUE.Init(ref_obj_as(this, block_queue_t));
                 BLOCK.Heap.Init(ref_obj_as(this, block_pool_t));
                 bResult = true;
             } while(false);
@@ -209,7 +209,7 @@ static block_t *get_next_block(stream_buffer_t *ptObj)
         
         if (this.bIsOutput) {
             //! find the next block from the list
-            ptItem = get_item_from_list( ref_obj_as(this, block_queue_t));
+            ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
         } else {
             
             //! get a new block
@@ -249,7 +249,7 @@ static void return_block(stream_buffer_t *ptObj, block_t *ptItem)
 
             //! stream is used for input
             //! add block to the list
-            append_item_to_list( ref_obj_as(this, block_queue_t), ptItem);
+            BLOCK_QUEUE.Enqueue( ref_obj_as(this, block_queue_t), ptItem);
         }
     } while(false);
 
@@ -274,12 +274,12 @@ static block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld
                 BLOCK.Heap.Free(ref_obj_as(this, block_pool_t), ptOld);
             }
             //! find the next block from the list
-            ptItem = get_item_from_list( ref_obj_as(this, block_queue_t));
+            ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
         } else {
             if (NULL != ptOld) {
                 //! stream is used for input
                 //! add block to the list
-                append_item_to_list(ref_obj_as(this, block_queue_t), ptOld);
+                BLOCK_QUEUE.Enqueue(ref_obj_as(this, block_queue_t), ptOld);
             }
             //! get a new block
             ptItem = BLOCK.Heap.New( ref_obj_as(this, block_pool_t));
@@ -310,7 +310,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             BLOCK.Heap.Free( ref_obj_as(this, block_pool_t), this.ptUsedByQueue);
         }
         //! fetch a block from list, and initialise it as a full queue
-        ptBlock = get_item_from_list( ref_obj_as(this, block_queue_t) );
+        ptBlock = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t) );
         
         if ( NULL == this.ptUsedByOutside) {
             if (NULL != this.fnRequestReceive) {
@@ -331,7 +331,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
                                              REF_OBJ_AS(this, 
                                                 QUEUE(StreamBufferQueue))));
             
-            append_item_to_list( ref_obj_as(this, block_queue_t), this.ptUsedByQueue);
+            BLOCK_QUEUE.Enqueue( ref_obj_as(this, block_queue_t), this.ptUsedByQueue);
             
             
             if (NULL == this.ptUsedByOutside ) {
