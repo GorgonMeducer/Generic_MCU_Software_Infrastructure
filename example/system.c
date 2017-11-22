@@ -143,7 +143,26 @@ static void app_1500ms_delay_timeout_event_handler(multiple_delay_report_status_
 
 #endif
 
-#if DEMO_FRAME_USE_BLOCK_MODE != ENABLED
+#if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+#   if DEMO_TELEGRAPH_ENGINE != ENABLED    
+static block_t * frame_parser(block_t *ptBlock, void *ptObj)
+{
+    #define DEMO_STRING         "Hello world!\r\n"
+    do {
+        if (NULL == ptBlock) {
+            break;
+        }
+        uint8_t *pchBuffer = BLOCK.Buffer.Get(ptBlock);
+        memcpy(&pchBuffer[1], DEMO_STRING, sizeof(DEMO_STRING));
+        BLOCK.Size.Set(ptBlock, sizeof(DEMO_STRING)+1);
+        
+    } while(false);
+    
+    
+    return ptBlock;
+}
+#   endif
+#else
 static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
 {
     return hwSize;
@@ -154,7 +173,7 @@ static uint_fast16_t frame_parser(mem_block_t tMemory, uint_fast16_t hwSize)
 
 static void app_init(void)
 {
-
+#if DEMO_TELEGRAPH_ENGINE == ENABLED
     do {
         TELEGRAPH_ENGINE_CFG(   &s_tTelegraphEngine,
                                 NULL,
@@ -162,7 +181,7 @@ static void app_init(void)
                             );
     
     } while(false);
-
+#endif
     //! initialise simple frame service
     do {
         NO_INIT static uint8_t s_chFrameBuffer[FRAME_BUFFER_SIZE];
@@ -182,8 +201,12 @@ static void app_init(void)
         ES_SIMPLE_FRAME_CFG(    &s_tFrame, 
                                 &s_tPipe,
                                 
-                            #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+                        #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
+                            #if DEMO_TELEGRAPH_ENGINE == ENABLED
                                 TELEGRAPH_ENGINE.Dependent.Parse,
+                            #else
+                                &frame_parser,
+                            #endif
                                 .bStaticBufferMode = false,
                                 .ptBlock = &s_tBuffer.tBlock,
                                 .pTag = &s_tTelegraphEngine
@@ -191,7 +214,7 @@ static void app_init(void)
                                 &frame_parser,
                                 s_chFrameBuffer,
                                 sizeof(s_chFrameBuffer)
-                            #endif
+                        #endif
                             );
     } while(false);
     
@@ -244,7 +267,10 @@ int main (void)
     #endif
         
         MULTIPLE_DELAY.Task(&s_tDelayService);
+        
+    #if DEMO_TELEGRAPH_ENGINE == ENABLED
         TELEGRAPH_ENGINE.Task(&s_tTelegraphEngine);
+    #endif
     }
 }
 
