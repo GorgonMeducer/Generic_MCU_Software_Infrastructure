@@ -608,6 +608,8 @@ void set_event(event_t *pEvent)
 //        } else {
 //            ptEvent->bSignal = false;           //!< set flag
 //        }
+
+    )
 #else
     SAFE_ATOM_CODE(
         //! wake up blocked tasks
@@ -636,7 +638,7 @@ void set_event(event_t *pEvent)
     )
 #endif
 
-    )
+    
 }
 
 #   if SAFE_TASK_CRITICAL_SECTION == ENABLED

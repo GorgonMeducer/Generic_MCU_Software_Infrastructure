@@ -231,7 +231,7 @@ static void app_init(void)
                                 3000,                                           //!< request delay 3000ns
                                 MULTIPLE_DELAY_LOW_PRIORITY,                    //!< priority is low
                                 NULL,                                           //!< no tag
-                                &app_3000ms_delay_timeout_event_handler);        //!< timout event handler
+                                &app_3000ms_delay_timeout_event_handler);       //!< timout event handler
                                 
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 

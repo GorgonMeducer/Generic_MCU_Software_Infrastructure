@@ -64,6 +64,10 @@ def_interface(i_block_t)
     } Size;
     struct {
         void *      (*Get)(block_t *);
+        bool        (*Write)    (   block_t *ptObj, 
+                                    const void *pchSrc, 
+                                    uint_fast16_t hwSize, 
+                                    uint_fast16_t hwOffsite);
     } Buffer;
     
 end_def_interface(i_block_t)

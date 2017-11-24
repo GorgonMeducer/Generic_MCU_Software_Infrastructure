@@ -89,7 +89,9 @@ simple_fsm(telegraph_engine_task,
 
 //! \name telegraph engine
 //! @{
-def_class(telegraph_engine_t,   which(  inherit(fsm(telegraph_engine_task))))
+def_class(telegraph_engine_t,   
+    which(  inherit(fsm(telegraph_engine_task))
+            inherit(pool_t)))
 
     struct {
         telegraph_t                             *ptHead;
@@ -101,14 +103,19 @@ def_class(telegraph_engine_t,   which(  inherit(fsm(telegraph_engine_task))))
         telegraph_t                             *ptTail;
     } Transmitter; 
     
-    telegraph_parser_t                      *fnDecoder;
-    multiple_delay_t                        *ptDelayService;
-    telegraph_engine_low_level_write_io_t   *fnWriteIO;
-    void                                    *pIOTag;
-end_def_class(telegraph_engine_t, which(  inherit(fsm(telegraph_engine_task))))
+    telegraph_parser_t                          *fnDecoder;
+    multiple_delay_t                            *ptDelayService;
+    telegraph_engine_low_level_write_io_t       *fnWriteIO;
+    void                                        *pIOTag;
+end_def_class(telegraph_engine_t, 
+    which(  inherit(fsm(telegraph_engine_task))
+            inherit(pool_t)))
 //! @}
 
 typedef struct {
+    mem_block_t                             tTelegraphPool;
+    uint32_t                                wTelegraphSize;
+    
     telegraph_parser_t                      *fnDecoder;
     multiple_delay_t                        *ptDelayService;
     telegraph_engine_low_level_write_io_t   *fnWriteIO;
@@ -130,6 +137,11 @@ def_interface(i_telegraph_engine_t)
                                     bool bPureListener);
         bool        (*Listen)   (   telegraph_engine_t *ptObj, 
                                     telegraph_t *ptTelegraph);
+                                    
+        telegraph_t *(*New)     (   telegraph_engine_t *ptObj,
+                                    telegraph_handler_t *fnHandler, 
+                                    uint32_t wTimeout, 
+                                    block_t *ptData);
     } Telegraph;
 end_def_interface(i_telegraph_engine_t)
 
@@ -145,6 +157,12 @@ static bool try_to_send_telegraph(  telegraph_engine_t *ptObj,
 static bool try_to_listen(  telegraph_engine_t *ptObj, 
                             telegraph_t *ptTelegraph);
 static fsm_rt_t task(telegraph_engine_t *ptObj);
+
+static telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
+                                        telegraph_handler_t *fnHandler, 
+                                        uint32_t wTimeout, 
+                                        block_t *ptData);
+
 /*============================ GLOBAL VARIABLES ==============================*/
 
 const i_telegraph_engine_t TELEGRAPH_ENGINE = {
@@ -156,6 +174,7 @@ const i_telegraph_engine_t TELEGRAPH_ENGINE = {
     .Telegraph = {
         .TryToSend =    &try_to_send_telegraph,
         .Listen =       &try_to_listen,
+        .New =         &telegraph_init,
     },
 };
 
@@ -206,6 +225,10 @@ fsm_implementation(telegraph_engine_task)
                 } 
                 
                 if (NULL == target.fnHandler) {
+                
+                    //! free telegraph
+                    pool_free(ref_obj_as(base, pool_t), ptTarget);
+                
                     //! pure sender
                     transfer_to(FETCH_TELEGRAPH);
                 } else {
@@ -242,6 +265,10 @@ static bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
     do {
         if (NULL == ptThis || NULL == ptCFG) {
             break;
+        } else if (     (NULL == ptCFG->tTelegraphPool.pchSrc) 
+                    ||  (ptCFG->tTelegraphPool.hwSize < sizeof(telegraph_t))
+                    ||  (ptCFG->wTelegraphSize < sizeof(telegraph_t))) {
+            break;
         }
         
         memset((void *)ptObj, 0, sizeof(telegraph_engine_t));
@@ -254,10 +281,49 @@ static bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
         init_fsm(   telegraph_engine_task, 
                     ref_obj_as(this, fsm(telegraph_engine_task)));
         
+        //! initialise telegraph pool
+        pool_init(ref_obj_as(this, pool_t));
+        
+        //! add buffer to telegraph heap
+        pool_add_heap(  ref_obj_as(this, pool_t), 
+                        ptCFG->tTelegraphPool.pObj,
+                        ptCFG->tTelegraphPool.hwSize,
+                        ptCFG->wTelegraphSize);
+        
+        
         return true;
     } while(false);
 
     return false;
+}
+
+static telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
+                                        telegraph_handler_t *fnHandler, 
+                                        uint32_t wTimeout, 
+                                        block_t *ptData)
+{
+    class_internal(ptObj, ptThis, telegraph_engine_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        
+        class_internal(pool_new(ref_obj_as(this, pool_t)), ptTarget, telegraph_t);
+        
+        if (NULL == ptTarget) {
+            break;
+        }
+        memset(ptTarget, 0, sizeof(telegraph_t));
+        
+        target.fnHandler = fnHandler;
+        target.wTimeout = wTimeout;
+        target.ptData = ptData;
+        
+        return (telegraph_t *)ptTarget;
+    } while(false);
+    
+    return NULL;
 }
 
 static void telegraph_timeout_event_handler(
@@ -272,6 +338,10 @@ static void telegraph_timeout_event_handler(
         return ;
     }  
     
+    __TE_ATOM_ACCESS (
+        //! remove it from the listener queue
+        LIST_QUEUE_REMOVE(this.Listener.ptHead, this.Listener.ptTail, ptTarget);
+    )
     
     if (MULTIPLE_DELAY_TIMEOUT == tStatus) {
         target.ptData = NULL;
@@ -280,12 +350,10 @@ static void telegraph_timeout_event_handler(
             (*target.fnHandler)(TELEGRAPH_TIMEOUT, (telegraph_t *)ptTarget);
         
         }
+        
+        //! free telegraph
+        pool_free(ref_obj_as(this, pool_t), ptTarget);
     } 
-    
-    __TE_ATOM_ACCESS (
-        //! remove it from the listener queue
-        LIST_QUEUE_REMOVE(this.Listener.ptHead, this.Listener.ptTail, ptTarget);
-    )
 
 }
 
@@ -358,7 +426,15 @@ static bool try_to_send_telegraph(  telegraph_engine_t *ptObj,
             );
         )
         
+        bResult = true;
     } while(false);
+    
+    if (    (!bResult) 
+        &&  (NULL != ptThis) 
+        &&  (NULL != ptTarget)) {
+        //! free telegraph
+        pool_free(ref_obj_as(this, pool_t), ptTarget);
+    }
     
     return bResult;
 }
@@ -411,7 +487,9 @@ static block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                             (*target.fnHandler)(TELEGRAPH_RECEIVED, (telegraph_t *)ptTarget);
                         
                         }
-                                                
+                        
+                        //! free telegraph
+                        pool_free(ref_obj_as(this, pool_t), ptTarget);
                     }
 
                     //! frame is received
