@@ -62,6 +62,10 @@ def_interface(i_block_t)
     } Size;
     struct {
         void *      (*Get)(block_t *);
+        bool        (*Write)    (   block_t *ptObj, 
+                                    const void *pchSrc, 
+                                    uint_fast16_t hwSize, 
+                                    uint_fast16_t hwOffsite);
     } Buffer;
     
 end_def_interface(i_block_t)
@@ -81,6 +85,10 @@ static bool block_pool_add_heap(  block_pool_t *ptObj,
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize);
 static block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
+static bool write_block_buffer( block_t *ptObj, 
+                                const void *pchSrc, 
+                                uint_fast16_t hwSize, 
+                                uint_fast16_t hwOffsite);
 /*============================ GLOBAL VARIABLES ==============================*/
 
 const i_block_t BLOCK = {
@@ -98,6 +106,7 @@ const i_block_t BLOCK = {
     },
     .Buffer = {
         .Get =      &get_block_buffer,
+        .Write =    &write_block_buffer,
     },
 };
 
@@ -139,6 +148,32 @@ static void *get_block_buffer(block_t *ptObj)
     }
     
     return ((uint32_t *)&this.wBuffer)+1;
+}
+
+static bool write_block_buffer( block_t *ptObj, 
+                                const void *pchSrc, 
+                                uint_fast16_t hwSize, 
+                                uint_fast16_t hwOffsite)
+{
+    class_internal(ptObj, ptThis, block_t);
+    bool bResult = false;
+    
+    do {
+        if (NULL == ptThis || NULL == pchSrc || 0 == hwSize) {
+            break;
+        }
+        uint_fast16_t hwMaxSize = this.wBlockSize - hwOffsite;
+        if (hwSize > hwMaxSize) {
+            hwSize = hwMaxSize;
+        }
+        
+        memcpy(get_block_buffer(ptObj), pchSrc, hwSize);
+        
+        this.wSize = hwSize+hwOffsite;
+        bResult = true;
+    } while(false);
+    
+    return bResult;
 }
 
 static void set_block_size(block_t *ptObj, uint32_t wSize)
@@ -197,6 +232,7 @@ static block_t *new_block(block_pool_t *ptObj)
         }
         
         ptBlock = (block_t *)pool_new( REF_OBJ_AS(this, pool_t));
+        reset_block_size(ptBlock);
         
     } while(false);
     

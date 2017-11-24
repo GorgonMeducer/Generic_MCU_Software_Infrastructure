@@ -78,13 +78,18 @@ bool pool_add_heap_ex( pool_t *ptPool,
 
 
     do {
-        __EPOOL_ATOM_ACCESS(LIST_STACK_PUSH(this.ptFreeList, ptBuffer);)
+        __EPOOL_ATOM_ACCESS(
+            LIST_STACK_PUSH(this.ptFreeList, ptBuffer);
+            this.tCounter++;
+        )
+        
         if (NULL != fnHandler) {
             (*fnHandler)(ptBuffer, hwItemSize);
         }
         ptBuffer = (void *)((uint8_t *)ptBuffer + hwItemSize);
         
         hwPoolSize -= hwItemSize;
+        
     } while( hwPoolSize >= hwItemSize);
 
 
@@ -116,7 +121,7 @@ void *pool_new(pool_t *ptPool)
             
             LIST_STACK_POP(this.ptFreeList, ptItem);
             
-            ((CLASS(pool_t) *)ptPool)->tCounter++;
+            this.tCounter--;
         } while (false);
     )
 
@@ -125,34 +130,41 @@ void *pool_new(pool_t *ptPool)
 
 void pool_free(pool_t *ptPool, void *ptItem)
 {
-    CLASS(pool_t) *ptThis = (CLASS(pool_t) *)ptPool;
-    if ((NULL == ptPool) || (NULL == ptItem)) {
+    class_internal(ptPool, ptThis, pool_t);
+    
+    if ((NULL == ptThis) || (NULL == ptItem)) {
         return;
     }
 
-    __EPOOL_ATOM_ACCESS(LIST_STACK_PUSH(this.ptFreeList, ptItem);)
+    __EPOOL_ATOM_ACCESS(
+        LIST_STACK_PUSH(this.ptFreeList, ptItem);
+        this.tCounter++;
+    )
 }
 
-uint16_t pool_get_item_count_allocated(pool_t *ptPool)
+uint16_t pool_get_item_count(pool_t *ptPool)
 {
-    uint_fast16_t tCount;
+    uint_fast16_t tCount = 0;
+    class_internal(ptPool, ptThis, pool_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
 
-    if (NULL == ptPool) {
-        return 0;
-    }
-
-    tCount = ((CLASS(pool_t) *)ptPool)->tCounter;
-
+        tCount = this.tCounter;
+    } while(false);
     return tCount;
 }
 
 __EPOOL_MUTEX_TYPE *pool_get_mutex(pool_t *ptPool)
 {
-    if (NULL == ptPool) {
+    class_internal(ptPool, ptThis, pool_t);
+    if (NULL == ptThis) {
         return NULL;
     }
 
-    return &(((CLASS(pool_t) *)ptPool)->tMutex);
+    return &(this.tMutex);
 }
 
 /*EOF*/

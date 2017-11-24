@@ -90,7 +90,9 @@ extern_simple_fsm(telegraph_engine_task,
 
 //! \name telegraph engine
 //! @{
-extern_class(telegraph_engine_t,   which(  inherit(fsm(telegraph_engine_task))))
+extern_class(telegraph_engine_t,   
+    which(  inherit(fsm(telegraph_engine_task))
+            inherit(pool_t)))
 
     struct {
         telegraph_t                             *ptHead;
@@ -102,14 +104,19 @@ extern_class(telegraph_engine_t,   which(  inherit(fsm(telegraph_engine_task))))
         telegraph_t                             *ptTail;
     } Transmitter; 
     
-    telegraph_parser_t                      *fnDecoder;
-    multiple_delay_t                        *ptDelayService;
-    telegraph_engine_low_level_write_io_t   *fnWriteIO;
-    void                                    *pIOTag;
-end_extern_class(telegraph_engine_t, which(  inherit(fsm(telegraph_engine_task))))
+    telegraph_parser_t                          *fnDecoder;
+    multiple_delay_t                            *ptDelayService;
+    telegraph_engine_low_level_write_io_t       *fnWriteIO;
+    void                                        *pIOTag;
+end_extern_class(telegraph_engine_t, 
+    which(  inherit(fsm(telegraph_engine_task))
+            inherit(pool_t)))
 //! @}
 
 typedef struct {
+    mem_block_t                             tTelegraphPool;
+    uint32_t                                wTelegraphSize;
+    
     telegraph_parser_t                      *fnDecoder;
     multiple_delay_t                        *ptDelayService;
     telegraph_engine_low_level_write_io_t   *fnWriteIO;
@@ -131,6 +138,11 @@ def_interface(i_telegraph_engine_t)
                                     bool bPureListener);
         bool        (*Listen)   (   telegraph_engine_t *ptObj, 
                                     telegraph_t *ptTelegraph);
+                                    
+        telegraph_t *(*New)     (   telegraph_engine_t *ptObj,
+                                    telegraph_handler_t *fnHandler, 
+                                    uint32_t wTimeout, 
+                                    block_t *ptData);
     } Telegraph;
 end_def_interface(i_telegraph_engine_t)
 
