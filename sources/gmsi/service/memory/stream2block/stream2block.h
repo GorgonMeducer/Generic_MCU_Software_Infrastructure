@@ -27,6 +27,16 @@
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
+#define STREAM_BUFFER_CFG(__ADDR, ...)                  \
+    do {                                                \
+        stream_buffer_cfg_t tCFG = {                    \
+            __VA_ARGS__                                 \
+        };                                              \
+                                                        \
+        STREAM_BUFFER.Init((__ADDR), &tCFG);            \
+    } while(false)
+
+
 /*----------------------------------------------------------------------------*
  * common template                                                            *
  *----------------------------------------------------------------------------*/
@@ -36,15 +46,16 @@
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
     end_def_class(__NAME##_stream_buffer_block_t,inherit(block_t))              \
     NO_INIT static stream_buffer_t s_t##__NAME##StreamBuffer;                   \
+    NO_INIT static block_pool_t s_t##__NAME##_BlockPool;                        \
                                                                                 \
     static bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)         \
     {                                                                           \
+        BLOCK.Heap.Init(&s_t##__NAME##_BlockPool);                              \
         return STREAM_BUFFER.Init(&s_t##__NAME##StreamBuffer, ptCFG);           \
     }                                                                           \
     static bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast16_t hwSize) \
     {                                                                           \
-        return STREAM_BUFFER.AddBuffer(                                         \
-                &s_t##__NAME##StreamBuffer,                                     \
+        return BLOCK.Heap.Add(&s_t##__NAME##_BlockPool,                         \
                 pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
     }                                                                           \
     static __NAME##_stream_buffer_block_t * __NAME##_stream_exchange_block(     \
@@ -80,6 +91,7 @@
 #define OUTPUT_STREAM_BUFFER_CFG(__NAME, ...)                                   \
         do {                                                                    \
             stream_buffer_cfg_t tCFG = {                                        \
+                .ptPool = &s_t##__NAME##_BlockPool,                             \
                 .tDirection = OUTPUT_STREAM,                                    \
                 __VA_ARGS__                                                     \
             };                                                                  \
@@ -240,6 +252,7 @@
 #define INPUT_STREAM_BUFFER_CFG(__NAME, ...)                                    \
         do {                                                                    \
             stream_buffer_cfg_t tCFG = {                                        \
+                .ptPool = &s_t##__NAME##_BlockPool,                             \
                 .tDirection = INPUT_STREAM,                                     \
                 __VA_ARGS__                                                     \
             };                                                                  \
@@ -430,22 +443,26 @@ typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 extern_class(stream_buffer_t, 
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
-        inherit(block_pool_t)
         inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
     )) 
 
     bool                                    bIsOutput;                          //!< direction
     bool                                    bIsQueueInitialised;                //!< Indicate whether the queue has been inialised or not
-    
+    block_pool_t                           *ptBlockPool;                        //!< a reference to outside block pool
     block_t                                *ptUsedByQueue;                      //!< buffer block used by queue
-    block_t                                 *ptUsedByOutside;                   //!< buffer block lent out  
+    block_t                                *ptUsedByOutside;                    //!< buffer block lent out  
     stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
 
-end_extern_class(stream_buffer_t)
+end_extern_class(stream_buffer_t,
+    which(   
+        inherit(block_queue_t)                                                  //!< inherit from block_queue_t
+        inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
+    ))
 //! @}
 
 typedef struct {
+    block_pool_t                           *ptPool;
     enum {
         INPUT_STREAM = 0,
         OUTPUT_STREAM
@@ -458,7 +475,6 @@ typedef struct {
 def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
-    bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
         
     struct {
         bool    (*Read)         (stream_buffer_t *, uint8_t *);
