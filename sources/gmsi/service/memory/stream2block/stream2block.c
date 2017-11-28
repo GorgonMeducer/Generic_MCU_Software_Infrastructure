@@ -54,23 +54,27 @@ typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 def_class(stream_buffer_t, 
     which(   
-        inherit(block_queue_t)                                          //!< inherit from block_queue_t
-        inherit(block_pool_t)
-        inherit(QUEUE(StreamBufferQueue))                               //!< inherit from queue StreamBufferQueue
+        inherit(block_queue_t)                                                  //!< inherit from block_queue_t
+        inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
     )) 
 
-    bool                                    bIsOutput;                  //!< direction
-    bool                                    bIsQueueInitialised;        //!< Indicate whether the queue has been inialised or not
-    
-    block_t                                *ptUsedByQueue;              //!< buffer block used by queue
-    block_t                                *ptUsedByOutside;            //!< buffer block lent out  
-    stream_buffer_req_event_t              *fnRequestSend;              //!< callback for triggering the first output transaction
+    bool                                    bIsOutput;                          //!< direction
+    bool                                    bIsQueueInitialised;                //!< Indicate whether the queue has been inialised or not
+    block_pool_t                           *ptBlockPool;                        //!< a reference to outside block pool
+    block_t                                *ptUsedByQueue;                      //!< buffer block used by queue
+    block_t                                *ptUsedByOutside;                    //!< buffer block lent out  
+    stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
 
-end_def_class(stream_buffer_t)
+end_def_class(stream_buffer_t,
+    which(   
+        inherit(block_queue_t)                                                  //!< inherit from block_queue_t
+        inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
+    ))
 //! @}
 
 typedef struct {
+    block_pool_t                           *ptPool;
     enum {
         INPUT_STREAM = 0,
         OUTPUT_STREAM
@@ -83,7 +87,6 @@ typedef struct {
 def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
-    bool        (*AddBuffer)    (stream_buffer_t *, void *, uint_fast16_t , uint_fast16_t );
         
     struct {
         bool    (*Read)         (stream_buffer_t *, uint8_t *);
@@ -104,11 +107,7 @@ end_def_interface(i_stream_buffer_t)
 /*============================ PROTOTYPES ====================================*/
     
 static bool stream_buffer_init(     stream_buffer_t *ptObj, 
-                                    stream_buffer_cfg_t *ptCFG);    
-static bool stream_buffer_add_heap( stream_buffer_t *ptObj, 
-                                    void *pBuffer, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwItemSize);
+                                    stream_buffer_cfg_t *ptCFG); 
 static bool stream_read(            stream_buffer_t *ptObj, 
                                     uint8_t *pchData);
 static bool stream_write(           stream_buffer_t *ptObj, 
@@ -125,7 +124,7 @@ static void stream_flush(           stream_buffer_t *ptObj);
     
 const i_stream_buffer_t STREAM_BUFFER = {
         .Init =         &stream_buffer_init,
-        .AddBuffer =    &stream_buffer_add_heap,
+        //.AddBuffer =    &stream_buffer_add_heap,
         .Stream = {
             .Read =     &stream_read,
             .Write =    &stream_write,
@@ -150,10 +149,13 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
         
         if (NULL == ptObj || NULL == ptCFG) {
             break;
-        } 
+        } else if (NULL == ptCFG->ptPool) {
+            break;
+        }
         
         __SB_ATOM_ACCESS(
             do {
+                this.ptBlockPool = ptCFG->ptPool;
                 this.bIsOutput = (ptCFG->tDirection == OUTPUT_STREAM);
                 this.bIsQueueInitialised = false;
 
@@ -166,7 +168,6 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
                 }
                                
                 BLOCK_QUEUE.Init(ref_obj_as(this, block_queue_t));
-                BLOCK.Heap.Init(ref_obj_as(this, block_pool_t));
                 bResult = true;
             } while(false);
         )
@@ -175,6 +176,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
     return bResult;
 }
 
+#if 0
 static bool stream_buffer_add_heap( stream_buffer_t *ptObj, 
                                     void *pBuffer, 
                                     uint_fast16_t hwSize, 
@@ -186,12 +188,12 @@ static bool stream_buffer_add_heap( stream_buffer_t *ptObj,
         return false;
     }
     
-    return BLOCK.Heap.Add(    ref_obj_as(this, block_pool_t), 
+    return BLOCK.Heap.Add(          this.ptBlockPool, 
                                     pBuffer, 
                                     hwSize, 
                                     hwItemSize );
 }
-
+#endif
 
 
 static block_t *get_next_block(stream_buffer_t *ptObj)
@@ -213,7 +215,7 @@ static block_t *get_next_block(stream_buffer_t *ptObj)
         } else {
             
             //! get a new block
-            ptItem = BLOCK.Heap.New( ref_obj_as(this, block_pool_t));
+            ptItem = BLOCK.Heap.New( this.ptBlockPool);
             
             if (NULL != ptItem) {
                 //! reset block size
@@ -243,7 +245,7 @@ static void return_block(stream_buffer_t *ptObj, block_t *ptItem)
             //! reset block size
             BLOCK.Size.Reset(ptItem);
             //! stream is used for output
-            BLOCK.Heap.Free(ref_obj_as(this, block_pool_t), ptItem);
+            BLOCK.Heap.Free(this.ptBlockPool, ptItem);
             
         } else {
 
@@ -271,7 +273,7 @@ static block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld
                 //! reset block size
                 BLOCK.Size.Reset(ptOld);
                 //! stream is used for output
-                BLOCK.Heap.Free(ref_obj_as(this, block_pool_t), ptOld);
+                BLOCK.Heap.Free(this.ptBlockPool, ptOld);
             }
             //! find the next block from the list
             ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
@@ -282,7 +284,7 @@ static block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld
                 BLOCK_QUEUE.Enqueue(ref_obj_as(this, block_queue_t), ptOld);
             }
             //! get a new block
-            ptItem = BLOCK.Heap.New( ref_obj_as(this, block_pool_t));
+            ptItem = BLOCK.Heap.New( this.ptBlockPool );
             
             if (NULL != ptItem) {
                 //! reset block size
@@ -307,7 +309,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         if (NULL != this.ptUsedByQueue) {
             BLOCK.Size.Reset(this.ptUsedByQueue);
 
-            BLOCK.Heap.Free( ref_obj_as(this, block_pool_t), this.ptUsedByQueue);
+            BLOCK.Heap.Free( this.ptBlockPool, this.ptUsedByQueue);
         }
         //! fetch a block from list, and initialise it as a full queue
         ptBlock = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t) );
@@ -344,7 +346,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         
         
         //! get a new block from heap and initialise it as an empty queue
-        ptBlock = BLOCK.Heap.New( ref_obj_as(this, block_pool_t));
+        ptBlock = BLOCK.Heap.New( this.ptBlockPool );
         
         if (NULL != ptBlock) {
             //! reset block size
