@@ -36,12 +36,13 @@
 
 
 /* -----------------  Start of section using anonymous unions  -------------- */
-#if defined(__CC_ARM)
+#if __IS_COMPILER_ARM_COMPILER_5__
   //#pragma push
   #pragma anon_unions
-#elif defined(__ICCARM__)
+#elif __IS_COMPILER_ARM_COMPILER_6__
+#elif __IS_COMPILER_IAR__
   #pragma language=extended
-#elif defined(__GNUC__)
+#elif __IS_COMPILER_GCC__
   /* anonymous unions are enabled by default */
 #elif defined(__TMS470__)
 /* anonymous unions are enabled by default */

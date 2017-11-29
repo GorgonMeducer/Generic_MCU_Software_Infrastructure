@@ -14,8 +14,9 @@
 *  limitations under the License.                                           *
 *                                                                           *
 ****************************************************************************/
+
 #ifndef _USE_COMPILER_H_
-#define _USE_COMPILER_H_
+#define _USE_COMPILER_H_            
 
 //! \name The macros to identify the compiler
 //! @{
@@ -24,27 +25,35 @@
 #ifdef __IS_COMPILER_IAR__
     #undef __IS_COMPILER_IAR__
 #endif
-#define __IS_COMPILER_IAR__ defined(__IAR_SYSTEMS_ICC__)
+#if defined(__IAR_SYSTEMS_ICC__)
+#define __IS_COMPILER_IAR__                 1
+#endif
 
 //! \note for gcc
 #ifdef __IS_COMPILER_GCC__
     #undef __IS_COMPILER_GCC__
 #endif
-#define __IS_COMPILER_GCC__ defined(__GNUC__)
+#if defined(__GNUC__)
+#define __IS_COMPILER_GCC__                 1
+#endif
 //! @}
 
 //! \note for arm compiler 5
 #ifdef __IS_COMPILER_ARM_COMPILER_5__
     #undef __IS_COMPILER_ARM_COMPILER_5__
 #endif
-#define __IS_COMPILER_ARM_COMPILER_5__ ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
+#if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
+#define __IS_COMPILER_ARM_COMPILER_5__      1
+#endif
 //! @}
 
 //! \note for arm compiler 6
 #ifdef __IS_COMPILER_ARM_COMPILER_6__
     #undef __IS_COMPILER_ARM_COMPILER_6__
 #endif
-#define __IS_COMPILER_ARM_COMPILER_6__ ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
+#if ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
+#define __IS_COMPILER_ARM_COMPILER_6__      1
+#endif
 //! @}
 
 
@@ -54,7 +63,7 @@
     #pragma anon_unions
 #elif   __IS_COMPILER_IAR__
     #pragma language=extended
-#elif   __IS_COMPILER_GCC__ OR __IS_COMPILER_ARM_COMPILER_6__
+#elif   __IS_COMPILER_GCC__ || __IS_COMPILER_ARM_COMPILER_6__
     /* anonymous unions are enabled by default */
 #else
     #warning Not supported compiler type

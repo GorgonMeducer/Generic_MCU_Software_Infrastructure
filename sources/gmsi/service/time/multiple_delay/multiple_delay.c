@@ -414,10 +414,7 @@ static bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG )
         EPOOL_ADD_HEAP(  multiple_delay_item_heap_t,
                     ref_obj_as(this, EPOOL(multiple_delay_item_heap_t)),
                     ptCFG->pchBuffer, ptCFG->hwSize);
-        
-        
-        
-        
+
         return NULL != init_fsm(multiple_delay_task, 
                         &base_obj(fsm(multiple_delay_task)), 
                         args(ptObj));
