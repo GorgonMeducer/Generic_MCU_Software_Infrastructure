@@ -442,6 +442,17 @@ declare_class(stream_buffer_t)
 typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
 
 
+typedef union {
+    struct {
+        uint8_t        IsAvailable         :1;
+        uint8_t        IsOutput            :1;
+        uint8_t        IsDataAvailable     :1;
+        uint8_t        IsBlockBufferDrain  :1;
+        uint8_t                            :4;
+    };
+    uint8_t tValue;
+} stream_buffer_status_t;
+
 extern_class(stream_buffer_t, 
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
@@ -455,7 +466,8 @@ extern_class(stream_buffer_t,
     block_t                                *ptUsedByOutside;                    //!< buffer block lent out  
     stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
-    uint_fast8_t                            chBlockReservedSize;
+    uint8_t                                 chBlockReservedSize;
+    stream_buffer_status_t                  tStatus;   
 end_extern_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
@@ -474,10 +486,13 @@ typedef struct {
     uint_fast8_t                            chBlockReservedSize;   
 }stream_buffer_cfg_t;
 
+
+
 def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
-        
+    stream_buffer_status_t
+                (*Status)       (stream_buffer_t *);
     struct {
         bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
@@ -486,10 +501,12 @@ def_interface(i_stream_buffer_t)
     } Stream;
     
     struct {
-        block_t*(*Exchange)    (stream_buffer_t *, block_t *);
-        block_t*(*GetNext)     (stream_buffer_t *);
+        block_t*(*Exchange)     (stream_buffer_t *, block_t *);
+        block_t*(*GetNext)      (stream_buffer_t *);
         void    (*Return)       (stream_buffer_t *, block_t *);
     } Block;
+    
+    
 
 end_def_interface(i_stream_buffer_t)
     
