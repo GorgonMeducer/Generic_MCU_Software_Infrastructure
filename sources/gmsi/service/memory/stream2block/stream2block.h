@@ -122,11 +122,12 @@
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
     static bool __NAME##_stream_write(uint8_t chData)                           \
     {                                                                           \
-        return STREAM_BUFFER.Stream.Write(&s_t##__NAME##StreamBuffer, chData);  \
+        return STREAM_BUFFER.Stream.WriteByte(                                  \
+                                        &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
     static void __NAME##_stream_flush(void)                                     \
     {                                                                           \
-        STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);                 \
+        while(!STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer));         \
     }                                                                           \
     __OUTPUT_STREAM_BUFFER_COMMON(__NAME) = {                                   \
             .Init =         &__NAME##_stream_buffer_init,                       \
@@ -283,7 +284,8 @@
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
     static bool __NAME##_stream_read(uint8_t *pchData)                          \
     {                                                                           \
-        return STREAM_BUFFER.Stream.Read(&s_t##__NAME##StreamBuffer, pchData);  \
+        return STREAM_BUFFER.Stream.ReadByte(                                   \
+                                        &s_t##__NAME##StreamBuffer, pchData);   \
     }                                                                           \
     __INPUT_STREAM_BUFFER_COMMON(__NAME) = {                                    \
             .Init =         &__NAME##_stream_buffer_init,                       \
@@ -453,7 +455,7 @@ extern_class(stream_buffer_t,
     block_t                                *ptUsedByOutside;                    //!< buffer block lent out  
     stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
-
+    uint_fast8_t                            chBlockReservedSize;
 end_extern_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
@@ -469,7 +471,7 @@ typedef struct {
     } tDirection;
     
     stream_buffer_req_event_t              *fnRequestHandler;
-    
+    uint_fast8_t                            chBlockReservedSize;   
 }stream_buffer_cfg_t;
 
 def_interface(i_stream_buffer_t)
@@ -477,9 +479,10 @@ def_interface(i_stream_buffer_t)
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
         
     struct {
-        bool    (*Read)         (stream_buffer_t *, uint8_t *);
-        bool    (*Write)        (stream_buffer_t *, uint8_t);
-        void    (*Flush)        (stream_buffer_t *ptObj);
+        bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
+        bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
+        bool    (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
+        bool    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
     struct {
