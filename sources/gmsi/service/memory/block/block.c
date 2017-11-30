@@ -59,6 +59,7 @@ def_interface(i_block_t)
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);
         void        (*Reset)(block_t *);
+        uint32_t    (*Capability)(block_t *);
     } Size;
     struct {
         void *      (*Get)(block_t *);
@@ -77,6 +78,7 @@ static void reset_block_size(block_t *ptObj);
 static void *get_block_buffer(block_t *ptObj);
 static void set_block_size(block_t *ptObj, uint32_t wSize);
 static uint32_t get_block_size(block_t *ptObj);
+static uint32_t get_block_capability(block_t *ptObj);
 static bool block_pool_init(block_pool_t *ptObj);
 static block_t *new_block(block_pool_t *ptObj);
 static void free_block(block_pool_t *ptObj, block_t *ptItem);
@@ -93,20 +95,21 @@ static bool write_block_buffer( block_t *ptObj,
 
 const i_block_t BLOCK = {
     .Heap = {
-        .Init =     &block_pool_init,
-        .Add =      &block_pool_add_heap,
-        .New =      &new_block,
-        .Free =     &free_block,
+        .Init =         &block_pool_init,
+        .Add =          &block_pool_add_heap,
+        .New =          &new_block,
+        .Free =         &free_block,
     },
-    .Init =         &init,
+    .Init =             &init,
     .Size = {
-        .Get =      &get_block_size,
-        .Set =      &set_block_size,
-        .Reset =    &reset_block_size,
+        .Get =          &get_block_size,
+        .Set =          &set_block_size,
+        .Reset =        &reset_block_size,
+        .Capability =   &get_block_capability,
     },
     .Buffer = {
-        .Get =      &get_block_buffer,
-        .Write =    &write_block_buffer,
+        .Get =          &get_block_buffer,
+        .Write =        &write_block_buffer,
     },
 };
 
@@ -167,7 +170,7 @@ static bool write_block_buffer( block_t *ptObj,
             hwSize = hwMaxSize;
         }
         
-        memcpy(get_block_buffer(ptObj), pchSrc, hwSize);
+        memcpy(get_block_buffer(ptObj)+hwOffsite, pchSrc, hwSize);
         
         this.wSize = hwSize+hwOffsite;
         bResult = true;
@@ -187,6 +190,16 @@ static void set_block_size(block_t *ptObj, uint32_t wSize)
     this.wSize = MIN(wSize, this.wBlockSize);
 }
 
+static uint32_t get_block_capability(block_t *ptObj)
+{
+    class_internal(ptObj, ptThis, block_t);
+    
+    if (NULL == ptThis) {
+        return 0;
+    }
+    
+    return this.wBlockSize;
+}
 
 static uint32_t get_block_size(block_t *ptObj)
 {

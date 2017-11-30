@@ -61,6 +61,7 @@ def_interface(i_block_t)
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);
         void        (*Reset)(block_t *);
+        uint32_t    (*Capability)(block_t *);
     } Size;
     struct {
         void *      (*Get)(block_t *);
