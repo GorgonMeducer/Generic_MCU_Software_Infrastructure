@@ -133,25 +133,25 @@ end_def_interface(i_multiple_delay_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-static void insert_timer_tick_event_handler(  multiple_delay_t *ptObj);
+private void insert_timer_tick_event_handler(  multiple_delay_t *ptObj);
 
-static bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG );
+private bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG );
 
-static fsm_rt_t task(multiple_delay_t *ptObj);
+private fsm_rt_t task(multiple_delay_t *ptObj);
 
-static multiple_delay_item_t * request_delay(  
+private multiple_delay_item_t * request_delay(  
                             multiple_delay_t *ptObj,
                             uint32_t wDelay,
                             multiple_delay_request_priority_t tPriority,        //!< request priority
                             void *pTag,                                         //!< object passed to timeout event handler
                             timeout_event_handler_t *fnHandler);
-static void cancel_delay(multiple_delay_t *ptObj, multiple_delay_item_t *ptItem);
+private void cancel_delay(multiple_delay_t *ptObj, multiple_delay_item_t *ptItem);
 
-extern_fsm_implementation(multiple_delay_task);
-extern_fsm_initialiser(multiple_delay_task, 
-    args(
-        multiple_delay_t *ptObj
-    ));
+private declare_fsm_implementation(multiple_delay_task);
+private declare_fsm_initialiser(multiple_delay_task, 
+            args(
+                multiple_delay_t *ptObj
+            ));
 
 /*============================ GLOBAL VARIABLES ==============================*/
 const i_multiple_delay_t MULTIPLE_DELAY = {
@@ -168,7 +168,7 @@ const i_multiple_delay_t MULTIPLE_DELAY = {
 
 /*============================ IMPLEMENTATION ================================*/
 
-static fsm_rt_t task(multiple_delay_t *ptObj)
+private fsm_rt_t task(multiple_delay_t *ptObj)
 {
     class_internal(ptObj, ptThis, multiple_delay_t);
     if (NULL == ptThis) {
@@ -181,7 +181,7 @@ static fsm_rt_t task(multiple_delay_t *ptObj)
 }
         
         
-static void add_to_delay_list(  multiple_delay_item_t *ptItem, 
+private void add_to_delay_list(  multiple_delay_item_t *ptItem, 
                                 multiple_delay_item_t **ppList) 
 {
     class_internal(ptItem, ptTarget, multiple_delay_item_t);
@@ -206,7 +206,7 @@ static void add_to_delay_list(  multiple_delay_item_t *ptItem,
     )
 }
 
-static bool remove_from_delay_list( multiple_delay_item_t *ptItem, 
+private bool remove_from_delay_list( multiple_delay_item_t *ptItem, 
                                     multiple_delay_item_t **ppList)
 {
     class_internal(ptItem, ptTarget, multiple_delay_item_t);
@@ -234,7 +234,7 @@ static bool remove_from_delay_list( multiple_delay_item_t *ptItem,
     return bResult;
 }
 
-static void cancel_delay(multiple_delay_t *ptObj, multiple_delay_item_t *ptItem)
+private void cancel_delay(multiple_delay_t *ptObj, multiple_delay_item_t *ptItem)
 {
     class_internal(ptObj, ptThis, multiple_delay_t);
     class_internal(ptItem, ptTarget, multiple_delay_item_t);
@@ -277,7 +277,7 @@ static void cancel_delay(multiple_delay_t *ptObj, multiple_delay_item_t *ptItem)
                 ptItem);
 }
 
-static multiple_delay_item_t * request_delay(  
+private multiple_delay_item_t * request_delay(  
                             multiple_delay_t *ptObj,
                             uint32_t wDelay,
                             multiple_delay_request_priority_t tPriority,        //!< request priority
@@ -340,7 +340,7 @@ static multiple_delay_item_t * request_delay(
 }
     
         
-static void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
+private void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
 {
     class_internal(ptObj, ptThis, multiple_delay_t);
     
@@ -388,7 +388,7 @@ static void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
         
 
         
-static bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG )
+private bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG )
 {
     class_internal(ptObj, ptThis, multiple_delay_t);
     if (NULL == ptThis) {
@@ -424,7 +424,7 @@ static bool init(  multiple_delay_t *ptObj,  multiple_delay_cfg_t *ptCFG )
 }
         
 
-fsm_initialiser(multiple_delay_task, 
+private fsm_initialiser(multiple_delay_task, 
     args(
         multiple_delay_t *ptObj
     ))
@@ -436,7 +436,7 @@ fsm_initialiser(multiple_delay_task,
         this.ptObj = ptObj;
     )
         
-fsm_implementation(multiple_delay_task) 
+private fsm_implementation(multiple_delay_task) 
         
     def_states(CHECK_LIST, RAISE_NORMAL_PRIORITY_EVENT, RAISE_LOW_PRIORITY_EVENT)    
     class_internal(this.ptObj, ptTarget, multiple_delay_t);

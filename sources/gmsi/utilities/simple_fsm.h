@@ -73,9 +73,13 @@
            We can then use demo_fsm_init_fn to define function pointer
  */
 #define __extern_fsm_initialiser(__NAME, ...)                                   \
-        typedef fsm(__NAME) *__NAME##_init_fn(fsm(__NAME) *ptFSM __VA_ARGS__);  \
-        extern  fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__);
+        fsm(__NAME) *__NAME##_init(fsm(__NAME) *ptFSM __VA_ARGS__);             \
+        typedef fsm(__NAME) *__NAME##_init_fn(fsm(__NAME) *ptFSM __VA_ARGS__);  
+        
 #define extern_fsm_initialiser(__NAME, ...)                                     \
+            __extern_fsm_initialiser(__NAME, __VA_ARGS__)
+            
+#define declare_fsm_initialiser(__NAME, ...)                                    \
             __extern_fsm_initialiser(__NAME, __VA_ARGS__)
 
 /*! \brief extern fsm task function and provide function prototye as <__NAME>_fn, E.g
@@ -88,14 +92,20 @@
  */
  //! @{
 #define __extern_fsm_implementation_ex(__NAME,__TYPE, ...)                      \
-        typedef fsm_rt_t __NAME##_fn( __TYPE *ptFSM __VA_ARGS__ );              \
-        fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )
+        fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ );                           \
+        typedef fsm_rt_t __NAME##_fn( __TYPE *ptFSM __VA_ARGS__ );              
         
+#define declare_fsm_implementation_ex(__NAME, __TYPE, ...)                      \
+            __extern_fsm_implementation_ex(__NAME, __TYPE, __VA_ARGS__)
+
 #define extern_fsm_implementation_ex(__NAME,__TYPE, ...)                        \
             __extern_fsm_implementation_ex(__NAME, __TYPE, __VA_ARGS__)
 
 #define extern_fsm_implementation(__NAME, ...)                                  \
-        __extern_fsm_implementation_ex(__NAME, fsm(__NAME), __VA_ARGS__)
+            __extern_fsm_implementation_ex(__NAME, fsm(__NAME), __VA_ARGS__)
+            
+#define declare_fsm_implementation(__NAME, ...)                                 \
+            __extern_fsm_implementation_ex(__NAME, fsm(__NAME), __VA_ARGS__)
 //! @}
 
 #define call_fsm(__NAME, __FSM, ...)                                            \
@@ -105,12 +115,12 @@
         case __STATE:                                                           \
             {__VA_ARGS__;}
 
-#define on_start(...)                       __VA_ARGS__
+#define on_start(...)                       {__VA_ARGS__;}
 
 
 #define reset_fsm()         do { ptThis->chState = 0; } while(0);
 #define fsm_cpl()           do {reset_fsm(); return fsm_rt_cpl;} while(0);
-#define fsm_report(__ERROR) return (fsm_rt_t)(__ERROR);
+#define fsm_report(__ERROR) do {reset_fsm(); return (fsm_rt_t)(__ERROR); } while(0);
 #define fsm_on_going()      return fsm_rt_on_going;
 #define fsm_continue()      break
 

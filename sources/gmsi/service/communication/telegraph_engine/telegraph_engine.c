@@ -149,16 +149,16 @@ end_def_interface(i_telegraph_engine_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-static bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG);
-static block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj);
-static bool try_to_send_telegraph(  telegraph_engine_t *ptObj, 
+private bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG);
+private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj);
+private bool try_to_send_telegraph(  telegraph_engine_t *ptObj, 
                                     telegraph_t *ptTelegraph,
                                     bool bListener);
-static bool try_to_listen(  telegraph_engine_t *ptObj, 
+private bool try_to_listen(  telegraph_engine_t *ptObj, 
                             telegraph_t *ptTelegraph);
-static fsm_rt_t task(telegraph_engine_t *ptObj);
+private fsm_rt_t task(telegraph_engine_t *ptObj);
 
-static telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
+private telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
                                         telegraph_handler_t *fnHandler, 
                                         uint32_t wTimeout, 
                                         block_t *ptData);
@@ -180,11 +180,11 @@ const i_telegraph_engine_t TELEGRAPH_ENGINE = {
 
 /*============================ IMPLEMENTATION ================================*/
 
-fsm_initialiser(telegraph_engine_task)
+private fsm_initialiser(telegraph_engine_task)
     init_body()
 
 
-fsm_implementation(telegraph_engine_task)
+private fsm_implementation(telegraph_engine_task)
     def_states(FETCH_TELEGRAPH, SEND_TELGRAPH, REGISTER_LISTENER)
     
     class_internal(ptThis, ptBase, telegraph_engine_t);
@@ -218,7 +218,6 @@ fsm_implementation(telegraph_engine_task)
                 fsm_rt_t tResult = (*(base.fnWriteIO))(target.ptData, base.pIOTag );
                 
                 if (IS_FSM_ERR(tResult)) {
-                    reset_fsm();
                     fsm_report(tResult);
                 } else if (fsm_rt_cpl != tResult) {
                     fsm_continue();
@@ -248,7 +247,7 @@ fsm_implementation(telegraph_engine_task)
         )
     )
     
-static fsm_rt_t task(telegraph_engine_t *ptObj)
+private fsm_rt_t task(telegraph_engine_t *ptObj)
 {
     class_internal(ptObj, ptThis, telegraph_engine_t);
     if (NULL == ptThis) {
@@ -259,7 +258,7 @@ static fsm_rt_t task(telegraph_engine_t *ptObj)
                     ref_obj_as(this, fsm(telegraph_engine_task)));
 }
 
-static bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
+private bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
 {
     class_internal(ptObj, ptThis, telegraph_engine_t);
     do {
@@ -297,7 +296,7 @@ static bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
     return false;
 }
 
-static telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
+private telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
                                         telegraph_handler_t *fnHandler, 
                                         uint32_t wTimeout, 
                                         block_t *ptData)
@@ -326,7 +325,7 @@ static telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
     return NULL;
 }
 
-static void telegraph_timeout_event_handler(
+private void telegraph_timeout_event_handler(
     multiple_delay_report_status_t tStatus, void *pObj)
 {
     class_internal(pObj, ptTarget, telegraph_t);
@@ -357,13 +356,13 @@ static void telegraph_timeout_event_handler(
 
 }
 
-static bool try_to_listen(  telegraph_engine_t *ptObj, 
+private bool try_to_listen(  telegraph_engine_t *ptObj, 
                             telegraph_t *ptTelegraph)
 {
     return try_to_send_telegraph(ptObj, ptTelegraph, true);
 }
 
-static bool try_to_send_telegraph(  telegraph_engine_t *ptObj, 
+private bool try_to_send_telegraph(  telegraph_engine_t *ptObj, 
                                     telegraph_t *ptTelegraph,
                                     bool bPureListener)
 {
@@ -440,7 +439,7 @@ static bool try_to_send_telegraph(  telegraph_engine_t *ptObj,
 }
 
 
-static block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
+private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
 {
     class_internal(ptObj, ptThis, telegraph_engine_t);
     telegraph_t *ptItem;
@@ -467,9 +466,7 @@ static block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
             //! call frame parser
             frame_parsing_report_t tReport = this.fnDecoder(&ptTempBlock, ptItem);
             
-            if (NULL != ptTempBlock) {
-                ptBlock = ptTempBlock;
-            }
+            
             
             if (FRAME_UNMATCH != tReport) {
                 if  (tReport == FRAME_RECEIVED) {
@@ -498,6 +495,10 @@ static block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                     
                 }
                 break;
+            }
+            
+            if (NULL != ptTempBlock) {
+                ptBlock = ptTempBlock;
             }
             
             __TE_ATOM_ACCESS (

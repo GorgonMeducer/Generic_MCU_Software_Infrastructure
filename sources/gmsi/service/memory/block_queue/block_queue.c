@@ -52,10 +52,10 @@ end_def_interface(i_block_queue_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/ 
 
-static bool block_queue_init(block_queue_t *ptObj);
-static bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
-static uint32_t get_item_count(block_queue_t *ptObj);
-static block_t *get_item_from_list(block_queue_t *ptObj);
+private bool block_queue_init(block_queue_t *ptObj);
+private bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem);
+private uint32_t get_item_count(block_queue_t *ptObj);
+private block_t *get_item_from_list(block_queue_t *ptObj);
 
                                    
 /*============================ IMPLEMENTATION ================================*/
@@ -70,7 +70,7 @@ const i_block_queue_t BLOCK_QUEUE = {
 
 
 
-static bool block_queue_init(block_queue_t *ptObj)
+private bool block_queue_init(block_queue_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_queue_t);
     
@@ -88,7 +88,7 @@ static bool block_queue_init(block_queue_t *ptObj)
     
 }
 
-static bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
+private bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_queue_t);
     
@@ -104,7 +104,7 @@ static bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
     return true;
 }
 
-static uint32_t get_item_count(block_queue_t *ptObj)
+private uint32_t get_item_count(block_queue_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_queue_t);
     uint32_t wResult;
@@ -116,7 +116,7 @@ static uint32_t get_item_count(block_queue_t *ptObj)
     return wResult;
 }
 
-static block_t *get_item_from_list(block_queue_t *ptObj)
+private block_t *get_item_from_list(block_queue_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_queue_t);
     block_t *ptResult = NULL;

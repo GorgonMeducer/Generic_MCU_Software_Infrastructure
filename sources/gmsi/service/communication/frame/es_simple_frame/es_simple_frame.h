@@ -106,28 +106,6 @@ typedef struct {
 //! @}
 
 /*============================ PROTOTYPES ====================================*/
-
-extern_fsm_initialiser(es_simple_frame_decoder,
-    args(
-        i_byte_pipe_t *ptPipe, 
-        void *fnParser,
-        mem_block_t tMemory,
-        block_t *ptBlock,
-        void *pTag
-    ))
-
-extern_fsm_initialiser(es_simple_frame_encoder,
-    args(
-        i_byte_pipe_t *ptPipe
-    ))
-
-extern_fsm_implementation(es_simple_frame_encoder,
-        args(
-            uint8_t *pchData, uint_fast16_t hwSize
-        ));
-       
-extern_fsm_implementation(es_simple_frame_decoder);
-
 /*============================ TYPES Part Two ================================*/
 //! \name frame interface
 //! @{

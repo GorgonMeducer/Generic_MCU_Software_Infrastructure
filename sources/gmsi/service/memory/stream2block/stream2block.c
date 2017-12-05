@@ -124,22 +124,22 @@ end_def_interface(i_stream_buffer_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
     
-static bool stream_buffer_init(     stream_buffer_t *ptObj, 
+private bool stream_buffer_init(     stream_buffer_t *ptObj, 
                                     stream_buffer_cfg_t *ptCFG); 
-static bool stream_read(            stream_buffer_t *ptObj, 
+private bool stream_read(            stream_buffer_t *ptObj, 
                                     uint8_t *pchData);
-static bool stream_write(           stream_buffer_t *ptObj, 
+private bool stream_write(           stream_buffer_t *ptObj, 
                                     uint8_t chData);
-static block_t *request_next_buffer_block(
+private block_t *request_next_buffer_block(
                                     stream_buffer_t *ptObj, 
                                     block_t *ptOld);
-static block_t *get_next_block(        stream_buffer_t *ptObj);
-static void return_block(           stream_buffer_t *ptObj, block_t *ptOld);
-static bool stream_flush(           stream_buffer_t *ptObj);
-static bool stream_write_block(     stream_buffer_t *ptObj, block_t *ptBlock);
-static void __append_block_to_output_list(
+private block_t *get_next_block(        stream_buffer_t *ptObj);
+private void return_block(           stream_buffer_t *ptObj, block_t *ptOld);
+private bool stream_flush(           stream_buffer_t *ptObj);
+private bool stream_write_block(     stream_buffer_t *ptObj, block_t *ptBlock);
+private void __append_block_to_output_list(
                                     stream_buffer_t *ptObj, block_t *ptBlock);
-static stream_buffer_status_t get_status (stream_buffer_t *ptObj);
+private stream_buffer_status_t get_status (stream_buffer_t *ptObj);
 
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -162,7 +162,7 @@ const i_stream_buffer_t STREAM_BUFFER = {
 
 
 
-static stream_buffer_status_t get_status (stream_buffer_t *ptObj)
+private stream_buffer_status_t get_status (stream_buffer_t *ptObj)
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
     stream_buffer_status_t tStatus = {0};
@@ -179,7 +179,7 @@ static stream_buffer_status_t get_status (stream_buffer_t *ptObj)
     return tStatus;
 }
 
-static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCFG)
+private bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCFG)
 {
     bool bResult = false;
     do {
@@ -225,7 +225,7 @@ static bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptCF
 }
 
 
-static block_t *__get_new_block(stream_buffer_t *ptObj)
+private block_t *__get_new_block(stream_buffer_t *ptObj)
 {
     block_t *ptItem = NULL;
     class_internal(ptObj, ptThis, stream_buffer_t);
@@ -245,7 +245,7 @@ static block_t *__get_new_block(stream_buffer_t *ptObj)
     return ptItem;
 }
 
-static block_t *get_next_block(stream_buffer_t *ptObj)
+private block_t *get_next_block(stream_buffer_t *ptObj)
 {
     block_t *ptItem = NULL;
     class_internal(ptObj, ptThis, stream_buffer_t);
@@ -275,7 +275,7 @@ static block_t *get_next_block(stream_buffer_t *ptObj)
     return ptItem;
 }
 
-static void return_block(stream_buffer_t *ptObj, block_t *ptItem)
+private void return_block(stream_buffer_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
     do {
@@ -305,7 +305,7 @@ static void return_block(stream_buffer_t *ptObj, block_t *ptItem)
 
 }
 
-static block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld)
+private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld)
 {
     block_t *ptItem = NULL;
     class_internal(ptObj, ptThis, stream_buffer_t);
@@ -353,7 +353,7 @@ static block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOld
     return ptItem;
 }
 
-static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
+private bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
     block_t *ptBlock;
@@ -426,7 +426,7 @@ static bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
     return true;
 }
 
-static bool stream_flush(stream_buffer_t *ptObj)
+private bool stream_flush(stream_buffer_t *ptObj)
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
     bool bResult = false;
@@ -455,7 +455,7 @@ static bool stream_flush(stream_buffer_t *ptObj)
 }
 
 
-static bool stream_read(stream_buffer_t *ptObj, uint8_t *pchData)
+private bool stream_read(stream_buffer_t *ptObj, uint8_t *pchData)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
@@ -488,7 +488,7 @@ static bool stream_read(stream_buffer_t *ptObj, uint8_t *pchData)
 
 
 
-static bool stream_write(stream_buffer_t *ptObj, uint8_t chData)
+private bool stream_write(stream_buffer_t *ptObj, uint8_t chData)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
@@ -518,7 +518,7 @@ static bool stream_write(stream_buffer_t *ptObj, uint8_t chData)
     return false;
 }
 
-static void __append_block_to_output_list(  stream_buffer_t *ptObj, 
+private void __append_block_to_output_list(  stream_buffer_t *ptObj, 
                                             block_t *ptBlock)
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
@@ -536,7 +536,7 @@ static void __append_block_to_output_list(  stream_buffer_t *ptObj,
     }
 }
 
-static bool stream_write_block(stream_buffer_t *ptObj, block_t *ptBlock)
+private bool stream_write_block(stream_buffer_t *ptObj, block_t *ptBlock)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);

@@ -110,7 +110,7 @@ typedef struct {
 
 /*============================ PROTOTYPES ====================================*/
 
-extern_fsm_initialiser(es_simple_frame_decoder,
+private extern_fsm_initialiser(es_simple_frame_decoder,
     args(
         i_byte_pipe_t *ptPipe, 
         void *fnParser,
@@ -119,42 +119,42 @@ extern_fsm_initialiser(es_simple_frame_decoder,
         void *pTag
     ))
 
-extern_fsm_initialiser(es_simple_frame_encoder,
+private extern_fsm_initialiser(es_simple_frame_encoder,
     args(
         i_byte_pipe_t *ptPipe
     ))
     
-extern_fsm_initialiser(es_simple_frame_decoder_wrapper,
+private extern_fsm_initialiser(es_simple_frame_decoder_wrapper,
     args(
         es_simple_frame_t *ptFrame
     ))
     
-extern_fsm_initialiser(es_simple_frame_encoder_wrapper,
+private extern_fsm_initialiser(es_simple_frame_encoder_wrapper,
     args(
         es_simple_frame_t *ptFrame
     ))
 
-extern_fsm_implementation(es_simple_frame_encoder,
+private extern_fsm_implementation(es_simple_frame_encoder,
         args(
             uint8_t *pchData, uint_fast16_t hwSize
         ));
 
-extern_fsm_implementation(es_simple_frame_decoder);
+private extern_fsm_implementation(es_simple_frame_decoder);
 
-extern_fsm_implementation(es_simple_frame_encoder_wrapper,
+private extern_fsm_implementation(es_simple_frame_encoder_wrapper,
     args(
         uint8_t *pchBuffer, uint_fast16_t hwSize
     ));
 
-extern_fsm_implementation(es_simple_frame_decoder_wrapper);
+private extern_fsm_implementation(es_simple_frame_decoder_wrapper);
 
-extern bool es_simple_frame_init(  
+private bool es_simple_frame_init(  
     es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-extern fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
+private fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
 
-static fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize);
-static fsm_rt_t task(es_simple_frame_t *ptFrame);
-static fsm_rt_t decoder(es_simple_frame_t *ptFrame);
+private fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize);
+private fsm_rt_t task(es_simple_frame_t *ptFrame);
+private fsm_rt_t decoder(es_simple_frame_t *ptFrame);
 /*============================ TYPES Part Two ================================*/
 //! \name frame interface
 //! @{
@@ -189,7 +189,7 @@ const i_es_simple_frame_t ES_SIMPLE_FRAME = {
  *! \retval true initliazation is successful
  *! \retval false failed in initialization
  */
-bool es_simple_frame_init(  
+private bool es_simple_frame_init(  
     es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG)
 {
     class_internal(ptFrame, ptThis, es_simple_frame_t);
@@ -266,7 +266,7 @@ bool es_simple_frame_init(
     return false;
 }
 
-fsm_initialiser(es_simple_frame_decoder,
+private fsm_initialiser(es_simple_frame_decoder,
     args(
         i_byte_pipe_t *ptPipe, 
         void *fnParser,
@@ -304,18 +304,18 @@ fsm_initialiser(es_simple_frame_decoder,
     )
 
         
-static fsm_rt_t decoder(es_simple_frame_t *ptFrame)
+private fsm_rt_t decoder(es_simple_frame_t *ptFrame)
 {
     class_internal( ptFrame, ptThis, es_simple_frame_t);
     if (NULL == ptFrame) {
-        fsm_report(GSF_ERR_INVALID_PTR);
+        return (fsm_rt_t)(GSF_ERR_INVALID_PTR);
     }
     
     return call_fsm(es_simple_frame_decoder, ref_obj_as(this, fsm(es_simple_frame_decoder)));
 } 
         
         
-fsm_implementation(es_simple_frame_decoder)
+private fsm_implementation(es_simple_frame_decoder)
         
     def_states (
          WAIT_FOR_HEAD,
@@ -477,7 +477,7 @@ fsm_implementation(es_simple_frame_decoder)
         )
     )
                 
-fsm_initialiser(es_simple_frame_decoder_wrapper,
+private fsm_initialiser(es_simple_frame_decoder_wrapper,
     args(
         es_simple_frame_t *ptFrame
     ))
@@ -489,18 +489,18 @@ fsm_initialiser(es_simple_frame_decoder_wrapper,
         this.ptFrame = ptFrame;
     )          
 
-static fsm_rt_t task(es_simple_frame_t *ptFrame)
+private fsm_rt_t task(es_simple_frame_t *ptFrame)
 {
     class_internal( ptFrame, ptThis, es_simple_frame_t);
     if (NULL == ptFrame) {
-        fsm_report(GSF_ERR_INVALID_PTR);
+        return (fsm_rt_t)(GSF_ERR_INVALID_PTR);
     }
     
     return call_fsm(es_simple_frame_decoder_wrapper, 
                     &base_obj(fsm(es_simple_frame_decoder_wrapper)));
 } 
                 
-fsm_implementation(es_simple_frame_decoder_wrapper)
+private fsm_implementation(es_simple_frame_decoder_wrapper)
     def_states(DECODING, TRY_TO_LOCK, REPLY)
                 
     fsm_rt_t tFSMReply;
@@ -569,7 +569,7 @@ fsm_implementation(es_simple_frame_decoder_wrapper)
 
             
             
-fsm_initialiser(es_simple_frame_encoder,
+private fsm_initialiser(es_simple_frame_encoder,
     args(
         i_byte_pipe_t *ptPipe
     ))
@@ -588,7 +588,7 @@ fsm_initialiser(es_simple_frame_encoder,
         
 
         
-fsm_implementation(es_simple_frame_encoder,
+private fsm_implementation(es_simple_frame_encoder,
     args(
         uint8_t *pchData, uint_fast16_t hwSize
     ))
@@ -678,7 +678,7 @@ fsm_implementation(es_simple_frame_encoder,
    
             
         
-fsm_initialiser(es_simple_frame_encoder_wrapper,
+private fsm_initialiser(es_simple_frame_encoder_wrapper,
     args(
         es_simple_frame_t *ptFrame
     ))
@@ -691,11 +691,11 @@ fsm_initialiser(es_simple_frame_encoder_wrapper,
     )
             
         
-static fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize)
+private fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize)
 {
     class_internal( ptFrame, ptThis, es_simple_frame_t);
     if (NULL == ptFrame) {
-        fsm_report(GSF_ERR_INVALID_PTR);
+        return (fsm_rt_t)(GSF_ERR_INVALID_PTR);
     }
     
     return call_fsm(es_simple_frame_encoder_wrapper, 
@@ -703,7 +703,7 @@ static fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fas
                     args(pchBuffer, hwSize));
 }         
         
-fsm_implementation(es_simple_frame_encoder_wrapper,
+private fsm_implementation(es_simple_frame_encoder_wrapper,
     args(
         uint8_t *pchBuffer, uint_fast16_t hwSize
     ))
