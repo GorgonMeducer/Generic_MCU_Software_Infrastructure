@@ -63,6 +63,13 @@
 #   define target       (*ptTarget)
 #endif
 
+#ifndef private
+#   define private     static
+#endif
+
+#ifndef public
+#   define public      
+#endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 

@@ -74,20 +74,20 @@ end_def_interface(i_block_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/   
 
-static void reset_block_size(block_t *ptObj);
-static void *get_block_buffer(block_t *ptObj);
-static void set_block_size(block_t *ptObj, uint32_t wSize);
-static uint32_t get_block_size(block_t *ptObj);
-static uint32_t get_block_capability(block_t *ptObj);
-static bool block_pool_init(block_pool_t *ptObj);
-static block_t *new_block(block_pool_t *ptObj);
-static void free_block(block_pool_t *ptObj, block_t *ptItem);
-static bool block_pool_add_heap(  block_pool_t *ptObj, 
+private void reset_block_size(block_t *ptObj);
+private void *get_block_buffer(block_t *ptObj);
+private void set_block_size(block_t *ptObj, uint32_t wSize);
+private uint32_t get_block_size(block_t *ptObj);
+private uint32_t get_block_capability(block_t *ptObj);
+private bool block_pool_init(block_pool_t *ptObj);
+private block_t *new_block(block_pool_t *ptObj);
+private void free_block(block_pool_t *ptObj, block_t *ptItem);
+private bool block_pool_add_heap(  block_pool_t *ptObj, 
                             void *pBuffer, 
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize);
-static block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
-static bool write_block_buffer( block_t *ptObj, 
+private block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
+private bool write_block_buffer( block_t *ptObj, 
                                 const void *pchSrc, 
                                 uint_fast16_t hwSize, 
                                 uint_fast16_t hwOffsite);
@@ -116,7 +116,7 @@ const i_block_t BLOCK = {
 /*============================ IMPLEMENTATION ================================*/
 
 
-static block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
+private block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
 {
     class_internal(ptBlock, ptThis, block_t);
     do {
@@ -131,7 +131,7 @@ static block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
     return ptBlock;
 }
 
-static void reset_block_size(block_t *ptObj)
+private void reset_block_size(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -142,7 +142,7 @@ static void reset_block_size(block_t *ptObj)
     this.wSize = this.wBlockSize;
 }
 
-static void *get_block_buffer(block_t *ptObj)
+private void *get_block_buffer(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -153,7 +153,7 @@ static void *get_block_buffer(block_t *ptObj)
     return ((uint32_t *)&this.wBuffer)+1;
 }
 
-static bool write_block_buffer( block_t *ptObj, 
+private bool write_block_buffer( block_t *ptObj, 
                                 const void *pchSrc, 
                                 uint_fast16_t hwSize, 
                                 uint_fast16_t hwOffsite)
@@ -179,7 +179,7 @@ static bool write_block_buffer( block_t *ptObj,
     return bResult;
 }
 
-static void set_block_size(block_t *ptObj, uint32_t wSize)
+private void set_block_size(block_t *ptObj, uint32_t wSize)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -190,7 +190,7 @@ static void set_block_size(block_t *ptObj, uint32_t wSize)
     this.wSize = MIN(wSize, this.wBlockSize);
 }
 
-static uint32_t get_block_capability(block_t *ptObj)
+private uint32_t get_block_capability(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -201,7 +201,7 @@ static uint32_t get_block_capability(block_t *ptObj)
     return this.wBlockSize;
 }
 
-static uint32_t get_block_size(block_t *ptObj)
+private uint32_t get_block_size(block_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_t);
     
@@ -213,7 +213,7 @@ static uint32_t get_block_size(block_t *ptObj)
 }
 
 
-static bool block_pool_init(block_pool_t *ptObj)
+private bool block_pool_init(block_pool_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -233,7 +233,7 @@ static bool block_pool_init(block_pool_t *ptObj)
     return false;
 }
 
-static block_t *new_block(block_pool_t *ptObj)
+private block_t *new_block(block_pool_t *ptObj)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -252,7 +252,7 @@ static block_t *new_block(block_pool_t *ptObj)
     return ptBlock;
 }
 
-static void free_block(block_pool_t *ptObj, block_t *ptItem)
+private void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     
@@ -266,7 +266,7 @@ static void free_block(block_pool_t *ptObj, block_t *ptItem)
     } while(false);
 }
 
-static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
+private void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
 {
     class_internal(ptItem, ptThis, block_t);
     if (NULL == ptThis) {
@@ -277,7 +277,7 @@ static void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
     this.wSize = hwItemSize;
 }
 
-static bool block_pool_add_heap(  block_pool_t *ptObj, 
+private bool block_pool_add_heap(  block_pool_t *ptObj, 
                             void *pBuffer, 
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize)

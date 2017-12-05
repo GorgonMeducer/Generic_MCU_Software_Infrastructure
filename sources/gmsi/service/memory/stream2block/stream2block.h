@@ -45,31 +45,31 @@
     def_class(__NAME##_stream_buffer_block_t, inherit(block_t))                 \
         uint8_t chBuffer[__BLOCK_SIZE];                                         \
     end_def_class(__NAME##_stream_buffer_block_t,inherit(block_t))              \
-    NO_INIT static stream_buffer_t s_t##__NAME##StreamBuffer;                   \
-    NO_INIT static block_pool_t s_t##__NAME##_BlockPool;                        \
+    NO_INIT private stream_buffer_t s_t##__NAME##StreamBuffer;                  \
+    NO_INIT private block_pool_t s_t##__NAME##_BlockPool;                       \
                                                                                 \
-    static bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)         \
+    private bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)        \
     {                                                                           \
         BLOCK.Heap.Init(&s_t##__NAME##_BlockPool);                              \
         return STREAM_BUFFER.Init(&s_t##__NAME##StreamBuffer, ptCFG);           \
     }                                                                           \
-    static bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast16_t hwSize) \
+    private bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast16_t hwSize)\
     {                                                                           \
         return BLOCK.Heap.Add(&s_t##__NAME##_BlockPool,                         \
                 pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
     }                                                                           \
-    static __NAME##_stream_buffer_block_t * __NAME##_stream_exchange_block(     \
+    private __NAME##_stream_buffer_block_t * __NAME##_stream_exchange_block(    \
                               __NAME##_stream_buffer_block_t *ptOld)            \
     {                                                                           \
         return (__NAME##_stream_buffer_block_t *)STREAM_BUFFER.Block.Exchange(  \
                 &s_t##__NAME##StreamBuffer, ref_obj_as((*ptOld), block_t));     \
     }                                                                           \
-    static __NAME##_stream_buffer_block_t * __NAME##_stream_get_next_block(void)\
+    private __NAME##_stream_buffer_block_t *__NAME##_stream_get_next_block(void)\
     {                                                                           \
         return (__NAME##_stream_buffer_block_t *)STREAM_BUFFER.Block.GetNext(   \
                 &s_t##__NAME##StreamBuffer);                                    \
     }                                                                           \
-    static void __NAME##_stream_return_block(                                   \
+    private void __NAME##_stream_return_block(                                  \
             __NAME##_stream_buffer_block_t *ptOld)                              \
     {                                                                           \
         STREAM_BUFFER.Block.Return(                                             \
@@ -120,12 +120,12 @@
         
 #define __DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
-    static bool __NAME##_stream_write(uint8_t chData)                           \
+    private bool __NAME##_stream_write(uint8_t chData)                          \
     {                                                                           \
         return STREAM_BUFFER.Stream.WriteByte(                                  \
                                         &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
-    static void __NAME##_stream_flush(void)                                     \
+    private void __NAME##_stream_flush(void)                                    \
     {                                                                           \
         while(!STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer));         \
     }                                                                           \
@@ -175,14 +175,14 @@
     extern void __NAME##_serial_port_disbale_tx_cpl_interrupt(void);            \
     extern void __NAME##_serial_port_fill_byte(uint8_t chByte);                 \
                                                                                 \
-    NO_INIT static volatile struct {                                            \
+    NO_INIT private volatile struct {                                           \
         __NAME##_stream_buffer_block_t *ptBlock;                                \
         uint8_t *pchBuffer;                                                     \
         uint_fast16_t hwSize;                                                   \
         uint_fast16_t hwIndex;                                                  \
         uint_fast16_t hwTimeoutCounter;                                         \
     } s_t##__NAME##StreamOutService;                                            \
-    static void __NAME##_request_send(void)                                     \
+    private void __NAME##_request_send(void)                                    \
     {                                                                           \
         s_t##__NAME##StreamOutService.ptBlock = STREAM_OUT.Block.Exchange(      \
             s_t##__NAME##StreamOutService.ptBlock);                             \
@@ -221,7 +221,7 @@
                     s_t##__NAME##StreamOutService.hwIndex++]);                  \
         }                                                                       \
     }                                                                           \
-    static void __NAME##_output_stream_req_send_event_handler(                  \
+    private void __NAME##_output_stream_req_send_event_handler(                 \
                 stream_buffer_t *ptObj)                                         \
     {                                                                           \
         if (NULL == ptObj) {                                                    \
@@ -232,7 +232,7 @@
     }                                                                           \
     void __NAME##_output_stream_adapter_init(void)                              \
     {                                                                           \
-        static NO_INIT __NAME##_stream_buffer_block_t                           \
+        private NO_INIT __NAME##_stream_buffer_block_t                          \
                         s_tBlocks[__BLOCK_COUNT];                               \
         OUTPUT_STREAM_BUFFER_CFG(                                               \
             __NAME,                                                             \
@@ -282,7 +282,7 @@
                                                                                         
 #define __DEF_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                         \
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
-    static bool __NAME##_stream_read(uint8_t *pchData)                          \
+    private bool __NAME##_stream_read(uint8_t *pchData)                         \
     {                                                                           \
         return STREAM_BUFFER.Stream.ReadByte(                                   \
                                         &s_t##__NAME##StreamBuffer, pchData);   \
@@ -331,14 +331,14 @@
     extern void __NAME##_serial_port_enable_rx_cpl_interrupt(void);             \
     extern void __NAME##_serial_port_disable_rx_cpl_interrupt(void);            \
     extern uint8_t __NAME##_serial_port_get_byte(void);                         \
-    NO_INIT static volatile struct {                                            \
+    NO_INIT private volatile struct {                                           \
         __NAME##_stream_buffer_block_t *ptBlock;                                \
         uint8_t *pchBuffer;                                                     \
         uint_fast16_t hwSize;                                                   \
         uint_fast16_t hwIndex;                                                  \
         uint_fast16_t hwTimeoutCounter;                                         \
     } s_t##__NAME##StreamInService;                                             \
-    static void __NAME##_request_read(void)                                     \
+    private void __NAME##_request_read(void)                                    \
     {                                                                           \
         s_t##__NAME##StreamInService.ptBlock =                                  \
             __NAME.Block.Exchange(                                              \
@@ -372,14 +372,14 @@
             }                                                                   \
         }                                                                       \
     }                                                                           \
-    static void __NAME##_reset_stream_in_rx_timer(void)                         \
+    private void __NAME##_reset_stream_in_rx_timer(void)                        \
     {                                                                           \
         SAFE_ATOM_CODE (                                                        \
             s_t##__NAME##StreamInService.hwTimeoutCounter =                     \
                 STREAM_IN_RCV_TIMEOUT;                                          \
         )                                                                       \
     }                                                                           \
-    static void __NAME##_input_stream_req_read_event_handler(                   \
+    private void __NAME##_input_stream_req_read_event_handler(                  \
                     stream_buffer_t *ptObj)                                     \
     {                                                                           \
         if (NULL == ptObj) {                                                    \
@@ -410,7 +410,7 @@
     }                                                                           \
     void __NAME##_input_stream_adapter_init(void)                               \
     {                                                                           \
-        static NO_INIT __NAME##_stream_buffer_block_t                           \
+        private NO_INIT __NAME##_stream_buffer_block_t                          \
                         s_tBlocks[__BLOCK_COUNT];                               \
         INPUT_STREAM_BUFFER_CFG(                                                \
             __NAME,                                                             \
