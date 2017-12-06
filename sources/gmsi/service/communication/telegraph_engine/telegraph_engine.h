@@ -53,7 +53,11 @@ typedef enum {
 //! @}
 
 //! \name telegraph report event handler prototype (delegate)
-typedef fsm_rt_t telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTelegraph);
+//! \param tStatus the reason to report
+//! \param ptTelegraph target telegraph
+//! \retval true it's safe to free this telegraph
+//! \retval false do not free the telegraph
+typedef bool telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTelegraph);
 
 //! \name abstruct class telegraph, user telegraph should inherit from this class
 //! @{
@@ -63,7 +67,8 @@ extern_class(telegraph_t)
     telegraph_handler_t     *fnHandler;
     multiple_delay_item_t   *ptDelayItem;
     uint32_t                wTimeout;
-    block_t                 *ptData;
+    block_t                 *ptOUTData;
+    block_t                 *ptINData;
 end_extern_class(telegraph_t)
 //! @}
 
@@ -77,7 +82,7 @@ typedef frame_parsing_report_t telegraph_parser_t(
                                                     block_t **pptBlock,         //! memory buffer
                                                     telegraph_t *ptItem);       //! target telegraph 
 
-typedef fsm_rt_t telegraph_engine_low_level_write_io_t(block_t *ptBlock, void *pObj);
+typedef fsm_rt_t telegraph_engine_low_level_write_io_t(telegraph_t *ptItem, void *pObj);
 
 
 extern_simple_fsm(telegraph_engine_task,
@@ -125,24 +130,30 @@ typedef struct {
 
 
 def_interface(i_telegraph_engine_t)
-    bool        (*Init)         (   telegraph_engine_t *ptObj, 
+    bool            (*Init)     (   telegraph_engine_t *ptObj, 
                                     telegraph_engine_cfg_t *ptCFG);
-    fsm_rt_t    (*Task)         (   telegraph_engine_t *ptObj);
+    fsm_rt_t        (*Task)     (   telegraph_engine_t *ptObj);
     struct {
         block_t *   (*Parse)    (   block_t *ptBlock, telegraph_engine_t *ptObj);
     } Dependent;
     
     struct {
-        bool        (*TryToSend)(   telegraph_engine_t *ptObj, 
-                                    telegraph_t *ptTelegraph,
-                                    bool bPureListener);
-        bool        (*Listen)   (   telegraph_engine_t *ptObj, 
-                                    telegraph_t *ptTelegraph);
-                                    
         telegraph_t *(*New)     (   telegraph_engine_t *ptObj,
                                     telegraph_handler_t *fnHandler, 
                                     uint32_t wTimeout, 
                                     block_t *ptData);
+        bool        (*TryToSend)(   telegraph_t *ptTelegraph,
+                                    bool bPureListener);
+        bool        (*Listen)   (   telegraph_t *ptTelegraph);
+        
+        struct {
+            block_t *(*GetInput)(telegraph_t *ptTelegraph);
+            block_t *(*GetOutput)(telegraph_t *ptTelegraph);
+        } Data;
+        
+        bool        (*IsWriteOnly) (telegraph_t *ptTelegraph);
+        bool        (*IsReadOnly)  (telegraph_t *ptTelegraph);
+        
     } Telegraph;
 end_def_interface(i_telegraph_engine_t)
 

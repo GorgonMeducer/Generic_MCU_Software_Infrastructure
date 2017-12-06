@@ -64,7 +64,7 @@
 #endif
 
 #ifndef private
-#   define private     static
+#   define private    static
 #endif
 
 #ifndef public

@@ -232,7 +232,7 @@
     }                                                                           \
     void __NAME##_output_stream_adapter_init(void)                              \
     {                                                                           \
-        private NO_INIT __NAME##_stream_buffer_block_t                          \
+        NO_INIT private __NAME##_stream_buffer_block_t                           \
                         s_tBlocks[__BLOCK_COUNT];                               \
         OUTPUT_STREAM_BUFFER_CFG(                                               \
             __NAME,                                                             \
@@ -410,7 +410,7 @@
     }                                                                           \
     void __NAME##_input_stream_adapter_init(void)                               \
     {                                                                           \
-        private NO_INIT __NAME##_stream_buffer_block_t                          \
+        NO_INIT private __NAME##_stream_buffer_block_t                           \
                         s_tBlocks[__BLOCK_COUNT];                               \
         INPUT_STREAM_BUFFER_CFG(                                                \
             __NAME,                                                             \
