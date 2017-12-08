@@ -475,6 +475,7 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
         }
        
         if (bPureListener) {
+            NOP();
             //! telegraph for pure listening 
             if (    (target.wTimeout > 0 && NULL == this.ptDelayService)        //!< no delay service available
                 ||  (NULL == this.fnDecoder)                                    //!< no decoder
@@ -530,8 +531,21 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
     if (    (!bResult) 
         &&  (NULL != ptThis) 
         &&  (NULL != ptTarget)) {
-        //! free telegraph
-        pool_free(ref_obj_as(this, pool_t), ptTarget);
+        
+        do {
+            //! raise telegraph received event
+            if (NULL != target.fnHandler) {
+                //! call telegraph handler
+                if (!(*target.fnHandler)(TELEGRAPH_ERROR, (telegraph_t *)ptTarget)) {
+                    //! do not free the telegraph
+                    break;
+                }
+            
+            }
+            
+            //! free telegraph
+            pool_free(ref_obj_as(this, pool_t), ptTarget);
+        } while(false);
     }
     
     return bResult;
@@ -596,9 +610,11 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                     //! frame is received
                 } else if (FRAME_UNKNOWN == tReport)  {
                     //! unknown frame detected
-                    
+                    BLOCK.Size.Set(ptBlock, 0);
                 }
                 break;
+            } else {
+                BLOCK.Size.Set(ptBlock, 0);
             }
             
             if (NULL != ptTempBlock) {
