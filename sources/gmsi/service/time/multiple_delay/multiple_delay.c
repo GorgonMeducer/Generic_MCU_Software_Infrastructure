@@ -459,39 +459,38 @@ private fsm_implementation(multiple_delay_task)
         )
             
         state( CHECK_LIST,
+
             do {
+                class_internal(target.ptDelayList, ptItem, multiple_delay_item_t);
+                
                 if (NULL == target.ptDelayList) {
                     break;
                 }
                 
-                do {
-                    class_internal(target.ptDelayList, ptItem, multiple_delay_item_t);
+                if (ptItem->wTargetTime <= target.wSavedCounter) {
                     
-                    if (ptItem->wTargetTime <= target.wSavedCounter) {
-                        
-                        __MD_ATOM_ACCESS (
-                            //! timeout detected
-                            LIST_STACK_POP(target.ptDelayList, ptItem);
-                        )
-                        
-                        if (ptItem->tPriority == MULTIPLE_DELAY_LOW_PRIORITY) {
-                            //! add the item to the low priority timeout list
-                            LIST_QUEUE_ENQUEUE( target.LowPriorityEvent.ptHead, 
-                                                target.LowPriorityEvent.ptTail, 
-                                                ptItem);
-                        } else {
-                            //! add the item to the normal priority timeout list
-                            LIST_QUEUE_ENQUEUE( target.NormalPriorityEvent.ptHead, 
-                                                target.NormalPriorityEvent.ptTail, 
-                                                ptItem);
-                        }
-                        
+                    __MD_ATOM_ACCESS (
+                        //! timeout detected
+                        LIST_STACK_POP(target.ptDelayList, ptItem);
+                    )
+                    
+                    if (ptItem->tPriority == MULTIPLE_DELAY_LOW_PRIORITY) {
+                        //! add the item to the low priority timeout list
+                        LIST_QUEUE_ENQUEUE( target.LowPriorityEvent.ptHead, 
+                                            target.LowPriorityEvent.ptTail, 
+                                            ptItem);
                     } else {
-                        break;
+                        //! add the item to the normal priority timeout list
+                        LIST_QUEUE_ENQUEUE( target.NormalPriorityEvent.ptHead, 
+                                            target.NormalPriorityEvent.ptTail, 
+                                            ptItem);
                     }
-                } while(true);
-                
-            } while(false);
+                    
+                } else {
+                    break;
+                }
+            } while(true);
+
                 
             update_state_to(RAISE_NORMAL_PRIORITY_EVENT);
         )
