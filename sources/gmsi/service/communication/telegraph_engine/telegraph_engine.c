@@ -484,7 +484,7 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
                 break;
             }
             
-            target.ptOUTData = NULL;
+            //never do this! :target.ptOUTData = NULL;
             
             //! request timeout service
             if (target.wTimeout > 0) {

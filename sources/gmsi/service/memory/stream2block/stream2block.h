@@ -106,7 +106,7 @@
                                                                                 \
         struct {                                                                \
             bool (*Write)(uint8_t);                                             \
-            void (*Flush)(void);                                                \
+            bool (*Flush)(void);                                                \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -125,9 +125,9 @@
         return STREAM_BUFFER.Stream.WriteByte(                                  \
                                         &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
-    private void __NAME##_stream_flush(void)                                    \
+    private bool __NAME##_stream_flush(void)                                    \
     {                                                                           \
-        while(!STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer));         \
+        return STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);         \
     }                                                                           \
     __OUTPUT_STREAM_BUFFER_COMMON(__NAME) = {                                   \
             .Init =         &__NAME##_stream_buffer_init,                       \
