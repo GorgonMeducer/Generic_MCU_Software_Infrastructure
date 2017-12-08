@@ -185,7 +185,6 @@ private void add_to_delay_list(  multiple_delay_item_t *ptItem,
                                 multiple_delay_item_t **ppList) 
 {
     class_internal(ptItem, ptTarget, multiple_delay_item_t);
-    
     __MD_ATOM_ACCESS (
         do {
             class_internal((*ppList), ptListItem, multiple_delay_item_t);
@@ -195,7 +194,8 @@ private void add_to_delay_list(  multiple_delay_item_t *ptItem,
                 break;
             }
             
-            if (ptListItem->wTargetTime >= target.wTargetTime) {
+            if (target.wTargetTime <= ptListItem->wTargetTime) {
+                
                 LIST_INSERT_AFTER((*ppList), ptItem);
                 break;
             }
@@ -354,6 +354,7 @@ private void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
             if (NULL == this.ptDelayList) {
                 this.wCounter = 0;
                 this.wOldCounter = 0;
+                this.wSavedCounter = 0;
                 break;
             }
         } else {
@@ -363,6 +364,10 @@ private void insert_timer_tick_event_handler(multiple_delay_t *ptObj)
                                 ptTarget, 
                                 multiple_delay_item_t);
                                 
+                if (NULL == ptTarget) {
+                    break;
+                }
+                
                 if (target.wTargetTime <= this.wCounter) {
                     //! timeout detected
                     LIST_STACK_POP(this.ptHighPriorityDelayList, ptTarget);
@@ -468,7 +473,7 @@ private fsm_implementation(multiple_delay_task)
                 }
                 
                 if (ptItem->wTargetTime <= target.wSavedCounter) {
-                    
+ 
                     __MD_ATOM_ACCESS (
                         //! timeout detected
                         LIST_STACK_POP(target.ptDelayList, ptItem);
