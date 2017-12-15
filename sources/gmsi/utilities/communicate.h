@@ -43,16 +43,16 @@ DEF_INTERFACE(i_byte_pipe_t)
     bool (*ReadByte)(uint8_t *pchByte);
     //!< write a byte
     bool (*WriteByte)(uint8_t chByte);
+    
+    bool (*Flush)(void);
 END_DEF_INTERFACE(i_byte_pipe_t)
 //! @}
 
 //! \name interface: pipe
 //! @{
 DEF_INTERFACE(i_pipe_t)
-    //!< read a byte
-    bool (*ReadByte)(uint8_t *pchByte);
-    //!< write a byte
-    bool (*WriteByte)(uint8_t chByte);
+
+    inherit(i_byte_pipe_t)
     
     struct {
         //! read a block

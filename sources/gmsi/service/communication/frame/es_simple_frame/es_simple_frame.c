@@ -155,14 +155,20 @@ private fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
 private fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize);
 private fsm_rt_t task(es_simple_frame_t *ptFrame);
 private fsm_rt_t decoder(es_simple_frame_t *ptFrame);
+private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame);
 /*============================ TYPES Part Two ================================*/
 //! \name frame interface
 //! @{
 def_interface(i_es_simple_frame_t)
-    bool (*Init)(es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-    fsm_rt_t (*Task)(es_simple_frame_t *ptFrame);
-    fsm_rt_t (*Decoder)(es_simple_frame_t *ptFrame);
-    fsm_rt_t (*Encoder)(es_simple_frame_t *ptFrame, uint8_t *pchData, uint_fast16_t hwSize);
+    bool                (*Init)     (   es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
+    fsm_rt_t            (*Task)     (   es_simple_frame_t *ptFrame);
+    fsm_rt_t            (*Decoder)  (   es_simple_frame_t *ptFrame);
+    fsm_rt_t            (*Encoder)  (   es_simple_frame_t *ptFrame, 
+                                        uint8_t *pchData,
+                                        uint_fast16_t hwSize);
+    struct {
+        uint_fast16_t   (*GetSize)  (   es_simple_frame_t *ptFrame);
+    }Buffer;
 end_def_interface(i_es_simple_frame_t)
 //! @}
 
@@ -174,13 +180,36 @@ const i_es_simple_frame_t ES_SIMPLE_FRAME = {
         .Task =         &task,
         .Decoder =      &decoder,
         .Encoder =      &encoder,
-    
+        .Buffer = {
+            .GetSize =  &get_buffer_size,
+        },
     };
     
 /*============================ IMPLEMENTATION ================================*/
 
 
-
+private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame)
+{
+    uint_fast16_t hwSize = 0;
+    class_internal(ptFrame, ptThis, es_simple_frame_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        class_internal( ref_obj_as(this, fsm(es_simple_frame_decoder)), 
+                        ptTarget, 
+                        fsm(es_simple_frame_decoder));
+        
+        if (NULL == target.ptBlock ) {
+            hwSize = target.hwSize;
+        } else {
+            hwSize = BLOCK.Size.Capability(target.ptBlock);
+        }
+    } while(false);
+     
+    return hwSize; 
+}
 
 
 /*! \brief initlialize es_simple_frame

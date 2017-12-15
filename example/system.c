@@ -265,7 +265,7 @@ int main (void)
     
     while (true) {
     
-    #if false
+    #if true
         if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
             STREAM_OUT.Stream.Flush();
         }

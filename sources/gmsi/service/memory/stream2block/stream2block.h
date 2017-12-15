@@ -468,6 +468,9 @@ extern_class(stream_buffer_t,
     stream_buffer_req_event_t              *fnRequestReceive; 
     uint8_t                                 chBlockReservedSize;
     stream_buffer_status_t                  tStatus;   
+    uint8_t                                 chReservedBlock;
+    uint8_t                                 chBlockLimit;
+    uint8_t                                 chBlockCount;
 end_extern_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
@@ -484,6 +487,8 @@ typedef struct {
     
     stream_buffer_req_event_t              *fnRequestHandler;
     uint_fast8_t                            chBlockReservedSize;   
+    uint_fast8_t                            chReservedBlock;
+    uint8_t                                 chBlockLimit;
 }stream_buffer_cfg_t;
 
 
@@ -493,6 +498,7 @@ def_interface(i_stream_buffer_t)
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     stream_buffer_status_t
                 (*Status)       (stream_buffer_t *);
+    bool        (*Dispose)      (stream_buffer_t *);
     struct {
         bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool    (*WriteByte)    (stream_buffer_t *, uint8_t);

@@ -55,6 +55,7 @@ def_interface(i_block_t)
         bool        (*Add)(block_pool_t *,void *, uint_fast16_t, uint_fast16_t);
         block_t*    (*New)(block_pool_t *);
         void        (*Free)(block_pool_t *, block_t *);
+        uint32_t    (*Count)(block_pool_t *ptObj);
     } Heap;
     block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
     struct {
