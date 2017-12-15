@@ -211,6 +211,16 @@ ____disable_irq(void) {
   return cpsr & 0x1;
 }
 
+/**
+  \brief   Set Priority Mask
+  \details Assigns the given value to the Priority Mask Register.
+  \param [in]    priMask  Priority Mask
+ */
+__attribute__((always_inline)) static inline void ____set_PRIMASK(unsigned int priMask)
+{
+    __asm__ volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
+}
+
 #else
 #   define DISABLE_GLOBAL_INTERRUPT()           __asm__ __volatile__ (" CPSID i");
 #endif
@@ -221,11 +231,11 @@ ____disable_irq(void) {
 typedef __istate_t   istate_t;
 #elif __IS_COMPILER_ARM_COMPILER_5__ 
 #   define GET_GLOBAL_INTERRUPT_STATE()         __disable_irq()
-#   define SET_GLOBAL_INTERRUPT_STATE(__STATE) if (!__STATE) { __enable_irq(); }
+#   define SET_GLOBAL_INTERRUPT_STATE(__STATE)  if (!__STATE) { __enable_irq(); }
 typedef int   istate_t;
 #elif __IS_COMPILER_ARM_COMPILER_6__
 #   define GET_GLOBAL_INTERRUPT_STATE()         ____disable_irq()
-#   define SET_GLOBAL_INTERRUPT_STATE(__STATE) if (!__STATE) { ENABLE_GLOBAL_INTERRUPT(); }
+#   define SET_GLOBAL_INTERRUPT_STATE(__STATE)  ____set_PRIMASK(__STATE)        
 typedef int   istate_t;
 #elif __IS_COMPILER_GCC__
 typedef int   istate_t;

@@ -53,6 +53,7 @@ def_interface(i_block_t)
         bool        (*Add)(block_pool_t *,void *, uint_fast16_t, uint_fast16_t);
         block_t*    (*New)(block_pool_t *);
         void        (*Free)(block_pool_t *, block_t *);
+        uint32_t    (*Count)(block_pool_t *ptObj);
     } Heap;
     block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
     struct {
@@ -91,6 +92,7 @@ private bool write_block_buffer( block_t *ptObj,
                                 const void *pchSrc, 
                                 uint_fast16_t hwSize, 
                                 uint_fast16_t hwOffsite);
+private uint32_t get_free_block_count(block_pool_t *ptObj);
 /*============================ GLOBAL VARIABLES ==============================*/
 
 const i_block_t BLOCK = {
@@ -99,6 +101,7 @@ const i_block_t BLOCK = {
         .Add =          &block_pool_add_heap,
         .New =          &new_block,
         .Free =         &free_block,
+        .Count =        &get_free_block_count,
     },
     .Init =             &init,
     .Size = {
@@ -114,6 +117,7 @@ const i_block_t BLOCK = {
 };
 
 /*============================ IMPLEMENTATION ================================*/
+
 
 
 private block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
@@ -223,7 +227,7 @@ private bool block_pool_init(block_pool_t *ptObj)
         }
         
         //! initialise pool
-        if (!pool_init(REF_OBJ_AS(this, pool_t))) {
+        if (!pool_init(ref_obj_as(this, pool_t))) {
             break;
         } 
         
@@ -231,6 +235,16 @@ private bool block_pool_init(block_pool_t *ptObj)
     } while(false);
     
     return false;
+}
+
+private uint32_t get_free_block_count(block_pool_t *ptObj)
+{
+    class_internal(ptObj, ptThis, block_pool_t);
+    if (NULL == ptThis) {
+        return 0;
+    }
+    
+    return pool_get_item_count(ref_obj_as(this, pool_t));
 }
 
 private block_t *new_block(block_pool_t *ptObj)

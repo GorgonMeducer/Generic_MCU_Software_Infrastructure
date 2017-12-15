@@ -440,12 +440,14 @@ private fsm_initialiser(multiple_delay_task,
         
         this.ptObj = ptObj;
     )
-        
+    
+
 private fsm_implementation(multiple_delay_task) 
         
     def_states(CHECK_LIST, RAISE_NORMAL_PRIORITY_EVENT, RAISE_LOW_PRIORITY_EVENT)    
     class_internal(this.ptObj, ptTarget, multiple_delay_t);
-        
+      
+      
     body(
         on_start(
             if (NULL == ptTarget) {
@@ -462,6 +464,7 @@ private fsm_implementation(multiple_delay_task)
             
             target.wOldCounter = target.wSavedCounter;
         )
+            
             
         state( CHECK_LIST,
 
@@ -499,8 +502,10 @@ private fsm_implementation(multiple_delay_task)
                 
             update_state_to(RAISE_NORMAL_PRIORITY_EVENT);
         )
+        
             
         privilege_state(RAISE_NORMAL_PRIORITY_EVENT,
+        
             do {
                 class(multiple_delay_item_t) *ptItem;
                 
@@ -551,6 +556,7 @@ private fsm_implementation(multiple_delay_task)
             
             fsm_continue();
         )
+
     )
         
 #endif

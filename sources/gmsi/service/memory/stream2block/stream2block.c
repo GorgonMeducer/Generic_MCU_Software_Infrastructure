@@ -77,8 +77,12 @@ def_class(stream_buffer_t,
     stream_buffer_req_event_t              *fnRequestSend;                      //!< callback for triggering the first output transaction
     stream_buffer_req_event_t              *fnRequestReceive; 
     
-    uint8_t                                 chBlockReservedSize;
+    uint8_t                                 chBlockReservedSize;                                
     stream_buffer_status_t                  tStatus;
+    uint8_t                                 chReservedBlock;
+    uint8_t                                 chBlockLimit;
+    uint8_t                                 chBlockCount;
+    
 end_def_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
@@ -95,6 +99,8 @@ typedef struct {
     
     stream_buffer_req_event_t              *fnRequestHandler;
     uint_fast8_t                            chBlockReservedSize; 
+    uint_fast8_t                            chReservedBlock;
+    uint8_t                                 chBlockLimit;
 }stream_buffer_cfg_t;
 
 
@@ -104,7 +110,8 @@ def_interface(i_stream_buffer_t)
 
     bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     stream_buffer_status_t
-                (*Status)       (stream_buffer_t *);    
+                (*Status)       (stream_buffer_t *);  
+    bool        (*Dispose)      (stream_buffer_t *);
     struct {
         bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
@@ -113,8 +120,8 @@ def_interface(i_stream_buffer_t)
     } Stream;
     
     struct {
-        block_t *(*Exchange)     (stream_buffer_t *, block_t *);
-        block_t *(*GetNext)      (stream_buffer_t *);
+        block_t *(*Exchange)    (stream_buffer_t *, block_t *);
+        block_t *(*GetNext)     (stream_buffer_t *);
         void    (*Return)       (stream_buffer_t *, block_t *);
     } Block;
 
@@ -141,12 +148,15 @@ private void __append_block_to_output_list(
                                     stream_buffer_t *ptObj, block_t *ptBlock);
 private stream_buffer_status_t get_status (stream_buffer_t *ptObj);
 
+private bool stream_dispose (stream_buffer_t *);
+
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
     
 const i_stream_buffer_t STREAM_BUFFER = {
         .Init =             &stream_buffer_init,
         .Status =           &get_status,
+        .Dispose =          &stream_dispose,
         .Stream = {
             .ReadByte =     &stream_read,
             .WriteByte =    &stream_write,
@@ -154,13 +164,45 @@ const i_stream_buffer_t STREAM_BUFFER = {
             .Flush =        &stream_flush,
         },
         .Block = {
-            .Exchange = &request_next_buffer_block,
-            .GetNext =  &get_next_block,
-            .Return =   &return_block,
+            .Exchange =     &request_next_buffer_block,
+            .GetNext =      &get_next_block,
+            .Return =       &return_block,
         },
     };
 
-
+private bool stream_dispose (stream_buffer_t *ptObj)
+{
+    class_internal(ptObj, ptThis, stream_buffer_t);
+    bool bResult = false;
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        
+        do {
+            block_t *ptBlock = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t) );
+            if (NULL == ptBlock) {
+                break;
+            }
+            
+            //! stream is used for output
+            BLOCK.Heap.Free(this.ptBlockPool, ptBlock);
+            
+        } while(true);
+        
+        if (NULL != this.ptUsedByQueue) {
+            //! stream is used for output
+            BLOCK.Heap.Free(this.ptBlockPool, this.ptUsedByQueue);
+        }
+        
+        memset(ptThis, 0, sizeof(stream_buffer_t));
+        
+        bResult = true;
+    } while(false);
+    
+    return bResult;
+}
 
 private stream_buffer_status_t get_status (stream_buffer_t *ptObj)
 {
@@ -207,8 +249,9 @@ private bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptC
                     this.fnRequestReceive = ptCFG->fnRequestHandler;
                 }
                 
-                
+                this.chReservedBlock = ptCFG->chReservedBlock;
                 this.chBlockReservedSize = ptCFG->chBlockReservedSize;
+                this.chBlockLimit = ptCFG->chBlockLimit;
                 
                 BLOCK_QUEUE.Init(ref_obj_as(this, block_queue_t));
                 
@@ -230,8 +273,27 @@ private block_t *__get_new_block(stream_buffer_t *ptObj)
     block_t *ptItem = NULL;
     class_internal(ptObj, ptThis, stream_buffer_t);
     
-    //! get a new block
-    ptItem = BLOCK.Heap.New( this.ptBlockPool);
+    
+    if (BLOCK.Heap.Count (this.ptBlockPool) > this.chReservedBlock) {
+        if (this.bIsOutput) {
+            if (0 != this.chBlockLimit) {
+                if (this.chBlockCount < this.chBlockLimit) {
+                    //! get a new block
+                    ptItem = BLOCK.Heap.New( this.ptBlockPool);
+                    if (NULL != ptItem) {
+                        this.chBlockCount++;
+                    }
+                }
+            } else {
+                ptItem = BLOCK.Heap.New( this.ptBlockPool);
+                if (NULL != ptItem) {
+                    this.chBlockCount++;
+                }
+            }
+        } else {
+            ptItem = BLOCK.Heap.New( this.ptBlockPool);
+        }
+    }
     
     if (NULL != ptItem) {
         //reserve block size
@@ -241,6 +303,7 @@ private block_t *__get_new_block(stream_buffer_t *ptObj)
         }
         
     }
+    
     
     return ptItem;
 }
@@ -262,6 +325,10 @@ private block_t *get_next_block(stream_buffer_t *ptObj)
                 ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
                 if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
                     this.tStatus.IsBlockBufferDrain = true;
+                } 
+                
+                if (NULL != ptItem) {
+                    this.chBlockCount--;
                 }
             )
         } else {
@@ -288,8 +355,10 @@ private void return_block(stream_buffer_t *ptObj, block_t *ptItem)
             
             //! reset block size
             BLOCK.Size.Reset(ptItem);
+            
             //! stream is used for output
             BLOCK.Heap.Free(this.ptBlockPool, ptItem);
+
             
         } else {
         
@@ -330,6 +399,10 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
             
                 if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
                     this.tStatus.IsBlockBufferDrain = true;
+                }
+                
+                if (NULL != ptItem) {
+                    this.chBlockCount--;
                 }
             )
         } else {
@@ -407,13 +480,13 @@ private bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
         
     }
 
+    this.ptUsedByQueue = (block_t *)ptBlock;
+
     if (NULL == ptBlock) {
         //! queue is empty
         return false;
     }
-    
-    this.ptUsedByQueue = (block_t *)ptBlock;
-    
+
     QUEUE_INIT_EX(  StreamBufferQueue,                                          //!< queue name
                     REF_OBJ_AS(this, QUEUE(StreamBufferQueue)),                 //!< queue obj
                     (uint8_t *)(BLOCK.Buffer.Get(ptBlock)),                     //!< buffer

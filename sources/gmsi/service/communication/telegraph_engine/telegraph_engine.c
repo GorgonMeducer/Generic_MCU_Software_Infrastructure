@@ -491,7 +491,7 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
                 target.ptDelayItem = 
                     MULTIPLE_DELAY.RequestDelay(    this.ptDelayService, 
                                                     target.wTimeout,
-                                                    MULTIPLE_DELAY_LOW_PRIORITY,
+                                                    MULTIPLE_DELAY_HIGH_PRIORITY,
                                                     ptTelegraph,
                                                     &telegraph_timeout_event_handler);
                 if (NULL == target.ptDelayItem) {
@@ -601,26 +601,35 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                                 }
                             
                             }
-                            
+                            __TE_ATOM_ACCESS (
+                                __LIST_QUEUE_REMOVE(this.Listener.ptHead, 
+                                                    this.Listener.ptTail, 
+                                                    ptItem);
+                            )
                             //! free telegraph
-                            pool_free(ref_obj_as(this, pool_t), ptTarget);
+                            pool_free(ref_obj_as(this, pool_t), ptItem);
+                            
                         } while(false);
                     }
 
+                    if (NULL != ptTempBlock) {
+                        ptBlock = ptTempBlock;
+                    } else {
+                        //! this should not happen
+                        while(1);
+                    }
+                    
+                    
+                    
+                    return ptBlock;
                     //! frame is received
-                } else if (FRAME_UNKNOWN == tReport)  {
+                } /*else if (FRAME_UNKNOWN == tReport)  {
                     //! unknown frame detected
                     BLOCK.Size.Set(ptBlock, 0);
-                }
+                } */
                 break;
-            } else {
-                BLOCK.Size.Set(ptBlock, 0);
             }
-            
-            if (NULL != ptTempBlock) {
-                ptBlock = ptTempBlock;
-            }
-            
+
             __TE_ATOM_ACCESS (
                 ptItem = (telegraph_t *)target.ptNext;
             )
@@ -628,6 +637,8 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
         } while(NULL != ptItem);
         
     } while(false);
+    
+    BLOCK.Size.Set(ptBlock, 0);
     
     return ptBlock;
 }

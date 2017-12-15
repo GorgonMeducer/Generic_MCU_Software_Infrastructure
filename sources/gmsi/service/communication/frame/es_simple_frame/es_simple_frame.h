@@ -70,13 +70,13 @@ extern_simple_fsm(es_simple_frame_decoder_wrapper,
     def_params(
         es_simple_frame_t *ptFrame;
     ))
-    
 
 extern_simple_fsm(es_simple_frame_encoder_wrapper,
     def_params(
         es_simple_frame_t *ptFrame;
     ))
-    
+ 
+
 //! \name class: e-snail simple frame
 //! @{
 extern_class(es_simple_frame_t)
@@ -85,7 +85,7 @@ extern_class(es_simple_frame_t)
     inherit(fsm(es_simple_frame_decoder_wrapper))
     inherit(fsm(es_simple_frame_encoder))
     inherit(fsm(es_simple_frame_encoder_wrapper))
-    bool            bDynamicBufferMode;
+    bool    bDynamicBufferMode;
 end_extern_class(es_simple_frame_t)
 //! @}
 
@@ -110,10 +110,15 @@ typedef struct {
 //! \name frame interface
 //! @{
 def_interface(i_es_simple_frame_t)
-    bool (*Init)(es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-    fsm_rt_t (*Task)(es_simple_frame_t *ptFrame);
-    fsm_rt_t (*Decoder)(es_simple_frame_t *ptFrame);
-    fsm_rt_t (*Encoder)(es_simple_frame_t *ptFrame, uint8_t *pchData, uint_fast16_t hwSize);
+    bool                (*Init)     (   es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
+    fsm_rt_t            (*Task)     (   es_simple_frame_t *ptFrame);
+    fsm_rt_t            (*Decoder)  (   es_simple_frame_t *ptFrame);
+    fsm_rt_t            (*Encoder)  (   es_simple_frame_t *ptFrame, 
+                                        uint8_t *pchData,
+                                        uint_fast16_t hwSize);
+    struct {
+        uint_fast16_t   (*GetSize)  (   es_simple_frame_t *ptFrame);
+    }Buffer;
 end_def_interface(i_es_simple_frame_t)
 //! @}
 
