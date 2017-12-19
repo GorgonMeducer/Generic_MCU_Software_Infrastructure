@@ -81,5 +81,23 @@ void leave_lock(locker_t *ptLock)
     )
 }
 
+/*! \brief get locker status
+ *! \param ptLock locker object
+ *! \return locker status
+ */
+bool check_lock(locker_t *ptLock)
+{
+    bool bResult = UNLOCKED;
+    if (NULL == ptLock) {
+        return false;
+    }
+    
+    SAFE_ATOM_CODE(
+        bResult = (*ptLock);
+    )
+    
+    return bResult;
+}
+
 /* EOF */
 

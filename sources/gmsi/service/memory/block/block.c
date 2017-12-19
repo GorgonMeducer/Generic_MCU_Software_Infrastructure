@@ -174,7 +174,7 @@ private bool write_block_buffer( block_t *ptObj,
             hwSize = hwMaxSize;
         }
         
-        memcpy(get_block_buffer(ptObj)+hwOffsite, pchSrc, hwSize);
+        memcpy(((uint8_t *)get_block_buffer(ptObj))+hwOffsite, pchSrc, hwSize);
         
         this.wSize = hwSize+hwOffsite;
         bResult = true;
