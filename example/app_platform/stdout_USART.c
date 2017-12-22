@@ -254,3 +254,10 @@ int stdout_putchar (int ch)
     return ch;
 }
 
+int stdin_getchar (void)
+{
+    uint8_t chByte;
+    while(!STREAM_IN.Stream.Read(&chByte));
+    
+    return chByte;
+}
