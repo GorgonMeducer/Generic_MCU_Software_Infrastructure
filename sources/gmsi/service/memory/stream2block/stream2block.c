@@ -318,24 +318,25 @@ private block_t *get_next_block(stream_buffer_t *ptObj)
         if (NULL == ptThis) {
             break;
         }
-
-        if (this.bIsOutput) {
-            __SB_ATOM_ACCESS(
-                //! find the next block from the list
-                ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
-                if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
-                    this.tStatus.IsBlockBufferDrain = true;
-                } 
+        __SB_ATOM_ACCESS(
+            if (this.bIsOutput) {
                 
-                if (NULL != ptItem) {
-                    this.chBlockCount--;
-                }
-            )
-        } else {
-            ptItem = __get_new_block(ptObj);
-        }
-        
-        this.ptUsedByOutside = ptItem;
+                    //! find the next block from the list
+                    ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
+                    if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
+                        this.tStatus.IsBlockBufferDrain = true;
+                    } 
+                    
+                    if (NULL != ptItem) {
+                        this.chBlockCount--;
+                    }
+                
+            } else {
+                ptItem = __get_new_block(ptObj);
+            }
+            
+            this.ptUsedByOutside = ptItem;
+        )
         
     } while(false);
 
@@ -384,42 +385,46 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
             break;
         }
         
-        if (this.bIsOutput) {
-            
-            if (NULL != ptOld) {
-                //! reset block size
-                BLOCK.Size.Reset(ptOld);
-                //! stream is used for output
-                BLOCK.Heap.Free(this.ptBlockPool, ptOld);
-            }
-            
-            __SB_ATOM_ACCESS(
-                //! find the next block from the list
-                ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
-            
-                if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
-                    this.tStatus.IsBlockBufferDrain = true;
+        __SB_ATOM_ACCESS(
+            if (this.bIsOutput) {
+                
+                if (NULL != ptOld) {
+                    //! reset block size
+                    BLOCK.Size.Reset(ptOld);
+                    //! stream is used for output
+                    BLOCK.Heap.Free(this.ptBlockPool, ptOld);
                 }
                 
-                if (NULL != ptItem) {
-                    this.chBlockCount--;
-                }
-            )
-        } else {
-            if (NULL != ptOld) {
-                __SB_ATOM_ACCESS(
+                
+                    //! find the next block from the list
+                    ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
+                
+                    if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
+                        this.tStatus.IsBlockBufferDrain = true;
+                    }
+                    
+                    if (NULL != ptItem) {
+                        this.chBlockCount--;
+                    }
+                
+            } else {
+                if (NULL != ptOld) {
+                
+                    /*if (BLOCK.Size.Get(ptOld) < BLOCK.Size.Capability(ptOld)) {
+                        NOP();
+                    }*/
                     //! stream is used for input
                     //! add block to the list
                     BLOCK_QUEUE.Enqueue( ref_obj_as(this, block_queue_t), ptOld);
                     this.tStatus.IsDataAvailable = true;
                     this.tStatus.IsBlockBufferDrain = false;
-                )
+                }
+                
+                ptItem = __get_new_block(ptObj);
             }
-            
-            ptItem = __get_new_block(ptObj);
-        }
         
-        this.ptUsedByOutside = ptItem;
+            this.ptUsedByOutside = ptItem;
+        )
         
     } while(false);
 

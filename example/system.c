@@ -265,7 +265,7 @@ int main (void)
     
     while (true) {
     
-    #if true
+    #if false
         if (fsm_rt_cpl == ES_SIMPLE_FRAME.Task(&s_tFrame)) {
             STREAM_OUT.Stream.Flush();
         }
@@ -278,7 +278,7 @@ int main (void)
         }
     #endif
 
-        MULTIPLE_DELAY.Task(&s_tDelayService);
+        //MULTIPLE_DELAY.Task(&s_tDelayService);
         
     }
 }

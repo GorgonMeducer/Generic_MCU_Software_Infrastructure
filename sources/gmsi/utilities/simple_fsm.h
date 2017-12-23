@@ -121,6 +121,7 @@
 #define reset_fsm()         do { ptThis->chState = 0; } while(0);
 #define fsm_cpl()           do {reset_fsm(); return fsm_rt_cpl;} while(0);
 #define fsm_report(__ERROR) do {reset_fsm(); return (fsm_rt_t)(__ERROR); } while(0);
+#define fsm_wait_for_obj()  return fsm_rt_wait_for_obj;
 #define fsm_on_going()      return fsm_rt_on_going;
 #define fsm_continue()      break
 

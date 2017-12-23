@@ -51,7 +51,7 @@
 //      <h> Input Stream (STREAM_IN)
 //          <o>The size of input buffer block <8-4096> 
 //          <i>Input stream will be received in blocks, the size of an input block is defined here.
-#define INPUT_STREAM_BLOCK_SIZE             (32)  
+#define INPUT_STREAM_BLOCK_SIZE             (16)  
 //          <o>The number of input blocks in a dedicated heap <2-65535>
 //          <i>All input blocks are allocated from a dedicated heap, the size of the heap is defined here.
 #define INPUT_STREAM_BLOCK_COUNT            (8)

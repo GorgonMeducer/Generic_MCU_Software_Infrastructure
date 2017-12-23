@@ -146,8 +146,14 @@ def_interface(i_telegraph_engine_t)
         bool        (*Listen)   (   telegraph_t *ptTelegraph);
         
         struct {
-            block_t *(*GetInput)(telegraph_t *ptTelegraph);
-            block_t *(*GetOutput)(telegraph_t *ptTelegraph);
+            struct {
+                block_t *(*Get)(telegraph_t *ptTelegraph);
+                void (*Reset)(telegraph_t *ptTelegraph);
+            }Input;
+            struct {
+                block_t *(*Get)(telegraph_t *ptTelegraph);
+                void (*Reset)(telegraph_t *ptTelegraph);
+            }Output;
         } Data;
         
         bool        (*IsWriteOnly) (telegraph_t *ptTelegraph);
@@ -175,6 +181,8 @@ private telegraph_t * telegraph_init(    telegraph_engine_t *ptObj,
                                         telegraph_handler_t *fnHandler, 
                                         uint32_t wTimeout, 
                                         block_t *ptData);
+private void reset_input_block(telegraph_t *ptTelegraph);
+private void reset_output_block(telegraph_t *ptTelegraph);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
@@ -189,8 +197,14 @@ const i_telegraph_engine_t TELEGRAPH_ENGINE = {
         .Listen =           &try_to_listen,
         .New =              &telegraph_init,
         .Data = {
-            .GetInput =     &get_input_block,
-            .GetOutput =    &get_output_block,
+            .Input = {
+                .Get =      &get_input_block,
+                .Reset =    &reset_input_block,
+            },
+            .Output = {
+                .Get =      &get_output_block,
+                .Reset =    &reset_output_block,
+            },
         },
         .IsWriteOnly =      &is_write_only_telegraph,
         .IsReadOnly =       &is_read_only_telegraph,
@@ -416,6 +430,19 @@ private bool is_read_only_telegraph(telegraph_t *ptTelegraph)
     return bResult;
 }
 
+private void reset_input_block(telegraph_t *ptTelegraph) 
+{
+    class_internal(ptTelegraph, ptThis, telegraph_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        
+        this.ptINData = NULL;
+    
+    } while(false);
+}
 
 private block_t *get_input_block(telegraph_t *ptTelegraph) 
 {
@@ -432,6 +459,20 @@ private block_t *get_input_block(telegraph_t *ptTelegraph)
     } while(false);
     
     return ptBlock;
+}
+
+private void reset_output_block(telegraph_t *ptTelegraph) 
+{
+    class_internal(ptTelegraph, ptThis, telegraph_t);
+    
+    do {
+        if (NULL == ptThis) {
+            break;
+        }
+        
+        this.ptOUTData = NULL;
+    
+    } while(false);
 }
 
 private block_t *get_output_block(telegraph_t *ptTelegraph) 
