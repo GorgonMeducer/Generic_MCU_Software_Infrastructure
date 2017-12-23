@@ -355,7 +355,7 @@ private fsm_implementation(es_simple_frame_decoder)
          WAIT_FOR_CHECK_SUM_H    
     )    
     uint8_t chData;
-        
+      
     body (
         on_start(
         
@@ -381,10 +381,9 @@ private fsm_implementation(es_simple_frame_decoder)
         )
             
         privilege_group(
-
             state(WAIT_FOR_HEAD,
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 
                 if (ES_SIMPLE_FRAME_HEAD == chData) {
@@ -398,7 +397,7 @@ private fsm_implementation(es_simple_frame_decoder)
             state(WAIT_FOR_LENGTH_L,
                 
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 
                 CRC(this.hwCheckSUM, chData);
@@ -410,7 +409,7 @@ private fsm_implementation(es_simple_frame_decoder)
             state(WAIT_FOR_LENGTH_H,
                 
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 
                 CRC(this.hwCheckSUM, chData);
@@ -427,10 +426,10 @@ private fsm_implementation(es_simple_frame_decoder)
                 update_state_to(WAIT_FOR_DATA);
                 this.hwCounter = 0;
             )
-                
+              
             state(WAIT_FOR_DATA,
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 
                 CRC(this.hwCheckSUM, chData);
@@ -445,11 +444,11 @@ private fsm_implementation(es_simple_frame_decoder)
                 
                 fsm_continue();
             )
-                
+              
             state(WAIT_FOR_CHECK_SUM_L,
                 
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 if (!(((uint8_t *)&this.hwCheckSUM)[0] == chData)) {
                     reset_fsm();
@@ -458,11 +457,13 @@ private fsm_implementation(es_simple_frame_decoder)
                 
                 update_state_to(WAIT_FOR_CHECK_SUM_H);
             )
+            
                 
+            
             state(WAIT_FOR_CHECK_SUM_H,
                 
                 if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_report(fsm_rt_wait_for_obj);
+                    fsm_wait_for_obj();
                 }
                 if (!(((uint8_t *)&this.hwCheckSUM)[1] == chData)) {
                     reset_fsm();
@@ -502,9 +503,11 @@ private fsm_implementation(es_simple_frame_decoder)
                 }
                 fsm_cpl();
             )
+            
         
         )
     )
+
                 
 private fsm_initialiser(es_simple_frame_decoder_wrapper,
     args(

@@ -147,8 +147,14 @@ def_interface(i_telegraph_engine_t)
         bool        (*Listen)   (   telegraph_t *ptTelegraph);
         
         struct {
-            block_t *(*GetInput)(telegraph_t *ptTelegraph);
-            block_t *(*GetOutput)(telegraph_t *ptTelegraph);
+            struct {
+                block_t *(*Get)(telegraph_t *ptTelegraph);
+                void (*Reset)(telegraph_t *ptTelegraph);
+            }Input;
+            struct {
+                block_t *(*Get)(telegraph_t *ptTelegraph);
+                void (*Reset)(telegraph_t *ptTelegraph);
+            }Output;
         } Data;
         
         bool        (*IsWriteOnly) (telegraph_t *ptTelegraph);

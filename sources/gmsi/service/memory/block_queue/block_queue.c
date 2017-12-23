@@ -100,7 +100,7 @@ private bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
         LIST_QUEUE_ENQUEUE(this.ptListHead, this.ptListTail, ptItem);
         this.wCount++;
     )
-    
+
     return true;
 }
 
@@ -131,6 +131,7 @@ private block_t *get_item_from_list(block_queue_t *ptObj)
             this.wCount--;
         }
     )
+
     
     return ptResult;
 }
