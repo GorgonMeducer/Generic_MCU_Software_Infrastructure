@@ -136,12 +136,5 @@ private block_t *get_item_from_list(block_queue_t *ptObj)
     return ptResult;
 }
 
-
-
-
-
-
-
-
 #endif
 /* EOF */

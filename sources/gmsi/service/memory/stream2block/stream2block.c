@@ -644,8 +644,5 @@ private bool stream_write_block(stream_buffer_t *ptObj, block_t *ptBlock)
     return false;
 }
 
-
-
-
 #endif
 /* EOF */
