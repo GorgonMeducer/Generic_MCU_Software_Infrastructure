@@ -150,7 +150,7 @@ private extern_fsm_implementation(es_simple_frame_decoder_wrapper);
 
 private bool es_simple_frame_init(  
     es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-private fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
+//private fsm_rt_t es_simple_frame_task(es_simple_frame_t *ptFrame);
 
 private fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fast16_t hwSize);
 private fsm_rt_t task(es_simple_frame_t *ptFrame);

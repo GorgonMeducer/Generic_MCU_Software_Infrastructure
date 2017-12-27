@@ -38,19 +38,19 @@ typedef struct {
 
 //! \name interface: byte pipe
 //! @{
-DEF_INTERFACE(i_byte_pipe_t)
+def_interface(i_byte_pipe_t)
     //!< read a byte
     bool (*ReadByte)(uint8_t *pchByte);
     //!< write a byte
     bool (*WriteByte)(uint8_t chByte);
     
     bool (*Flush)(void);
-END_DEF_INTERFACE(i_byte_pipe_t)
+end_def_interface(i_byte_pipe_t)
 //! @}
 
 //! \name interface: pipe
 //! @{
-DEF_INTERFACE(i_pipe_t)
+def_interface(i_pipe_t)
 
     inherit(i_byte_pipe_t)
     
@@ -61,7 +61,7 @@ DEF_INTERFACE(i_pipe_t)
         uint_fast16_t  (*Write)(uint8_t *pchStream, uint_fast16_t hwSize);
     } Stream;
 
-END_DEF_INTERFACE(i_pipe_t)
+end_def_interface(i_pipe_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
