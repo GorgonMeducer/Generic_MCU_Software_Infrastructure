@@ -119,7 +119,7 @@
 #elif __IS_COMPILER_GCC__
 #   define FLASH                const
 #   define EEPROM               const
-#   define NO_INIT              __attribute__(( section( ".bss.noinit"))
+#   define NO_INIT              __attribute__(( section( ".bss.noinit")))
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               inline
 #   define ALWAYS_INLINE        __attribute__((always_inline))
