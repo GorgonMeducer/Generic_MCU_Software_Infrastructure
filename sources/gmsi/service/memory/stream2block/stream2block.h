@@ -105,8 +105,9 @@
         bool (*AddBuffer)(void *, uint_fast16_t );                              \
                                                                                 \
         struct {                                                                \
-            bool (*Write)(uint8_t);                                             \
-            bool (*Flush)(void);                                                \
+            bool    (*WriteByte)(uint8_t);                                      \
+            int32_t (*Write)(uint8_t *, uint_fast16_t );                        \
+            bool    (*Flush)(void);                                             \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -120,21 +121,28 @@
         
 #define __DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
-    private bool __NAME##_stream_write(uint8_t chData)                          \
+    private bool __NAME##_stream_write_byte(uint8_t chData)                     \
     {                                                                           \
         return STREAM_BUFFER.Stream.WriteByte(                                  \
                                         &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
+    private int32_t __NAME##_stream_write(uint8_t *pchSrc, uint_fast16_t hwSize)\
+    {                                                                           \
+        return STREAM_BUFFER.Stream.Write(  &s_t##__NAME##StreamBuffer,         \
+                                            pchSrc,                             \
+                                            hwSize);                            \
+    }                                                                           \
     private bool __NAME##_stream_flush(void)                                    \
     {                                                                           \
-        return STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);         \
+        return STREAM_BUFFER.Stream.Flush(&s_t##__NAME##StreamBuffer);          \
     }                                                                           \
     __OUTPUT_STREAM_BUFFER_COMMON(__NAME) = {                                   \
             .Init =         &__NAME##_stream_buffer_init,                       \
             .AddBuffer =    &__NAME##_stream_add_buffer,                        \
             .Stream = {                                                         \
-                .Write =    &__NAME##_stream_write,                             \
-                .Flush =    &__NAME##_stream_flush,                             \
+                .WriteByte =    &__NAME##_stream_write_byte,                    \
+                .Write =        &__NAME##_stream_write,                         \
+                .Flush =        &__NAME##_stream_flush,                         \
             },                                                                  \
             .Block = {                                                          \
                 .Exchange = &__NAME##_stream_exchange_block,                    \
@@ -267,7 +275,8 @@
         bool (*AddBuffer)(void *, uint_fast16_t );                              \
                                                                                 \
         struct {                                                                \
-            bool (*Read)(uint8_t *);                                            \
+            bool    (*ReadByte)(uint8_t *);                                     \
+            int32_t (*Read)(uint8_t *, uint_fast16_t );                         \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -282,16 +291,23 @@
                                                                                         
 #define __DEF_INPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                         \
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
-    private bool __NAME##_stream_read(uint8_t *pchData)                         \
+    private bool __NAME##_stream_read_byte(uint8_t *pchData)                    \
     {                                                                           \
         return STREAM_BUFFER.Stream.ReadByte(                                   \
                                         &s_t##__NAME##StreamBuffer, pchData);   \
+    }                                                                           \
+    private int32_t __NAME##_stream_read(uint8_t *pchSrc, uint_fast16_t hwSize) \
+    {                                                                           \
+        return STREAM_BUFFER.Stream.Read(  &s_t##__NAME##StreamBuffer,          \
+                                            pchSrc,                             \
+                                            hwSize);                            \
     }                                                                           \
     __INPUT_STREAM_BUFFER_COMMON(__NAME) = {                                    \
             .Init =         &__NAME##_stream_buffer_init,                       \
             .AddBuffer =    &__NAME##_stream_add_buffer,                        \
             .Stream = {                                                         \
-                .Read =    &__NAME##_stream_read,                               \
+                .ReadByte = &__NAME##_stream_read_byte,                         \
+                .Read =     &__NAME##_stream_read,                              \
             },                                                                  \
             .Block = {                                                          \
                 .Exchange = &__NAME##_stream_exchange_block,                    \
@@ -502,6 +518,8 @@ def_interface(i_stream_buffer_t)
     struct {
         bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
+        int32_t (*Read)         (stream_buffer_t *, uint8_t *, uint_fast16_t );
+        int32_t (*Write)        (stream_buffer_t *, uint8_t *, uint_fast16_t );
         bool    (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
         bool    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;

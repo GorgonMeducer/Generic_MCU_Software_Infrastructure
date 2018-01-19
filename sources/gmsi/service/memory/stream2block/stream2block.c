@@ -115,6 +115,8 @@ def_interface(i_stream_buffer_t)
     struct {
         bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
+        int32_t (*Read)         (stream_buffer_t *, uint8_t *, uint_fast16_t );
+        int32_t (*Write)        (stream_buffer_t *, uint8_t *, uint_fast16_t );
         bool    (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
         bool    (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
@@ -131,12 +133,19 @@ end_def_interface(i_stream_buffer_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
     
-private bool stream_buffer_init(     stream_buffer_t *ptObj, 
+private bool stream_buffer_init(    stream_buffer_t *ptObj, 
                                     stream_buffer_cfg_t *ptCFG); 
-private bool stream_read(            stream_buffer_t *ptObj, 
+private bool stream_read_byte(      stream_buffer_t *ptObj, 
                                     uint8_t *pchData);
-private bool stream_write(           stream_buffer_t *ptObj, 
+private bool stream_write_byte(     stream_buffer_t *ptObj, 
                                     uint8_t chData);
+private int32_t stream_read(        stream_buffer_t *ptObj, 
+                                    uint8_t *pchData, 
+                                    uint_fast16_t hwSize);
+private int32_t stream_write(       stream_buffer_t *ptObj, 
+                                    uint8_t *pchData, 
+                                    uint_fast16_t hwSize);
+                                    
 private block_t *request_next_buffer_block(
                                     stream_buffer_t *ptObj, 
                                     block_t *ptOld);
@@ -150,6 +159,7 @@ private stream_buffer_status_t get_status (stream_buffer_t *ptObj);
 
 private bool stream_dispose (stream_buffer_t *);
 
+
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
     
@@ -158,8 +168,10 @@ const i_stream_buffer_t STREAM_BUFFER = {
         .Status =           &get_status,
         .Dispose =          &stream_dispose,
         .Stream = {
-            .ReadByte =     &stream_read,
-            .WriteByte =    &stream_write,
+            .ReadByte =     &stream_read_byte,
+            .WriteByte =    &stream_write_byte,
+            .Read =         &stream_read,
+            .Write =        &stream_write,
             .WriteBlock =   &stream_write_block,
             .Flush =        &stream_flush,
         },
@@ -533,7 +545,7 @@ private bool stream_flush(stream_buffer_t *ptObj)
 }
 
 
-private bool stream_read(stream_buffer_t *ptObj, uint8_t *pchData)
+private bool stream_read_byte(stream_buffer_t *ptObj, uint8_t *pchData)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
@@ -564,9 +576,86 @@ private bool stream_read(stream_buffer_t *ptObj, uint8_t *pchData)
     return false;
 }
 
+private int32_t stream_read(  stream_buffer_t *ptObj, 
+                                    uint8_t *pchData, 
+                                    uint_fast16_t hwSize)
+{
+    int32_t nResult = -1;
+    do {
+        class_internal(ptObj, ptThis, stream_buffer_t);
+        if (NULL == ptThis || NULL == pchData || 0 == hwSize) {
+            break;
+        } else if (this.bIsOutput) {
+            break;
+        }
+        
+        do {
+            if (!this.bIsQueueInitialised) {
+                if (!queue_init(ptObj, true)) {
+                    //! queue is empty
+                    break;
+                }
+            }
+            
+            nResult = DEQUEUE_BLOCK(    StreamBufferQueue, 
+                                        REF_OBJ_AS( this, 
+                                                    QUEUE(StreamBufferQueue)), 
+                                                    pchData, 
+                                                    hwSize);
+            if (nResult < 0) {
+                this.bIsQueueInitialised = false;
+            } else {
+                break;
+            }
+        } while(true);
+        
+    } while(false);
+    
+    return nResult;
+}
 
 
-private bool stream_write(stream_buffer_t *ptObj, uint8_t chData)
+private int32_t stream_write(  stream_buffer_t *ptObj, 
+                                    uint8_t *pchData, 
+                                    uint_fast16_t hwSize)
+{
+    int32_t nResult = -1;
+    do {
+        class_internal(ptObj, ptThis, stream_buffer_t);
+        if (NULL == ptThis || NULL == pchData || 0 == hwSize) {
+            break;
+        } else if (!this.bIsOutput) {
+            break;
+        }
+        
+        do {
+            if (!this.bIsQueueInitialised) {
+                if (!queue_init(ptObj, false)) {
+                    //! queue is empty
+                    break;
+                }
+            }
+            
+            nResult = ENQUEUE_BLOCK(    StreamBufferQueue, 
+                                        REF_OBJ_AS( this, 
+                                                    QUEUE(StreamBufferQueue)), 
+                                                    pchData, 
+                                                    hwSize);
+            if (nResult < 0) {
+                this.bIsQueueInitialised = false;
+            } else {
+                break;
+            }
+        } while(true);
+        
+    } while(false);
+    
+    return nResult;
+}
+
+
+
+private bool stream_write_byte(stream_buffer_t *ptObj, uint8_t chData)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);

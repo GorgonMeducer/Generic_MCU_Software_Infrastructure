@@ -64,11 +64,17 @@
 #define DEQUEUE(__NAME, __QUEUE, __ADDR)                                    \
             __NAME##_dequeue((__QUEUE),(__ADDR))
 
+#define DEQUEUE_BLOCK(__NAME, __QUEUE, __ADDR, __SIZE)                      \
+            __NAME##_dequeue_block((__QUEUE),(__ADDR), (__SIZE))
+
 #define DEQUEUE_REF(__NAME, __QUEUE)                                        \
             __NAME##_dequeue_ref((__QUEUE))
 
 #define ENQUEUE(__NAME, __QUEUE, __VALUE)                                   \
             __NAME##_enqueue((__QUEUE), (__VALUE))
+
+#define ENQUEUE_BLOCK(__NAME, __QUEUE, __ADDR, __SIZE)                      \
+            __NAME##_enqueue_block((__QUEUE),(__ADDR), (__SIZE))
 
 #define PEEK_QUEUE(__NAME, __QUEUE, __ADDR)                                 \
             __NAME##_queue_peek((__QUEUE),(__ADDR))
@@ -104,8 +110,14 @@ extern __MUTEX_TYPE *__NAME##_queue_mutex(__NAME##_queue_t *ptQueue);       \
 extern bool __NAME##_queue_init(                                            \
     __NAME##_queue_t *ptQueue, __TYPE *ptBuffer, __PTR_TYPE tSize);         \
 extern bool __NAME##_enqueue(__NAME##_queue_t *ptQueue, __TYPE tObj);       \
+extern int32_t __NAME##_enqueue_block( __NAME##_queue_t *ptQueue,           \
+                                __TYPE *ptSrc,                              \
+                                uint_fast16_t hwSize);                      \
 extern bool __NAME##_queue_peek(__NAME##_queue_t *ptQueue, __TYPE *ptObj);  \
 extern bool __NAME##_dequeue(__NAME##_queue_t *ptQueue, __TYPE *ptObj);     \
+extern int32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,           \
+                                __TYPE *ptSrc,                              \
+                                uint_fast16_t hwSize);                      \
 extern __TYPE * __NAME##_dequeue_ref(__NAME##_queue_t *ptQueue);            \
 extern void __NAME##_get_all_peeked(__NAME##_queue_t *ptQueue);             \
 extern void __NAME##_reset_peek(__NAME##_queue_t *ptQueue);                 \
@@ -195,6 +207,45 @@ bool __NAME##_enqueue(__NAME##_queue_t *ptQueue, __TYPE tObj)               \
                                                                             \
     return bResult;                                                         \
 }                                                                           \
+int32_t __NAME##_enqueue_block(__NAME##_queue_t *ptQueue,                   \
+                            __TYPE *ptSrc,                                  \
+                            uint_fast16_t hwSize)                           \
+{                                                                           \
+    int32_t nResult = -1;                                                   \
+    CLASS(__NAME##_queue_t) *ptQ = (CLASS(__NAME##_queue_t) *)ptQueue;      \
+    do {                                                                    \
+        if (NULL == ptQ || NULL == ptSrc || 0 == hwSize) {                  \
+            break;                                                          \
+        }                                                                   \
+                                                                            \
+        __ATOM_ACCESS(                                                      \
+            do {                                                            \
+                if ((ptQ->tHead == ptQ->tTail) && (0 != ptQ->tCounter)) {   \
+                    break;                                                  \
+                }                                                           \
+                uint32_t wLength;                                           \
+                if (ptQ->tTail < ptQ->tHead) {                              \
+                    wLength = ptQ->tHead - ptQ->tTail;                      \
+                } else /*if (ptQ->tTail >= ptQ->tHead)*/ {                  \
+                    wLength = ptQ->tSize - ptQ->tTail;                      \
+                }                                                           \
+                wLength = MIN(wLength, hwSize);                             \
+                memcpy( &(ptQ->ptBuffer[ptQ->tTail]),                       \
+                        ptSrc,                                              \
+                        wLength * sizeof(__TYPE));                          \
+                ptQ->tTail += wLength;                                      \
+                if (ptQ->tTail >= ptQ->tSize) {                             \
+                    ptQ->tTail = 0;                                         \
+                }                                                           \
+                ptQ->tCounter += wLength;                                   \
+                ptQ->tPeekCounter += wLength;                               \
+                nResult = wLength;                                          \
+            } while (false);                                                \
+        )                                                                   \
+    } while(false);                                                         \
+                                                                            \
+    return nResult;                                                         \
+}                                                                           \
                                                                             \
 bool __NAME##_queue_peek(__NAME##_queue_t *ptQueue, __TYPE *ptObj)          \
 {                                                                           \
@@ -252,6 +303,46 @@ bool __NAME##_dequeue(__NAME##_queue_t *ptQueue, __TYPE *ptObj)             \
     )                                                                       \
                                                                             \
     return bResult;                                                         \
+}                                                                           \
+int32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,                  \
+                                __TYPE *ptSrc,                              \
+                                uint_fast16_t hwSize)                       \
+{                                                                           \
+    int32_t nResult = -1;                                                   \
+    CLASS(__NAME##_queue_t) *ptQ = (CLASS(__NAME##_queue_t) *)ptQueue;      \
+    do {                                                                    \
+        if (NULL == ptQ || NULL == ptSrc || 0 == hwSize) {                  \
+            break;                                                          \
+        }                                                                   \
+                                                                            \
+        __ATOM_ACCESS(                                                      \
+            do {                                                            \
+                if ((ptQ->tHead == ptQ->tTail) && (!(ptQ->tCounter))) {     \
+                    break;                                                  \
+                }                                                           \
+                uint32_t wLength;                                           \
+                if (ptQ->tHead < ptQ->tTail) {                              \
+                    wLength = ptQ->tTail - ptQ->tHead;                      \
+                } else /*if (ptQ->tHead >= ptQ->tTail)*/ {                  \
+                    wLength = ptQ->tSize - ptQ->tHead;                      \
+                }                                                           \
+                wLength = MIN(wLength, hwSize);                             \
+                memcpy( ptSrc,                                              \
+                        &(ptQ->ptBuffer[ptQ->tHead]),                       \
+                        wLength * sizeof(__TYPE));                          \
+                ptQ->tHead += wLength;                                      \
+                if (ptQ->tHead >= ptQ->tSize) {                             \
+                    ptQ->tHead = 0;                                         \
+                }                                                           \
+                ptQ->tCounter -= wLength;                                   \
+                ptQ->tPeek = ptQ->tHead;                                    \
+                ptQ->tPeekCounter = ptQ->tCounter;                          \
+                nResult = wLength;                                          \
+            } while (false);                                                \
+        )                                                                   \
+    } while(false);                                                         \
+                                                                            \
+    return nResult;                                                         \
 }                                                                           \
 __TYPE * __NAME##_dequeue_ref(__NAME##_queue_t *ptQueue)                    \
 {                                                                           \
