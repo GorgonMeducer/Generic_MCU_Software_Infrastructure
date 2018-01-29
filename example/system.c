@@ -176,8 +176,8 @@ static void app_init(void)
     do {
         NO_INIT static uint8_t s_chFrameBuffer[FRAME_BUFFER_SIZE];
         NO_INIT static i_byte_pipe_t s_tPipe;
-        s_tPipe.ReadByte = (STREAM_IN.Stream.Read);
-        s_tPipe.WriteByte = (STREAM_OUT.Stream.Write);
+        s_tPipe.ReadByte = (STREAM_IN.Stream.ReadByte);
+        s_tPipe.WriteByte = (STREAM_OUT.Stream.WriteByte);
         
     #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
     
@@ -271,8 +271,8 @@ int main (void)
         }
     #else
         uint8_t chByte;
-        if (STREAM_IN.Stream.Read(&chByte)) {
-            STREAM_OUT.Stream.Write(chByte);
+        if (STREAM_IN.Stream.ReadByte(&chByte)) {
+            STREAM_OUT.Stream.WriteByte(chByte);
         } else {
             STREAM_OUT.Stream.Flush();
         }

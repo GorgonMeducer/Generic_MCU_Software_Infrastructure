@@ -249,7 +249,7 @@ bool stdout_init (void)
 */
 int stdout_putchar (int ch) 
 {
-    while(!STREAM_OUT.Stream.Write(ch));
+    while(!STREAM_OUT.Stream.WriteByte(ch));
     
     return ch;
 }
@@ -257,7 +257,7 @@ int stdout_putchar (int ch)
 int stdin_getchar (void)
 {
     uint8_t chByte;
-    while(!STREAM_IN.Stream.Read(&chByte));
+    while(!STREAM_IN.Stream.ReadByte(&chByte));
     
     return chByte;
 }
