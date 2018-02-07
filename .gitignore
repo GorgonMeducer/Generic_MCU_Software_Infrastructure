@@ -13,3 +13,6 @@ example/build/mdk/Out/Blinky_V2M-MPS2.dep
 example/build/mdk/Out/ExtDll.iex
 example/build/mdk/Out/startup_cmsdk_cm7.lst
 *.TMP
+example/build/mdk/Out/Blinky.fed
+*._2i
+example/build/mdk/Out/Blinky.l2p
