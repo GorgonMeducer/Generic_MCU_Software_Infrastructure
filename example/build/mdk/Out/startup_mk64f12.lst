@@ -1,0 +1,3442 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; * ----------------------------------------------------
+                       -----------------------------------
+    2 00000000         ; *  @file:    startup_MK64F12.s
+    3 00000000         ; *  @purpose: CMSIS Cortex-M4 Core Device Startup File
+    4 00000000         ; *            MK64F12
+    5 00000000         ; *  @version: 2.9
+    6 00000000         ; *  @date:    2016-3-21
+    7 00000000         ; *  @build:   b170730
+    8 00000000         ; * ----------------------------------------------------
+                       -----------------------------------
+    9 00000000         ; *
+   10 00000000         ; * Copyright 1997-2016 Freescale Semiconductor, Inc.
+   11 00000000         ; * Copyright 2016-2017 NXP
+   12 00000000         ; * Redistribution and use in source and binary forms, w
+                       ith or without modification,
+   13 00000000         ; * are permitted provided that the following conditions
+                        are met:
+   14 00000000         ; *
+   15 00000000         ; * 1. Redistributions of source code must retain the ab
+                       ove copyright notice, this list
+   16 00000000         ; *   of conditions and the following disclaimer.
+   17 00000000         ; *
+   18 00000000         ; * 2. Redistributions in binary form must reproduce the
+                        above copyright notice, this
+   19 00000000         ; *   list of conditions and the following disclaimer in
+                        the documentation and/or
+   20 00000000         ; *   other materials provided with the distribution.
+   21 00000000         ; *
+   22 00000000         ; * 3. Neither the name of the copyright holder nor the 
+                       names of its
+   23 00000000         ; *   contributors may be used to endorse or promote pro
+                       ducts derived from this
+   24 00000000         ; *   software without specific prior written permission
+                       .
+   25 00000000         ; *
+   26 00000000         ; * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS A
+                       ND CONTRIBUTORS "AS IS" AND
+   27 00000000         ; * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NO
+                       T LIMITED TO, THE IMPLIED
+   28 00000000         ; * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PART
+                       ICULAR PURPOSE ARE
+   29 00000000         ; * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER O
+                       R CONTRIBUTORS BE LIABLE FOR
+   30 00000000         ; * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY
+                       , OR CONSEQUENTIAL DAMAGES
+   31 00000000         ; * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBST
+                       ITUTE GOODS OR SERVICES;
+   32 00000000         ; * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPT
+                       ION) HOWEVER CAUSED AND ON
+   33 00000000         ; * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+                        LIABILITY, OR TORT
+   34 00000000         ; * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY W
+                       AY OUT OF THE USE OF THIS
+   35 00000000         ; * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+                        DAMAGE.
+   36 00000000         ; *
+   37 00000000         ; *------- <<< Use Configuration Wizard in Context Menu 
+                       >>> ------------------
+   38 00000000         ; *
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   39 00000000         ; ******************************************************
+                       ***********************/
+   40 00000000         
+   41 00000000         
+   42 00000000                 PRESERVE8
+   43 00000000                 THUMB
+   44 00000000         
+   45 00000000         
+   46 00000000         ; Vector Table Mapped to Address 0 at Reset
+   47 00000000         
+   48 00000000                 AREA             RESET, DATA, READONLY
+   49 00000000                 EXPORT           __Vectors
+   50 00000000                 EXPORT           __Vectors_End
+   51 00000000                 EXPORT           __Vectors_Size
+   52 00000000                 IMPORT           |Image$$ARM_LIB_STACK$$ZI$$Limi
+t|
+   53 00000000         
+   54 00000000 00000000 
+                       __Vectors
+                               DCD              |Image$$ARM_LIB_STACK$$ZI$$Limi
+t| 
+                                                            ; Top of Stack
+   55 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   56 00000008 00000000        DCD              NMI_Handler ;NMI Handler
+   57 0000000C 00000000        DCD              HardFault_Handler 
+                                                            ;Hard Fault Handler
+                                                            
+   58 00000010 00000000        DCD              MemManage_Handler 
+                                                            ;MPU Fault Handler
+   59 00000014 00000000        DCD              BusFault_Handler 
+                                                            ;Bus Fault Handler
+   60 00000018 00000000        DCD              UsageFault_Handler ;Usage Fault
+                                                             Handler
+   61 0000001C 00000000        DCD              0           ;Reserved
+   62 00000020 00000000        DCD              0           ;Reserved
+   63 00000024 00000000        DCD              0           ;Reserved
+   64 00000028 00000000        DCD              0           ;Reserved
+   65 0000002C 00000000        DCD              SVC_Handler ;SVCall Handler
+   66 00000030 00000000        DCD              DebugMon_Handler ;Debug Monitor
+                                                             Handler
+   67 00000034 00000000        DCD              0           ;Reserved
+   68 00000038 00000000        DCD              PendSV_Handler ;PendSV Handler
+   69 0000003C 00000000        DCD              SysTick_Handler 
+                                                            ;SysTick Handler
+   70 00000040         
+   71 00000040         ;External Interrupts
+   72 00000040 00000000        DCD              DMA0_IRQHandler ;DMA Channel 0 
+                                                            Transfer Complete
+   73 00000044 00000000        DCD              DMA1_IRQHandler ;DMA Channel 1 
+                                                            Transfer Complete
+   74 00000048 00000000        DCD              DMA2_IRQHandler ;DMA Channel 2 
+                                                            Transfer Complete
+   75 0000004C 00000000        DCD              DMA3_IRQHandler ;DMA Channel 3 
+                                                            Transfer Complete
+   76 00000050 00000000        DCD              DMA4_IRQHandler ;DMA Channel 4 
+                                                            Transfer Complete
+   77 00000054 00000000        DCD              DMA5_IRQHandler ;DMA Channel 5 
+                                                            Transfer Complete
+   78 00000058 00000000        DCD              DMA6_IRQHandler ;DMA Channel 6 
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+                                                            Transfer Complete
+   79 0000005C 00000000        DCD              DMA7_IRQHandler ;DMA Channel 7 
+                                                            Transfer Complete
+   80 00000060 00000000        DCD              DMA8_IRQHandler ;DMA Channel 8 
+                                                            Transfer Complete
+   81 00000064 00000000        DCD              DMA9_IRQHandler ;DMA Channel 9 
+                                                            Transfer Complete
+   82 00000068 00000000        DCD              DMA10_IRQHandler ;DMA Channel 1
+                                                            0 Transfer Complete
+                                                            
+   83 0000006C 00000000        DCD              DMA11_IRQHandler ;DMA Channel 1
+                                                            1 Transfer Complete
+                                                            
+   84 00000070 00000000        DCD              DMA12_IRQHandler ;DMA Channel 1
+                                                            2 Transfer Complete
+                                                            
+   85 00000074 00000000        DCD              DMA13_IRQHandler ;DMA Channel 1
+                                                            3 Transfer Complete
+                                                            
+   86 00000078 00000000        DCD              DMA14_IRQHandler ;DMA Channel 1
+                                                            4 Transfer Complete
+                                                            
+   87 0000007C 00000000        DCD              DMA15_IRQHandler ;DMA Channel 1
+                                                            5 Transfer Complete
+                                                            
+   88 00000080 00000000        DCD              DMA_Error_IRQHandler ;DMA Error
+                                                             Interrupt
+   89 00000084 00000000        DCD              MCM_IRQHandler 
+                                                            ;Normal Interrupt
+   90 00000088 00000000        DCD              FTFE_IRQHandler ;FTFE Command c
+                                                            omplete interrupt
+   91 0000008C 00000000        DCD              Read_Collision_IRQHandler ;Read
+                                                             Collision Interrup
+                                                            t
+   92 00000090 00000000        DCD              LVD_LVW_IRQHandler ;Low Voltage
+                                                             Detect, Low Voltag
+                                                            e Warning
+   93 00000094 00000000        DCD              LLWU_IRQHandler ;Low Leakage Wa
+                                                            keup Unit
+   94 00000098 00000000        DCD              WDOG_EWM_IRQHandler 
+                                                            ;WDOG Interrupt
+   95 0000009C 00000000        DCD              RNG_IRQHandler ;RNG Interrupt
+   96 000000A0 00000000        DCD              I2C0_IRQHandler ;I2C0 interrupt
+                                                            
+   97 000000A4 00000000        DCD              I2C1_IRQHandler ;I2C1 interrupt
+                                                            
+   98 000000A8 00000000        DCD              SPI0_IRQHandler ;SPI0 Interrupt
+                                                            
+   99 000000AC 00000000        DCD              SPI1_IRQHandler ;SPI1 Interrupt
+                                                            
+  100 000000B0 00000000        DCD              I2S0_Tx_IRQHandler ;I2S0 transm
+                                                            it interrupt
+  101 000000B4 00000000        DCD              I2S0_Rx_IRQHandler ;I2S0 receiv
+                                                            e interrupt
+  102 000000B8 00000000        DCD              UART0_LON_IRQHandler ;UART0 LON
+                                                             interrupt
+  103 000000BC 00000000        DCD              UART0_RX_TX_IRQHandler ;UART0 R
+                                                            eceive/Transmit int
+                                                            errupt
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  104 000000C0 00000000        DCD              UART0_ERR_IRQHandler ;UART0 Err
+                                                            or interrupt
+  105 000000C4 00000000        DCD              UART1_RX_TX_IRQHandler ;UART1 R
+                                                            eceive/Transmit int
+                                                            errupt
+  106 000000C8 00000000        DCD              UART1_ERR_IRQHandler ;UART1 Err
+                                                            or interrupt
+  107 000000CC 00000000        DCD              UART2_RX_TX_IRQHandler ;UART2 R
+                                                            eceive/Transmit int
+                                                            errupt
+  108 000000D0 00000000        DCD              UART2_ERR_IRQHandler ;UART2 Err
+                                                            or interrupt
+  109 000000D4 00000000        DCD              UART3_RX_TX_IRQHandler ;UART3 R
+                                                            eceive/Transmit int
+                                                            errupt
+  110 000000D8 00000000        DCD              UART3_ERR_IRQHandler ;UART3 Err
+                                                            or interrupt
+  111 000000DC 00000000        DCD              ADC0_IRQHandler ;ADC0 interrupt
+                                                            
+  112 000000E0 00000000        DCD              CMP0_IRQHandler ;CMP0 interrupt
+                                                            
+  113 000000E4 00000000        DCD              CMP1_IRQHandler ;CMP1 interrupt
+                                                            
+  114 000000E8 00000000        DCD              FTM0_IRQHandler ;FTM0 fault, ov
+                                                            erflow and channels
+                                                             interrupt
+  115 000000EC 00000000        DCD              FTM1_IRQHandler ;FTM1 fault, ov
+                                                            erflow and channels
+                                                             interrupt
+  116 000000F0 00000000        DCD              FTM2_IRQHandler ;FTM2 fault, ov
+                                                            erflow and channels
+                                                             interrupt
+  117 000000F4 00000000        DCD              CMT_IRQHandler ;CMT interrupt
+  118 000000F8 00000000        DCD              RTC_IRQHandler ;RTC interrupt
+  119 000000FC 00000000        DCD              RTC_Seconds_IRQHandler ;RTC sec
+                                                            onds interrupt
+  120 00000100 00000000        DCD              PIT0_IRQHandler ;PIT timer chan
+                                                            nel 0 interrupt
+  121 00000104 00000000        DCD              PIT1_IRQHandler ;PIT timer chan
+                                                            nel 1 interrupt
+  122 00000108 00000000        DCD              PIT2_IRQHandler ;PIT timer chan
+                                                            nel 2 interrupt
+  123 0000010C 00000000        DCD              PIT3_IRQHandler ;PIT timer chan
+                                                            nel 3 interrupt
+  124 00000110 00000000        DCD              PDB0_IRQHandler ;PDB0 Interrupt
+                                                            
+  125 00000114 00000000        DCD              USB0_IRQHandler ;USB0 interrupt
+                                                            
+  126 00000118 00000000        DCD              USBDCD_IRQHandler 
+                                                            ;USBDCD Interrupt
+  127 0000011C 00000000        DCD              Reserved71_IRQHandler ;Reserved
+                                                             interrupt 71
+  128 00000120 00000000        DCD              DAC0_IRQHandler ;DAC0 interrupt
+                                                            
+  129 00000124 00000000        DCD              MCG_IRQHandler ;MCG Interrupt
+  130 00000128 00000000        DCD              LPTMR0_IRQHandler 
+                                                            ;LPTimer interrupt
+  131 0000012C 00000000        DCD              PORTA_IRQHandler 
+                                                            ;Port A interrupt
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  132 00000130 00000000        DCD              PORTB_IRQHandler 
+                                                            ;Port B interrupt
+  133 00000134 00000000        DCD              PORTC_IRQHandler 
+                                                            ;Port C interrupt
+  134 00000138 00000000        DCD              PORTD_IRQHandler 
+                                                            ;Port D interrupt
+  135 0000013C 00000000        DCD              PORTE_IRQHandler 
+                                                            ;Port E interrupt
+  136 00000140 00000000        DCD              SWI_IRQHandler 
+                                                            ;Software interrupt
+                                                            
+  137 00000144 00000000        DCD              SPI2_IRQHandler ;SPI2 Interrupt
+                                                            
+  138 00000148 00000000        DCD              UART4_RX_TX_IRQHandler ;UART4 R
+                                                            eceive/Transmit int
+                                                            errupt
+  139 0000014C 00000000        DCD              UART4_ERR_IRQHandler ;UART4 Err
+                                                            or interrupt
+  140 00000150 00000000        DCD              UART5_RX_TX_IRQHandler ;UART5 R
+                                                            eceive/Transmit int
+                                                            errupt
+  141 00000154 00000000        DCD              UART5_ERR_IRQHandler ;UART5 Err
+                                                            or interrupt
+  142 00000158 00000000        DCD              CMP2_IRQHandler ;CMP2 interrupt
+                                                            
+  143 0000015C 00000000        DCD              FTM3_IRQHandler ;FTM3 fault, ov
+                                                            erflow and channels
+                                                             interrupt
+  144 00000160 00000000        DCD              DAC1_IRQHandler ;DAC1 interrupt
+                                                            
+  145 00000164 00000000        DCD              ADC1_IRQHandler ;ADC1 interrupt
+                                                            
+  146 00000168 00000000        DCD              I2C2_IRQHandler ;I2C2 interrupt
+                                                            
+  147 0000016C 00000000        DCD              CAN0_ORed_Message_buffer_IRQHan
+dler 
+                                                            ;CAN0 OR'd message 
+                                                            buffers interrupt
+  148 00000170 00000000        DCD              CAN0_Bus_Off_IRQHandler ;CAN0 b
+                                                            us off interrupt
+  149 00000174 00000000        DCD              CAN0_Error_IRQHandler ;CAN0 err
+                                                            or interrupt
+  150 00000178 00000000        DCD              CAN0_Tx_Warning_IRQHandler ;CAN
+                                                            0 Tx warning interr
+                                                            upt
+  151 0000017C 00000000        DCD              CAN0_Rx_Warning_IRQHandler ;CAN
+                                                            0 Rx warning interr
+                                                            upt
+  152 00000180 00000000        DCD              CAN0_Wake_Up_IRQHandler ;CAN0 w
+                                                            ake up interrupt
+  153 00000184 00000000        DCD              SDHC_IRQHandler ;SDHC interrupt
+                                                            
+  154 00000188 00000000        DCD              ENET_1588_Timer_IRQHandler ;Eth
+                                                            ernet MAC IEEE 1588
+                                                             Timer Interrupt
+  155 0000018C 00000000        DCD              ENET_Transmit_IRQHandler ;Ether
+                                                            net MAC Transmit In
+                                                            terrupt
+  156 00000190 00000000        DCD              ENET_Receive_IRQHandler ;Ethern
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+                                                            et MAC Receive Inte
+                                                            rrupt
+  157 00000194 00000000        DCD              ENET_Error_IRQHandler ;Ethernet
+                                                             MAC Error and misc
+                                                            elaneous Interrupt
+  158 00000198 00000000        DCD              DefaultISR  ;102
+  159 0000019C 00000000        DCD              DefaultISR  ;103
+  160 000001A0 00000000        DCD              DefaultISR  ;104
+  161 000001A4 00000000        DCD              DefaultISR  ;105
+  162 000001A8 00000000        DCD              DefaultISR  ;106
+  163 000001AC 00000000        DCD              DefaultISR  ;107
+  164 000001B0 00000000        DCD              DefaultISR  ;108
+  165 000001B4 00000000        DCD              DefaultISR  ;109
+  166 000001B8 00000000        DCD              DefaultISR  ;110
+  167 000001BC 00000000        DCD              DefaultISR  ;111
+  168 000001C0 00000000        DCD              DefaultISR  ;112
+  169 000001C4 00000000        DCD              DefaultISR  ;113
+  170 000001C8 00000000        DCD              DefaultISR  ;114
+  171 000001CC 00000000        DCD              DefaultISR  ;115
+  172 000001D0 00000000        DCD              DefaultISR  ;116
+  173 000001D4 00000000        DCD              DefaultISR  ;117
+  174 000001D8 00000000        DCD              DefaultISR  ;118
+  175 000001DC 00000000        DCD              DefaultISR  ;119
+  176 000001E0 00000000        DCD              DefaultISR  ;120
+  177 000001E4 00000000        DCD              DefaultISR  ;121
+  178 000001E8 00000000        DCD              DefaultISR  ;122
+  179 000001EC 00000000        DCD              DefaultISR  ;123
+  180 000001F0 00000000        DCD              DefaultISR  ;124
+  181 000001F4 00000000        DCD              DefaultISR  ;125
+  182 000001F8 00000000        DCD              DefaultISR  ;126
+  183 000001FC 00000000        DCD              DefaultISR  ;127
+  184 00000200 00000000        DCD              DefaultISR  ;128
+  185 00000204 00000000        DCD              DefaultISR  ;129
+  186 00000208 00000000        DCD              DefaultISR  ;130
+  187 0000020C 00000000        DCD              DefaultISR  ;131
+  188 00000210 00000000        DCD              DefaultISR  ;132
+  189 00000214 00000000        DCD              DefaultISR  ;133
+  190 00000218 00000000        DCD              DefaultISR  ;134
+  191 0000021C 00000000        DCD              DefaultISR  ;135
+  192 00000220 00000000        DCD              DefaultISR  ;136
+  193 00000224 00000000        DCD              DefaultISR  ;137
+  194 00000228 00000000        DCD              DefaultISR  ;138
+  195 0000022C 00000000        DCD              DefaultISR  ;139
+  196 00000230 00000000        DCD              DefaultISR  ;140
+  197 00000234 00000000        DCD              DefaultISR  ;141
+  198 00000238 00000000        DCD              DefaultISR  ;142
+  199 0000023C 00000000        DCD              DefaultISR  ;143
+  200 00000240 00000000        DCD              DefaultISR  ;144
+  201 00000244 00000000        DCD              DefaultISR  ;145
+  202 00000248 00000000        DCD              DefaultISR  ;146
+  203 0000024C 00000000        DCD              DefaultISR  ;147
+  204 00000250 00000000        DCD              DefaultISR  ;148
+  205 00000254 00000000        DCD              DefaultISR  ;149
+  206 00000258 00000000        DCD              DefaultISR  ;150
+  207 0000025C 00000000        DCD              DefaultISR  ;151
+  208 00000260 00000000        DCD              DefaultISR  ;152
+  209 00000264 00000000        DCD              DefaultISR  ;153
+  210 00000268 00000000        DCD              DefaultISR  ;154
+  211 0000026C 00000000        DCD              DefaultISR  ;155
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  212 00000270 00000000        DCD              DefaultISR  ;156
+  213 00000274 00000000        DCD              DefaultISR  ;157
+  214 00000278 00000000        DCD              DefaultISR  ;158
+  215 0000027C 00000000        DCD              DefaultISR  ;159
+  216 00000280 00000000        DCD              DefaultISR  ;160
+  217 00000284 00000000        DCD              DefaultISR  ;161
+  218 00000288 00000000        DCD              DefaultISR  ;162
+  219 0000028C 00000000        DCD              DefaultISR  ;163
+  220 00000290 00000000        DCD              DefaultISR  ;164
+  221 00000294 00000000        DCD              DefaultISR  ;165
+  222 00000298 00000000        DCD              DefaultISR  ;166
+  223 0000029C 00000000        DCD              DefaultISR  ;167
+  224 000002A0 00000000        DCD              DefaultISR  ;168
+  225 000002A4 00000000        DCD              DefaultISR  ;169
+  226 000002A8 00000000        DCD              DefaultISR  ;170
+  227 000002AC 00000000        DCD              DefaultISR  ;171
+  228 000002B0 00000000        DCD              DefaultISR  ;172
+  229 000002B4 00000000        DCD              DefaultISR  ;173
+  230 000002B8 00000000        DCD              DefaultISR  ;174
+  231 000002BC 00000000        DCD              DefaultISR  ;175
+  232 000002C0 00000000        DCD              DefaultISR  ;176
+  233 000002C4 00000000        DCD              DefaultISR  ;177
+  234 000002C8 00000000        DCD              DefaultISR  ;178
+  235 000002CC 00000000        DCD              DefaultISR  ;179
+  236 000002D0 00000000        DCD              DefaultISR  ;180
+  237 000002D4 00000000        DCD              DefaultISR  ;181
+  238 000002D8 00000000        DCD              DefaultISR  ;182
+  239 000002DC 00000000        DCD              DefaultISR  ;183
+  240 000002E0 00000000        DCD              DefaultISR  ;184
+  241 000002E4 00000000        DCD              DefaultISR  ;185
+  242 000002E8 00000000        DCD              DefaultISR  ;186
+  243 000002EC 00000000        DCD              DefaultISR  ;187
+  244 000002F0 00000000        DCD              DefaultISR  ;188
+  245 000002F4 00000000        DCD              DefaultISR  ;189
+  246 000002F8 00000000        DCD              DefaultISR  ;190
+  247 000002FC 00000000        DCD              DefaultISR  ;191
+  248 00000300 00000000        DCD              DefaultISR  ;192
+  249 00000304 00000000        DCD              DefaultISR  ;193
+  250 00000308 00000000        DCD              DefaultISR  ;194
+  251 0000030C 00000000        DCD              DefaultISR  ;195
+  252 00000310 00000000        DCD              DefaultISR  ;196
+  253 00000314 00000000        DCD              DefaultISR  ;197
+  254 00000318 00000000        DCD              DefaultISR  ;198
+  255 0000031C 00000000        DCD              DefaultISR  ;199
+  256 00000320 00000000        DCD              DefaultISR  ;200
+  257 00000324 00000000        DCD              DefaultISR  ;201
+  258 00000328 00000000        DCD              DefaultISR  ;202
+  259 0000032C 00000000        DCD              DefaultISR  ;203
+  260 00000330 00000000        DCD              DefaultISR  ;204
+  261 00000334 00000000        DCD              DefaultISR  ;205
+  262 00000338 00000000        DCD              DefaultISR  ;206
+  263 0000033C 00000000        DCD              DefaultISR  ;207
+  264 00000340 00000000        DCD              DefaultISR  ;208
+  265 00000344 00000000        DCD              DefaultISR  ;209
+  266 00000348 00000000        DCD              DefaultISR  ;210
+  267 0000034C 00000000        DCD              DefaultISR  ;211
+  268 00000350 00000000        DCD              DefaultISR  ;212
+  269 00000354 00000000        DCD              DefaultISR  ;213
+  270 00000358 00000000        DCD              DefaultISR  ;214
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+  271 0000035C 00000000        DCD              DefaultISR  ;215
+  272 00000360 00000000        DCD              DefaultISR  ;216
+  273 00000364 00000000        DCD              DefaultISR  ;217
+  274 00000368 00000000        DCD              DefaultISR  ;218
+  275 0000036C 00000000        DCD              DefaultISR  ;219
+  276 00000370 00000000        DCD              DefaultISR  ;220
+  277 00000374 00000000        DCD              DefaultISR  ;221
+  278 00000378 00000000        DCD              DefaultISR  ;222
+  279 0000037C 00000000        DCD              DefaultISR  ;223
+  280 00000380 00000000        DCD              DefaultISR  ;224
+  281 00000384 00000000        DCD              DefaultISR  ;225
+  282 00000388 00000000        DCD              DefaultISR  ;226
+  283 0000038C 00000000        DCD              DefaultISR  ;227
+  284 00000390 00000000        DCD              DefaultISR  ;228
+  285 00000394 00000000        DCD              DefaultISR  ;229
+  286 00000398 00000000        DCD              DefaultISR  ;230
+  287 0000039C 00000000        DCD              DefaultISR  ;231
+  288 000003A0 00000000        DCD              DefaultISR  ;232
+  289 000003A4 00000000        DCD              DefaultISR  ;233
+  290 000003A8 00000000        DCD              DefaultISR  ;234
+  291 000003AC 00000000        DCD              DefaultISR  ;235
+  292 000003B0 00000000        DCD              DefaultISR  ;236
+  293 000003B4 00000000        DCD              DefaultISR  ;237
+  294 000003B8 00000000        DCD              DefaultISR  ;238
+  295 000003BC 00000000        DCD              DefaultISR  ;239
+  296 000003C0 00000000        DCD              DefaultISR  ;240
+  297 000003C4 00000000        DCD              DefaultISR  ;241
+  298 000003C8 00000000        DCD              DefaultISR  ;242
+  299 000003CC 00000000        DCD              DefaultISR  ;243
+  300 000003D0 00000000        DCD              DefaultISR  ;244
+  301 000003D4 00000000        DCD              DefaultISR  ;245
+  302 000003D8 00000000        DCD              DefaultISR  ;246
+  303 000003DC 00000000        DCD              DefaultISR  ;247
+  304 000003E0 00000000        DCD              DefaultISR  ;248
+  305 000003E4 00000000        DCD              DefaultISR  ;249
+  306 000003E8 00000000        DCD              DefaultISR  ;250
+  307 000003EC 00000000        DCD              DefaultISR  ;251
+  308 000003F0 00000000        DCD              DefaultISR  ;252
+  309 000003F4 00000000        DCD              DefaultISR  ;253
+  310 000003F8 00000000        DCD              DefaultISR  ;254
+  311 000003FC FFFFFFFF        DCD              0xFFFFFFFF  ; Reserved for user
+                                                             TRIM value
+  312 00000400         __Vectors_End
+  313 00000400         
+  314 00000400 00000400 
+                       __Vectors_Size
+                               EQU              __Vectors_End - __Vectors
+  315 00000400         
+  316 00000400         ; <h> Flash Configuration
+  317 00000400         ;   <i> 16-byte flash configuration field that stores de
+                       fault protection settings (loaded on reset)
+  318 00000400         ;   <i> and security information that allows the MCU to 
+                       restrict access to the FTFL module.
+  319 00000400         ;   <h> Backdoor Comparison Key
+  320 00000400         ;     <o0>  Backdoor Comparison Key 0.  <0x0-0xFF:2>
+  321 00000400         ;     <o1>  Backdoor Comparison Key 1.  <0x0-0xFF:2>
+  322 00000400         ;     <o2>  Backdoor Comparison Key 2.  <0x0-0xFF:2>
+  323 00000400         ;     <o3>  Backdoor Comparison Key 3.  <0x0-0xFF:2>
+  324 00000400         ;     <o4>  Backdoor Comparison Key 4.  <0x0-0xFF:2>
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+  325 00000400         ;     <o5>  Backdoor Comparison Key 5.  <0x0-0xFF:2>
+  326 00000400         ;     <o6>  Backdoor Comparison Key 6.  <0x0-0xFF:2>
+  327 00000400         ;     <o7>  Backdoor Comparison Key 7.  <0x0-0xFF:2>
+  328 00000400 000000FF 
+                       BackDoorK0
+                               EQU              0xFF
+  329 00000400 000000FF 
+                       BackDoorK1
+                               EQU              0xFF
+  330 00000400 000000FF 
+                       BackDoorK2
+                               EQU              0xFF
+  331 00000400 000000FF 
+                       BackDoorK3
+                               EQU              0xFF
+  332 00000400 000000FF 
+                       BackDoorK4
+                               EQU              0xFF
+  333 00000400 000000FF 
+                       BackDoorK5
+                               EQU              0xFF
+  334 00000400 000000FF 
+                       BackDoorK6
+                               EQU              0xFF
+  335 00000400 000000FF 
+                       BackDoorK7
+                               EQU              0xFF
+  336 00000400         ;   </h>
+  337 00000400         ;   <h> Program flash protection bytes (FPROT)
+  338 00000400         ;     <i> Each program flash region can be protected fro
+                       m program and erase operation by setting the associated 
+                       PROT bit.
+  339 00000400         ;     <i> Each bit protects a 1/32 region of the program
+                        flash memory.
+  340 00000400         ;     <h> FPROT0
+  341 00000400         ;       <i> Program Flash Region Protect Register 0
+  342 00000400         ;       <i> 1/32 - 8/32 region
+  343 00000400         ;       <o.0>   FPROT0.0
+  344 00000400         ;       <o.1>   FPROT0.1
+  345 00000400         ;       <o.2>   FPROT0.2
+  346 00000400         ;       <o.3>   FPROT0.3
+  347 00000400         ;       <o.4>   FPROT0.4
+  348 00000400         ;       <o.5>   FPROT0.5
+  349 00000400         ;       <o.6>   FPROT0.6
+  350 00000400         ;       <o.7>   FPROT0.7
+  351 00000400 00000000 
+                       nFPROT0 EQU              0x00
+  352 00000400 000000FF 
+                       FPROT0  EQU              nFPROT0:EOR:0xFF
+  353 00000400         ;     </h>
+  354 00000400         ;     <h> FPROT1
+  355 00000400         ;       <i> Program Flash Region Protect Register 1
+  356 00000400         ;       <i> 9/32 - 16/32 region
+  357 00000400         ;       <o.0>   FPROT1.0
+  358 00000400         ;       <o.1>   FPROT1.1
+  359 00000400         ;       <o.2>   FPROT1.2
+  360 00000400         ;       <o.3>   FPROT1.3
+  361 00000400         ;       <o.4>   FPROT1.4
+  362 00000400         ;       <o.5>   FPROT1.5
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+  363 00000400         ;       <o.6>   FPROT1.6
+  364 00000400         ;       <o.7>   FPROT1.7
+  365 00000400 00000000 
+                       nFPROT1 EQU              0x00
+  366 00000400 000000FF 
+                       FPROT1  EQU              nFPROT1:EOR:0xFF
+  367 00000400         ;     </h>
+  368 00000400         ;     <h> FPROT2
+  369 00000400         ;       <i> Program Flash Region Protect Register 2
+  370 00000400         ;       <i> 17/32 - 24/32 region
+  371 00000400         ;       <o.0>   FPROT2.0
+  372 00000400         ;       <o.1>   FPROT2.1
+  373 00000400         ;       <o.2>   FPROT2.2
+  374 00000400         ;       <o.3>   FPROT2.3
+  375 00000400         ;       <o.4>   FPROT2.4
+  376 00000400         ;       <o.5>   FPROT2.5
+  377 00000400         ;       <o.6>   FPROT2.6
+  378 00000400         ;       <o.7>   FPROT2.7
+  379 00000400 00000000 
+                       nFPROT2 EQU              0x00
+  380 00000400 000000FF 
+                       FPROT2  EQU              nFPROT2:EOR:0xFF
+  381 00000400         ;     </h>
+  382 00000400         ;     <h> FPROT3
+  383 00000400         ;       <i> Program Flash Region Protect Register 3
+  384 00000400         ;       <i> 25/32 - 32/32 region
+  385 00000400         ;       <o.0>   FPROT3.0
+  386 00000400         ;       <o.1>   FPROT3.1
+  387 00000400         ;       <o.2>   FPROT3.2
+  388 00000400         ;       <o.3>   FPROT3.3
+  389 00000400         ;       <o.4>   FPROT3.4
+  390 00000400         ;       <o.5>   FPROT3.5
+  391 00000400         ;       <o.6>   FPROT3.6
+  392 00000400         ;       <o.7>   FPROT3.7
+  393 00000400 00000000 
+                       nFPROT3 EQU              0x00
+  394 00000400 000000FF 
+                       FPROT3  EQU              nFPROT3:EOR:0xFF
+  395 00000400         ;     </h>
+  396 00000400         ;   </h>
+  397 00000400         ;   <h> Data flash protection byte (FDPROT)
+  398 00000400         ;     <i> Each bit protects a 1/8 region of the data fla
+                       sh memory.
+  399 00000400         ;     <i> (Program flash only devices: Reserved)
+  400 00000400         ;       <o.0>   FDPROT.0
+  401 00000400         ;       <o.1>   FDPROT.1
+  402 00000400         ;       <o.2>   FDPROT.2
+  403 00000400         ;       <o.3>   FDPROT.3
+  404 00000400         ;       <o.4>   FDPROT.4
+  405 00000400         ;       <o.5>   FDPROT.5
+  406 00000400         ;       <o.6>   FDPROT.6
+  407 00000400         ;       <o.7>   FDPROT.7
+  408 00000400 00000000 
+                       nFDPROT EQU              0x00
+  409 00000400 000000FF 
+                       FDPROT  EQU              nFDPROT:EOR:0xFF
+  410 00000400         ;   </h>
+  411 00000400         ;   <h> EEPROM protection byte (FEPROT)
+  412 00000400         ;     <i> FlexNVM devices: Each bit protects a 1/8 regio
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+                       n of the EEPROM.
+  413 00000400         ;     <i> (Program flash only devices: Reserved)
+  414 00000400         ;       <o.0>   FEPROT.0
+  415 00000400         ;       <o.1>   FEPROT.1
+  416 00000400         ;       <o.2>   FEPROT.2
+  417 00000400         ;       <o.3>   FEPROT.3
+  418 00000400         ;       <o.4>   FEPROT.4
+  419 00000400         ;       <o.5>   FEPROT.5
+  420 00000400         ;       <o.6>   FEPROT.6
+  421 00000400         ;       <o.7>   FEPROT.7
+  422 00000400 00000000 
+                       nFEPROT EQU              0x00
+  423 00000400 000000FF 
+                       FEPROT  EQU              nFEPROT:EOR:0xFF
+  424 00000400         ;   </h>
+  425 00000400         ;   <h> Flash nonvolatile option byte (FOPT)
+  426 00000400         ;     <i> Allows the user to customize the operation of 
+                       the MCU at boot time.
+  427 00000400         ;     <o.0> LPBOOT
+  428 00000400         ;       <0=> Low-power boot
+  429 00000400         ;       <1=> Normal boot
+  430 00000400         ;     <o.1> EZPORT_DIS
+  431 00000400         ;       <0=> EzPort operation is disabled
+  432 00000400         ;       <1=> EzPort operation is enabled
+  433 00000400 000000FF 
+                       FOPT    EQU              0xFF
+  434 00000400         ;   </h>
+  435 00000400         ;   <h> Flash security byte (FSEC)
+  436 00000400         ;     <i> WARNING: If SEC field is configured as "MCU se
+                       curity status is secure" and MEEN field is configured as
+                        "Mass erase is disabled",
+  437 00000400         ;     <i> MCU's security status cannot be set back to un
+                       secure state since Mass erase via the debugger is blocke
+                       d !!!
+  438 00000400         ;     <o.0..1> SEC
+  439 00000400         ;       <2=> MCU security status is unsecure
+  440 00000400         ;       <3=> MCU security status is secure
+  441 00000400         ;         <i> Flash Security
+  442 00000400         ;     <o.2..3> FSLACC
+  443 00000400         ;       <2=> Freescale factory access denied
+  444 00000400         ;       <3=> Freescale factory access granted
+  445 00000400         ;         <i> Freescale Failure Analysis Access Code
+  446 00000400         ;     <o.4..5> MEEN
+  447 00000400         ;       <2=> Mass erase is disabled
+  448 00000400         ;       <3=> Mass erase is enabled
+  449 00000400         ;     <o.6..7> KEYEN
+  450 00000400         ;       <2=> Backdoor key access enabled
+  451 00000400         ;       <3=> Backdoor key access disabled
+  452 00000400         ;         <i> Backdoor Key Security Enable
+  453 00000400 000000FE 
+                       FSEC    EQU              0xFE
+  454 00000400         ;   </h>
+  455 00000400         ; </h>
+  456 00000400                 IF               :LNOT::DEF:RAM_TARGET
+  457 00000400                 AREA             FlashConfig, DATA, READONLY
+  458 00000000         __FlashConfig
+  459 00000000 FF FF FF 
+              FF               DCB              BackDoorK0, BackDoorK1, BackDoo
+rK2, BackDoorK3
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+  460 00000004 FF FF FF 
+              FF               DCB              BackDoorK4, BackDoorK5, BackDoo
+rK6, BackDoorK7
+  461 00000008 FF FF FF 
+              FF               DCB              FPROT0    , FPROT1    , FPROT2 
+   , FPROT3
+  462 0000000C FE FF FF 
+              FF               DCB              FSEC      , FOPT      , FEPROT 
+   , FDPROT
+  463 00000010                 ENDIF
+  464 00000010         
+  465 00000010         
+  466 00000010                 AREA             |.text|, CODE, READONLY
+  467 00000000         
+  468 00000000         ; Reset Handler
+  469 00000000         
+  470 00000000         Reset_Handler
+                               PROC
+  471 00000000                 EXPORT           Reset_Handler             [WEAK
+]
+  472 00000000                 IMPORT           SystemInit
+  473 00000000                 IMPORT           __main
+  474 00000000         
+  475 00000000                 IF               :LNOT::DEF:RAM_TARGET
+  476 00000000                 REQUIRE          FlashConfig
+  477 00000000                 ENDIF
+  478 00000000         
+  479 00000000 B672            CPSID            I           ; Mask interrupts
+  480 00000002 483C            LDR              R0, =0xE000ED08
+  481 00000004 493C            LDR              R1, =__Vectors
+  482 00000006 6001            STR              R1, [R0]
+  483 00000008 680A            LDR              R2, [R1]
+  484 0000000A F382 8808       MSR              MSP, R2
+  485 0000000E 483B            LDR              R0, =SystemInit
+  486 00000010 4780            BLX              R0
+  487 00000012 B662            CPSIE            i           ; Unmask interrupts
+                                                            
+  488 00000014 483A            LDR              R0, =__main
+  489 00000016 4700            BX               R0
+  490 00000018                 ENDP
+  491 00000018         
+  492 00000018         
+  493 00000018         ; Dummy Exception Handlers (infinite loops which can be 
+                       modified)
+  495 00000018         NMI_Handler
+                               PROC
+  496 00000018                 EXPORT           NMI_Handler         [WEAK]
+  497 00000018 E7FE            B                .
+  498 0000001A                 ENDP
+  500 0000001A         HardFault_Handler
+                               PROC
+  501 0000001A                 EXPORT           HardFault_Handler         [WEAK
+]
+  502 0000001A E7FE            B                .
+  503 0000001C                 ENDP
+  505 0000001C         MemManage_Handler
+                               PROC
+  506 0000001C                 EXPORT           MemManage_Handler         [WEAK
+]
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+  507 0000001C E7FE            B                .
+  508 0000001E                 ENDP
+  510 0000001E         BusFault_Handler
+                               PROC
+  511 0000001E                 EXPORT           BusFault_Handler         [WEAK]
+  512 0000001E E7FE            B                .
+  513 00000020                 ENDP
+  515 00000020         UsageFault_Handler
+                               PROC
+  516 00000020                 EXPORT           UsageFault_Handler         [WEA
+K]
+  517 00000020 E7FE            B                .
+  518 00000022                 ENDP
+  520 00000022         SVC_Handler
+                               PROC
+  521 00000022                 EXPORT           SVC_Handler         [WEAK]
+  522 00000022 E7FE            B                .
+  523 00000024                 ENDP
+  525 00000024         DebugMon_Handler
+                               PROC
+  526 00000024                 EXPORT           DebugMon_Handler         [WEAK]
+  527 00000024 E7FE            B                .
+  528 00000026                 ENDP
+  530 00000026         PendSV_Handler
+                               PROC
+  531 00000026                 EXPORT           PendSV_Handler         [WEAK]
+  532 00000026 E7FE            B                .
+  533 00000028                 ENDP
+  535 00000028         SysTick_Handler
+                               PROC
+  536 00000028                 EXPORT           SysTick_Handler         [WEAK]
+  537 00000028 E7FE            B                .
+  538 0000002A                 ENDP
+  540 0000002A         DMA0_IRQHandler
+                               PROC
+  541 0000002A                 EXPORT           DMA0_IRQHandler         [WEAK]
+  542 0000002A 4836            LDR              R0, =DMA0_DriverIRQHandler
+  543 0000002C 4700            BX               R0
+  544 0000002E                 ENDP
+  545 0000002E         
+  547 0000002E         DMA1_IRQHandler
+                               PROC
+  548 0000002E                 EXPORT           DMA1_IRQHandler         [WEAK]
+  549 0000002E 4836            LDR              R0, =DMA1_DriverIRQHandler
+  550 00000030 4700            BX               R0
+  551 00000032                 ENDP
+  552 00000032         
+  554 00000032         DMA2_IRQHandler
+                               PROC
+  555 00000032                 EXPORT           DMA2_IRQHandler         [WEAK]
+  556 00000032 4836            LDR              R0, =DMA2_DriverIRQHandler
+  557 00000034 4700            BX               R0
+  558 00000036                 ENDP
+  559 00000036         
+  561 00000036         DMA3_IRQHandler
+                               PROC
+  562 00000036                 EXPORT           DMA3_IRQHandler         [WEAK]
+  563 00000036 4836            LDR              R0, =DMA3_DriverIRQHandler
+  564 00000038 4700            BX               R0
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+  565 0000003A                 ENDP
+  566 0000003A         
+  568 0000003A         DMA4_IRQHandler
+                               PROC
+  569 0000003A                 EXPORT           DMA4_IRQHandler         [WEAK]
+  570 0000003A 4836            LDR              R0, =DMA4_DriverIRQHandler
+  571 0000003C 4700            BX               R0
+  572 0000003E                 ENDP
+  573 0000003E         
+  575 0000003E         DMA5_IRQHandler
+                               PROC
+  576 0000003E                 EXPORT           DMA5_IRQHandler         [WEAK]
+  577 0000003E 4836            LDR              R0, =DMA5_DriverIRQHandler
+  578 00000040 4700            BX               R0
+  579 00000042                 ENDP
+  580 00000042         
+  582 00000042         DMA6_IRQHandler
+                               PROC
+  583 00000042                 EXPORT           DMA6_IRQHandler         [WEAK]
+  584 00000042 4836            LDR              R0, =DMA6_DriverIRQHandler
+  585 00000044 4700            BX               R0
+  586 00000046                 ENDP
+  587 00000046         
+  589 00000046         DMA7_IRQHandler
+                               PROC
+  590 00000046                 EXPORT           DMA7_IRQHandler         [WEAK]
+  591 00000046 4836            LDR              R0, =DMA7_DriverIRQHandler
+  592 00000048 4700            BX               R0
+  593 0000004A                 ENDP
+  594 0000004A         
+  596 0000004A         DMA8_IRQHandler
+                               PROC
+  597 0000004A                 EXPORT           DMA8_IRQHandler         [WEAK]
+  598 0000004A 4836            LDR              R0, =DMA8_DriverIRQHandler
+  599 0000004C 4700            BX               R0
+  600 0000004E                 ENDP
+  601 0000004E         
+  603 0000004E         DMA9_IRQHandler
+                               PROC
+  604 0000004E                 EXPORT           DMA9_IRQHandler         [WEAK]
+  605 0000004E 4836            LDR              R0, =DMA9_DriverIRQHandler
+  606 00000050 4700            BX               R0
+  607 00000052                 ENDP
+  608 00000052         
+  610 00000052         DMA10_IRQHandler
+                               PROC
+  611 00000052                 EXPORT           DMA10_IRQHandler         [WEAK]
+  612 00000052 4836            LDR              R0, =DMA10_DriverIRQHandler
+  613 00000054 4700            BX               R0
+  614 00000056                 ENDP
+  615 00000056         
+  617 00000056         DMA11_IRQHandler
+                               PROC
+  618 00000056                 EXPORT           DMA11_IRQHandler         [WEAK]
+  619 00000056 4836            LDR              R0, =DMA11_DriverIRQHandler
+  620 00000058 4700            BX               R0
+  621 0000005A                 ENDP
+  622 0000005A         
+  624 0000005A         DMA12_IRQHandler
+
+
+
+ARM Macro Assembler    Page 15 
+
+
+                               PROC
+  625 0000005A                 EXPORT           DMA12_IRQHandler         [WEAK]
+  626 0000005A 4836            LDR              R0, =DMA12_DriverIRQHandler
+  627 0000005C 4700            BX               R0
+  628 0000005E                 ENDP
+  629 0000005E         
+  631 0000005E         DMA13_IRQHandler
+                               PROC
+  632 0000005E                 EXPORT           DMA13_IRQHandler         [WEAK]
+  633 0000005E 4836            LDR              R0, =DMA13_DriverIRQHandler
+  634 00000060 4700            BX               R0
+  635 00000062                 ENDP
+  636 00000062         
+  638 00000062         DMA14_IRQHandler
+                               PROC
+  639 00000062                 EXPORT           DMA14_IRQHandler         [WEAK]
+  640 00000062 4836            LDR              R0, =DMA14_DriverIRQHandler
+  641 00000064 4700            BX               R0
+  642 00000066                 ENDP
+  643 00000066         
+  645 00000066         DMA15_IRQHandler
+                               PROC
+  646 00000066                 EXPORT           DMA15_IRQHandler         [WEAK]
+  647 00000066 4836            LDR              R0, =DMA15_DriverIRQHandler
+  648 00000068 4700            BX               R0
+  649 0000006A                 ENDP
+  650 0000006A         
+  652 0000006A         DMA_Error_IRQHandler
+                               PROC
+  653 0000006A                 EXPORT           DMA_Error_IRQHandler         [W
+EAK]
+  654 0000006A 4836            LDR              R0, =DMA_Error_DriverIRQHandler
+  655 0000006C 4700            BX               R0
+  656 0000006E                 ENDP
+  657 0000006E         
+  659 0000006E         I2C0_IRQHandler
+                               PROC
+  660 0000006E                 EXPORT           I2C0_IRQHandler         [WEAK]
+  661 0000006E 4836            LDR              R0, =I2C0_DriverIRQHandler
+  662 00000070 4700            BX               R0
+  663 00000072                 ENDP
+  664 00000072         
+  666 00000072         I2C1_IRQHandler
+                               PROC
+  667 00000072                 EXPORT           I2C1_IRQHandler         [WEAK]
+  668 00000072 4836            LDR              R0, =I2C1_DriverIRQHandler
+  669 00000074 4700            BX               R0
+  670 00000076                 ENDP
+  671 00000076         
+  673 00000076         SPI0_IRQHandler
+                               PROC
+  674 00000076                 EXPORT           SPI0_IRQHandler         [WEAK]
+  675 00000076 4836            LDR              R0, =SPI0_DriverIRQHandler
+  676 00000078 4700            BX               R0
+  677 0000007A                 ENDP
+  678 0000007A         
+  680 0000007A         SPI1_IRQHandler
+                               PROC
+  681 0000007A                 EXPORT           SPI1_IRQHandler         [WEAK]
+
+
+
+ARM Macro Assembler    Page 16 
+
+
+  682 0000007A 4836            LDR              R0, =SPI1_DriverIRQHandler
+  683 0000007C 4700            BX               R0
+  684 0000007E                 ENDP
+  685 0000007E         
+  687 0000007E         I2S0_Tx_IRQHandler
+                               PROC
+  688 0000007E                 EXPORT           I2S0_Tx_IRQHandler         [WEA
+K]
+  689 0000007E 4836            LDR              R0, =I2S0_Tx_DriverIRQHandler
+  690 00000080 4700            BX               R0
+  691 00000082                 ENDP
+  692 00000082         
+  694 00000082         I2S0_Rx_IRQHandler
+                               PROC
+  695 00000082                 EXPORT           I2S0_Rx_IRQHandler         [WEA
+K]
+  696 00000082 4836            LDR              R0, =I2S0_Rx_DriverIRQHandler
+  697 00000084 4700            BX               R0
+  698 00000086                 ENDP
+  699 00000086         
+  701 00000086         UART0_LON_IRQHandler
+                               PROC
+  702 00000086                 EXPORT           UART0_LON_IRQHandler         [W
+EAK]
+  703 00000086 4836            LDR              R0, =UART0_LON_DriverIRQHandler
+  704 00000088 4700            BX               R0
+  705 0000008A                 ENDP
+  706 0000008A         
+  708 0000008A         UART0_RX_TX_IRQHandler
+                               PROC
+  709 0000008A                 EXPORT           UART0_RX_TX_IRQHandler         
+[WEAK]
+  710 0000008A 4836            LDR              R0, =UART0_RX_TX_DriverIRQHandl
+er
+  711 0000008C 4700            BX               R0
+  712 0000008E                 ENDP
+  713 0000008E         
+  715 0000008E         UART0_ERR_IRQHandler
+                               PROC
+  716 0000008E                 EXPORT           UART0_ERR_IRQHandler         [W
+EAK]
+  717 0000008E 4836            LDR              R0, =UART0_ERR_DriverIRQHandler
+  718 00000090 4700            BX               R0
+  719 00000092                 ENDP
+  720 00000092         
+  722 00000092         UART1_RX_TX_IRQHandler
+                               PROC
+  723 00000092                 EXPORT           UART1_RX_TX_IRQHandler         
+[WEAK]
+  724 00000092 4836            LDR              R0, =UART1_RX_TX_DriverIRQHandl
+er
+  725 00000094 4700            BX               R0
+  726 00000096                 ENDP
+  727 00000096         
+  729 00000096         UART1_ERR_IRQHandler
+                               PROC
+  730 00000096                 EXPORT           UART1_ERR_IRQHandler         [W
+EAK]
+  731 00000096 4836            LDR              R0, =UART1_ERR_DriverIRQHandler
+
+
+
+ARM Macro Assembler    Page 17 
+
+
+  732 00000098 4700            BX               R0
+  733 0000009A                 ENDP
+  734 0000009A         
+  736 0000009A         UART2_RX_TX_IRQHandler
+                               PROC
+  737 0000009A                 EXPORT           UART2_RX_TX_IRQHandler         
+[WEAK]
+  738 0000009A 4836            LDR              R0, =UART2_RX_TX_DriverIRQHandl
+er
+  739 0000009C 4700            BX               R0
+  740 0000009E                 ENDP
+  741 0000009E         
+  743 0000009E         UART2_ERR_IRQHandler
+                               PROC
+  744 0000009E                 EXPORT           UART2_ERR_IRQHandler         [W
+EAK]
+  745 0000009E 4836            LDR              R0, =UART2_ERR_DriverIRQHandler
+  746 000000A0 4700            BX               R0
+  747 000000A2                 ENDP
+  748 000000A2         
+  750 000000A2         UART3_RX_TX_IRQHandler
+                               PROC
+  751 000000A2                 EXPORT           UART3_RX_TX_IRQHandler         
+[WEAK]
+  752 000000A2 4836            LDR              R0, =UART3_RX_TX_DriverIRQHandl
+er
+  753 000000A4 4700            BX               R0
+  754 000000A6                 ENDP
+  755 000000A6         
+  757 000000A6         UART3_ERR_IRQHandler
+                               PROC
+  758 000000A6                 EXPORT           UART3_ERR_IRQHandler         [W
+EAK]
+  759 000000A6 4836            LDR              R0, =UART3_ERR_DriverIRQHandler
+  760 000000A8 4700            BX               R0
+  761 000000AA                 ENDP
+  762 000000AA         
+  764 000000AA         SPI2_IRQHandler
+                               PROC
+  765 000000AA                 EXPORT           SPI2_IRQHandler         [WEAK]
+  766 000000AA 4836            LDR              R0, =SPI2_DriverIRQHandler
+  767 000000AC 4700            BX               R0
+  768 000000AE                 ENDP
+  769 000000AE         
+  771 000000AE         UART4_RX_TX_IRQHandler
+                               PROC
+  772 000000AE                 EXPORT           UART4_RX_TX_IRQHandler         
+[WEAK]
+  773 000000AE 4836            LDR              R0, =UART4_RX_TX_DriverIRQHandl
+er
+  774 000000B0 4700            BX               R0
+  775 000000B2                 ENDP
+  776 000000B2         
+  778 000000B2         UART4_ERR_IRQHandler
+                               PROC
+  779 000000B2                 EXPORT           UART4_ERR_IRQHandler         [W
+EAK]
+  780 000000B2 4836            LDR              R0, =UART4_ERR_DriverIRQHandler
+  781 000000B4 4700            BX               R0
+
+
+
+ARM Macro Assembler    Page 18 
+
+
+  782 000000B6                 ENDP
+  783 000000B6         
+  785 000000B6         UART5_RX_TX_IRQHandler
+                               PROC
+  786 000000B6                 EXPORT           UART5_RX_TX_IRQHandler         
+[WEAK]
+  787 000000B6 4836            LDR              R0, =UART5_RX_TX_DriverIRQHandl
+er
+  788 000000B8 4700            BX               R0
+  789 000000BA                 ENDP
+  790 000000BA         
+  792 000000BA         UART5_ERR_IRQHandler
+                               PROC
+  793 000000BA                 EXPORT           UART5_ERR_IRQHandler         [W
+EAK]
+  794 000000BA 4836            LDR              R0, =UART5_ERR_DriverIRQHandler
+  795 000000BC 4700            BX               R0
+  796 000000BE                 ENDP
+  797 000000BE         
+  799 000000BE         I2C2_IRQHandler
+                               PROC
+  800 000000BE                 EXPORT           I2C2_IRQHandler         [WEAK]
+  801 000000BE 4836            LDR              R0, =I2C2_DriverIRQHandler
+  802 000000C0 4700            BX               R0
+  803 000000C2                 ENDP
+  804 000000C2         
+  806 000000C2         CAN0_ORed_Message_buffer_IRQHandler
+                               PROC
+  807 000000C2                 EXPORT           CAN0_ORed_Message_buffer_IRQHan
+dler         [WEAK]
+  808 000000C2 4836            LDR              R0, =CAN0_DriverIRQHandler
+  809 000000C4 4700            BX               R0
+  810 000000C6                 ENDP
+  811 000000C6         
+  813 000000C6         CAN0_Bus_Off_IRQHandler
+                               PROC
+  814 000000C6                 EXPORT           CAN0_Bus_Off_IRQHandler        
+ [WEAK]
+  815 000000C6 4835            LDR              R0, =CAN0_DriverIRQHandler
+  816 000000C8 4700            BX               R0
+  817 000000CA                 ENDP
+  818 000000CA         
+  820 000000CA         CAN0_Error_IRQHandler
+                               PROC
+  821 000000CA                 EXPORT           CAN0_Error_IRQHandler         [
+WEAK]
+  822 000000CA 4834            LDR              R0, =CAN0_DriverIRQHandler
+  823 000000CC 4700            BX               R0
+  824 000000CE                 ENDP
+  825 000000CE         
+  827 000000CE         CAN0_Tx_Warning_IRQHandler
+                               PROC
+  828 000000CE                 EXPORT           CAN0_Tx_Warning_IRQHandler     
+    [WEAK]
+  829 000000CE 4833            LDR              R0, =CAN0_DriverIRQHandler
+  830 000000D0 4700            BX               R0
+  831 000000D2                 ENDP
+  832 000000D2         
+  834 000000D2         CAN0_Rx_Warning_IRQHandler
+
+
+
+ARM Macro Assembler    Page 19 
+
+
+                               PROC
+  835 000000D2                 EXPORT           CAN0_Rx_Warning_IRQHandler     
+    [WEAK]
+  836 000000D2 4832            LDR              R0, =CAN0_DriverIRQHandler
+  837 000000D4 4700            BX               R0
+  838 000000D6                 ENDP
+  839 000000D6         
+  841 000000D6         CAN0_Wake_Up_IRQHandler
+                               PROC
+  842 000000D6                 EXPORT           CAN0_Wake_Up_IRQHandler        
+ [WEAK]
+  843 000000D6 4831            LDR              R0, =CAN0_DriverIRQHandler
+  844 000000D8 4700            BX               R0
+  845 000000DA                 ENDP
+  846 000000DA         
+  848 000000DA         SDHC_IRQHandler
+                               PROC
+  849 000000DA                 EXPORT           SDHC_IRQHandler         [WEAK]
+  850 000000DA 4831            LDR              R0, =SDHC_DriverIRQHandler
+  851 000000DC 4700            BX               R0
+  852 000000DE                 ENDP
+  853 000000DE         
+  855 000000DE         ENET_1588_Timer_IRQHandler
+                               PROC
+  856 000000DE                 EXPORT           ENET_1588_Timer_IRQHandler     
+    [WEAK]
+  857 000000DE 4831            LDR              R0, =ENET_1588_Timer_DriverIRQH
+andler
+  858 000000E0 4700            BX               R0
+  859 000000E2                 ENDP
+  860 000000E2         
+  862 000000E2         ENET_Transmit_IRQHandler
+                               PROC
+  863 000000E2                 EXPORT           ENET_Transmit_IRQHandler       
+  [WEAK]
+  864 000000E2 4831            LDR              R0, =ENET_Transmit_DriverIRQHan
+dler
+  865 000000E4 4700            BX               R0
+  866 000000E6                 ENDP
+  867 000000E6         
+  869 000000E6         ENET_Receive_IRQHandler
+                               PROC
+  870 000000E6                 EXPORT           ENET_Receive_IRQHandler        
+ [WEAK]
+  871 000000E6 4831            LDR              R0, =ENET_Receive_DriverIRQHand
+ler
+  872 000000E8 4700            BX               R0
+  873 000000EA                 ENDP
+  874 000000EA         
+  876 000000EA         ENET_Error_IRQHandler
+                               PROC
+  877 000000EA                 EXPORT           ENET_Error_IRQHandler         [
+WEAK]
+  878 000000EA 4831            LDR              R0, =ENET_Error_DriverIRQHandle
+r
+  879 000000EC 4700            BX               R0
+  880 000000EE                 ENDP
+  881 000000EE         
+  883 000000EE         Default_Handler
+
+
+
+ARM Macro Assembler    Page 20 
+
+
+                               PROC
+  884 000000EE                 EXPORT           DMA0_DriverIRQHandler         [
+WEAK]
+  885 000000EE                 EXPORT           DMA1_DriverIRQHandler         [
+WEAK]
+  886 000000EE                 EXPORT           DMA2_DriverIRQHandler         [
+WEAK]
+  887 000000EE                 EXPORT           DMA3_DriverIRQHandler         [
+WEAK]
+  888 000000EE                 EXPORT           DMA4_DriverIRQHandler         [
+WEAK]
+  889 000000EE                 EXPORT           DMA5_DriverIRQHandler         [
+WEAK]
+  890 000000EE                 EXPORT           DMA6_DriverIRQHandler         [
+WEAK]
+  891 000000EE                 EXPORT           DMA7_DriverIRQHandler         [
+WEAK]
+  892 000000EE                 EXPORT           DMA8_DriverIRQHandler         [
+WEAK]
+  893 000000EE                 EXPORT           DMA9_DriverIRQHandler         [
+WEAK]
+  894 000000EE                 EXPORT           DMA10_DriverIRQHandler         
+[WEAK]
+  895 000000EE                 EXPORT           DMA11_DriverIRQHandler         
+[WEAK]
+  896 000000EE                 EXPORT           DMA12_DriverIRQHandler         
+[WEAK]
+  897 000000EE                 EXPORT           DMA13_DriverIRQHandler         
+[WEAK]
+  898 000000EE                 EXPORT           DMA14_DriverIRQHandler         
+[WEAK]
+  899 000000EE                 EXPORT           DMA15_DriverIRQHandler         
+[WEAK]
+  900 000000EE                 EXPORT           DMA_Error_DriverIRQHandler     
+    [WEAK]
+  901 000000EE                 EXPORT           MCM_IRQHandler         [WEAK]
+  902 000000EE                 EXPORT           FTFE_IRQHandler         [WEAK]
+  903 000000EE                 EXPORT           Read_Collision_IRQHandler      
+   [WEAK]
+  904 000000EE                 EXPORT           LVD_LVW_IRQHandler         [WEA
+K]
+  905 000000EE                 EXPORT           LLWU_IRQHandler         [WEAK]
+  906 000000EE                 EXPORT           WDOG_EWM_IRQHandler         [WE
+AK]
+  907 000000EE                 EXPORT           RNG_IRQHandler         [WEAK]
+  908 000000EE                 EXPORT           I2C0_DriverIRQHandler         [
+WEAK]
+  909 000000EE                 EXPORT           I2C1_DriverIRQHandler         [
+WEAK]
+  910 000000EE                 EXPORT           SPI0_DriverIRQHandler         [
+WEAK]
+  911 000000EE                 EXPORT           SPI1_DriverIRQHandler         [
+WEAK]
+  912 000000EE                 EXPORT           I2S0_Tx_DriverIRQHandler       
+  [WEAK]
+  913 000000EE                 EXPORT           I2S0_Rx_DriverIRQHandler       
+  [WEAK]
+  914 000000EE                 EXPORT           UART0_LON_DriverIRQHandler     
+    [WEAK]
+
+
+
+ARM Macro Assembler    Page 21 
+
+
+  915 000000EE                 EXPORT           UART0_RX_TX_DriverIRQHandler   
+      [WEAK]
+  916 000000EE                 EXPORT           UART0_ERR_DriverIRQHandler     
+    [WEAK]
+  917 000000EE                 EXPORT           UART1_RX_TX_DriverIRQHandler   
+      [WEAK]
+  918 000000EE                 EXPORT           UART1_ERR_DriverIRQHandler     
+    [WEAK]
+  919 000000EE                 EXPORT           UART2_RX_TX_DriverIRQHandler   
+      [WEAK]
+  920 000000EE                 EXPORT           UART2_ERR_DriverIRQHandler     
+    [WEAK]
+  921 000000EE                 EXPORT           UART3_RX_TX_DriverIRQHandler   
+      [WEAK]
+  922 000000EE                 EXPORT           UART3_ERR_DriverIRQHandler     
+    [WEAK]
+  923 000000EE                 EXPORT           ADC0_IRQHandler         [WEAK]
+  924 000000EE                 EXPORT           CMP0_IRQHandler         [WEAK]
+  925 000000EE                 EXPORT           CMP1_IRQHandler         [WEAK]
+  926 000000EE                 EXPORT           FTM0_IRQHandler         [WEAK]
+  927 000000EE                 EXPORT           FTM1_IRQHandler         [WEAK]
+  928 000000EE                 EXPORT           FTM2_IRQHandler         [WEAK]
+  929 000000EE                 EXPORT           CMT_IRQHandler         [WEAK]
+  930 000000EE                 EXPORT           RTC_IRQHandler         [WEAK]
+  931 000000EE                 EXPORT           RTC_Seconds_IRQHandler         
+[WEAK]
+  932 000000EE                 EXPORT           PIT0_IRQHandler         [WEAK]
+  933 000000EE                 EXPORT           PIT1_IRQHandler         [WEAK]
+  934 000000EE                 EXPORT           PIT2_IRQHandler         [WEAK]
+  935 000000EE                 EXPORT           PIT3_IRQHandler         [WEAK]
+  936 000000EE                 EXPORT           PDB0_IRQHandler         [WEAK]
+  937 000000EE                 EXPORT           USB0_IRQHandler         [WEAK]
+  938 000000EE                 EXPORT           USBDCD_IRQHandler         [WEAK
+]
+  939 000000EE                 EXPORT           Reserved71_IRQHandler         [
+WEAK]
+  940 000000EE                 EXPORT           DAC0_IRQHandler         [WEAK]
+  941 000000EE                 EXPORT           MCG_IRQHandler         [WEAK]
+  942 000000EE                 EXPORT           LPTMR0_IRQHandler         [WEAK
+]
+  943 000000EE                 EXPORT           PORTA_IRQHandler         [WEAK]
+  944 000000EE                 EXPORT           PORTB_IRQHandler         [WEAK]
+  945 000000EE                 EXPORT           PORTC_IRQHandler         [WEAK]
+  946 000000EE                 EXPORT           PORTD_IRQHandler         [WEAK]
+  947 000000EE                 EXPORT           PORTE_IRQHandler         [WEAK]
+  948 000000EE                 EXPORT           SWI_IRQHandler         [WEAK]
+  949 000000EE                 EXPORT           SPI2_DriverIRQHandler         [
+WEAK]
+  950 000000EE                 EXPORT           UART4_RX_TX_DriverIRQHandler   
+      [WEAK]
+  951 000000EE                 EXPORT           UART4_ERR_DriverIRQHandler     
+    [WEAK]
+  952 000000EE                 EXPORT           UART5_RX_TX_DriverIRQHandler   
+      [WEAK]
+  953 000000EE                 EXPORT           UART5_ERR_DriverIRQHandler     
+    [WEAK]
+  954 000000EE                 EXPORT           CMP2_IRQHandler         [WEAK]
+  955 000000EE                 EXPORT           FTM3_IRQHandler         [WEAK]
+  956 000000EE                 EXPORT           DAC1_IRQHandler         [WEAK]
+
+
+
+ARM Macro Assembler    Page 22 
+
+
+  957 000000EE                 EXPORT           ADC1_IRQHandler         [WEAK]
+  958 000000EE                 EXPORT           I2C2_DriverIRQHandler         [
+WEAK]
+  959 000000EE                 EXPORT           CAN0_DriverIRQHandler         [
+WEAK]
+  960 000000EE                 EXPORT           SDHC_DriverIRQHandler         [
+WEAK]
+  961 000000EE                 EXPORT           ENET_1588_Timer_DriverIRQHandle
+r         [WEAK]
+  962 000000EE                 EXPORT           ENET_Transmit_DriverIRQHandler 
+        [WEAK]
+  963 000000EE                 EXPORT           ENET_Receive_DriverIRQHandler  
+       [WEAK]
+  964 000000EE                 EXPORT           ENET_Error_DriverIRQHandler    
+     [WEAK]
+  965 000000EE                 EXPORT           DefaultISR         [WEAK]
+  966 000000EE         DMA0_DriverIRQHandler
+  967 000000EE         DMA1_DriverIRQHandler
+  968 000000EE         DMA2_DriverIRQHandler
+  969 000000EE         DMA3_DriverIRQHandler
+  970 000000EE         DMA4_DriverIRQHandler
+  971 000000EE         DMA5_DriverIRQHandler
+  972 000000EE         DMA6_DriverIRQHandler
+  973 000000EE         DMA7_DriverIRQHandler
+  974 000000EE         DMA8_DriverIRQHandler
+  975 000000EE         DMA9_DriverIRQHandler
+  976 000000EE         DMA10_DriverIRQHandler
+  977 000000EE         DMA11_DriverIRQHandler
+  978 000000EE         DMA12_DriverIRQHandler
+  979 000000EE         DMA13_DriverIRQHandler
+  980 000000EE         DMA14_DriverIRQHandler
+  981 000000EE         DMA15_DriverIRQHandler
+  982 000000EE         DMA_Error_DriverIRQHandler
+  983 000000EE         MCM_IRQHandler
+  984 000000EE         FTFE_IRQHandler
+  985 000000EE         Read_Collision_IRQHandler
+  986 000000EE         LVD_LVW_IRQHandler
+  987 000000EE         LLWU_IRQHandler
+  988 000000EE         WDOG_EWM_IRQHandler
+  989 000000EE         RNG_IRQHandler
+  990 000000EE         I2C0_DriverIRQHandler
+  991 000000EE         I2C1_DriverIRQHandler
+  992 000000EE         SPI0_DriverIRQHandler
+  993 000000EE         SPI1_DriverIRQHandler
+  994 000000EE         I2S0_Tx_DriverIRQHandler
+  995 000000EE         I2S0_Rx_DriverIRQHandler
+  996 000000EE         UART0_LON_DriverIRQHandler
+  997 000000EE         UART0_RX_TX_DriverIRQHandler
+  998 000000EE         UART0_ERR_DriverIRQHandler
+  999 000000EE         UART1_RX_TX_DriverIRQHandler
+ 1000 000000EE         UART1_ERR_DriverIRQHandler
+ 1001 000000EE         UART2_RX_TX_DriverIRQHandler
+ 1002 000000EE         UART2_ERR_DriverIRQHandler
+ 1003 000000EE         UART3_RX_TX_DriverIRQHandler
+ 1004 000000EE         UART3_ERR_DriverIRQHandler
+ 1005 000000EE         ADC0_IRQHandler
+ 1006 000000EE         CMP0_IRQHandler
+ 1007 000000EE         CMP1_IRQHandler
+ 1008 000000EE         FTM0_IRQHandler
+
+
+
+ARM Macro Assembler    Page 23 
+
+
+ 1009 000000EE         FTM1_IRQHandler
+ 1010 000000EE         FTM2_IRQHandler
+ 1011 000000EE         CMT_IRQHandler
+ 1012 000000EE         RTC_IRQHandler
+ 1013 000000EE         RTC_Seconds_IRQHandler
+ 1014 000000EE         PIT0_IRQHandler
+ 1015 000000EE         PIT1_IRQHandler
+ 1016 000000EE         PIT2_IRQHandler
+ 1017 000000EE         PIT3_IRQHandler
+ 1018 000000EE         PDB0_IRQHandler
+ 1019 000000EE         USB0_IRQHandler
+ 1020 000000EE         USBDCD_IRQHandler
+ 1021 000000EE         Reserved71_IRQHandler
+ 1022 000000EE         DAC0_IRQHandler
+ 1023 000000EE         MCG_IRQHandler
+ 1024 000000EE         LPTMR0_IRQHandler
+ 1025 000000EE         PORTA_IRQHandler
+ 1026 000000EE         PORTB_IRQHandler
+ 1027 000000EE         PORTC_IRQHandler
+ 1028 000000EE         PORTD_IRQHandler
+ 1029 000000EE         PORTE_IRQHandler
+ 1030 000000EE         SWI_IRQHandler
+ 1031 000000EE         SPI2_DriverIRQHandler
+ 1032 000000EE         UART4_RX_TX_DriverIRQHandler
+ 1033 000000EE         UART4_ERR_DriverIRQHandler
+ 1034 000000EE         UART5_RX_TX_DriverIRQHandler
+ 1035 000000EE         UART5_ERR_DriverIRQHandler
+ 1036 000000EE         CMP2_IRQHandler
+ 1037 000000EE         FTM3_IRQHandler
+ 1038 000000EE         DAC1_IRQHandler
+ 1039 000000EE         ADC1_IRQHandler
+ 1040 000000EE         I2C2_DriverIRQHandler
+ 1041 000000EE         CAN0_DriverIRQHandler
+ 1042 000000EE         SDHC_DriverIRQHandler
+ 1043 000000EE         ENET_1588_Timer_DriverIRQHandler
+ 1044 000000EE         ENET_Transmit_DriverIRQHandler
+ 1045 000000EE         ENET_Receive_DriverIRQHandler
+ 1046 000000EE         ENET_Error_DriverIRQHandler
+ 1047 000000EE         DefaultISR
+ 1048 000000EE 4836            LDR              R0, =DefaultISR
+ 1049 000000F0 4700            BX               R0
+ 1050 000000F2                 ENDP
+ 1051 000000F2 00 00           ALIGN
+ 1052 000000F4         
+ 1053 000000F4         
+ 1054 000000F4                 END
+              E000ED08 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+
+
+
+ARM Macro Assembler    Page 24 
+
+
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\out\startup_mk64f12.d -o.\out\startup_mk64f12.o -I.\RTE\Board
+_Support\MK64FN1M0xxx12 -I.\RTE\Device\MK64FN1M0xxx12 -I.\RTE\_FRDM-K64 -IC:\Ke
+il_v5\ARM\PACK\ARM\CMSIS\5.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\NXP\MK64F12_
+DFP\10.0.0\drivers -IC:\Keil_v5\ARM\PACK\Keil\Kinetis_K60_DFP\1.5.0\Device\Incl
+ude --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --
+predefine="_RTE_ SETA 1" --predefine="MK64FN1M0xxx12 SETA 1" --list=.\out\start
+up_mk64f12.lst RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 48 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 54 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 49 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 314 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 481 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+__Vectors_End 00000400
+
+Symbol: __Vectors_End
+   Definitions
+      At line 312 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 50 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 314 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+FlashConfig 00000000
+
+Symbol: FlashConfig
+   Definitions
+      At line 457 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 476 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FlashConfig used once
+__FlashConfig 00000000
+
+Symbol: __FlashConfig
+   Definitions
+      At line 458 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      None
+Comment: __FlashConfig unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 466 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      None
+Comment: .text unused
+ADC0_IRQHandler 000000EE
+
+Symbol: ADC0_IRQHandler
+   Definitions
+      At line 1005 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 111 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 923 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ADC1_IRQHandler 000000EE
+
+Symbol: ADC1_IRQHandler
+   Definitions
+      At line 1039 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 145 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 957 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+BusFault_Handler 0000001E
+
+Symbol: BusFault_Handler
+   Definitions
+      At line 510 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 59 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 511 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_Bus_Off_IRQHandler 000000C6
+
+Symbol: CAN0_Bus_Off_IRQHandler
+   Definitions
+      At line 813 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 148 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 814 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_DriverIRQHandler 000000EE
+
+Symbol: CAN0_DriverIRQHandler
+   Definitions
+      At line 1041 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 808 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 815 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 822 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 829 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 836 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 843 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 959 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_Error_IRQHandler 000000CA
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: CAN0_Error_IRQHandler
+   Definitions
+      At line 820 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 149 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 821 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_ORed_Message_buffer_IRQHandler 000000C2
+
+Symbol: CAN0_ORed_Message_buffer_IRQHandler
+   Definitions
+      At line 806 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 147 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 807 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_Rx_Warning_IRQHandler 000000D2
+
+Symbol: CAN0_Rx_Warning_IRQHandler
+   Definitions
+      At line 834 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 151 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 835 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_Tx_Warning_IRQHandler 000000CE
+
+Symbol: CAN0_Tx_Warning_IRQHandler
+   Definitions
+      At line 827 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 150 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 828 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CAN0_Wake_Up_IRQHandler 000000D6
+
+Symbol: CAN0_Wake_Up_IRQHandler
+   Definitions
+      At line 841 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 152 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 842 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CMP0_IRQHandler 000000EE
+
+Symbol: CMP0_IRQHandler
+   Definitions
+      At line 1006 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 112 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 924 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CMP1_IRQHandler 000000EE
+
+Symbol: CMP1_IRQHandler
+   Definitions
+      At line 1007 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 113 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 925 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CMP2_IRQHandler 000000EE
+
+Symbol: CMP2_IRQHandler
+   Definitions
+      At line 1036 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 142 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 954 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+CMT_IRQHandler 000000EE
+
+Symbol: CMT_IRQHandler
+   Definitions
+      At line 1011 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 117 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 929 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DAC0_IRQHandler 000000EE
+
+Symbol: DAC0_IRQHandler
+   Definitions
+      At line 1022 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 128 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 940 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DAC1_IRQHandler 000000EE
+
+Symbol: DAC1_IRQHandler
+   Definitions
+      At line 1038 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 144 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 956 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA0_DriverIRQHandler 000000EE
+
+Symbol: DMA0_DriverIRQHandler
+   Definitions
+      At line 966 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 542 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 884 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA0_IRQHandler 0000002A
+
+Symbol: DMA0_IRQHandler
+   Definitions
+      At line 540 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 72 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 541 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA10_DriverIRQHandler 000000EE
+
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: DMA10_DriverIRQHandler
+   Definitions
+      At line 976 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 612 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 894 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA10_IRQHandler 00000052
+
+Symbol: DMA10_IRQHandler
+   Definitions
+      At line 610 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 82 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 611 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA11_DriverIRQHandler 000000EE
+
+Symbol: DMA11_DriverIRQHandler
+   Definitions
+      At line 977 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 619 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 895 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA11_IRQHandler 00000056
+
+Symbol: DMA11_IRQHandler
+   Definitions
+      At line 617 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 83 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 618 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA12_DriverIRQHandler 000000EE
+
+Symbol: DMA12_DriverIRQHandler
+   Definitions
+      At line 978 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 626 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 896 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA12_IRQHandler 0000005A
+
+Symbol: DMA12_IRQHandler
+   Definitions
+      At line 624 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 84 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 625 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA13_DriverIRQHandler 000000EE
+
+Symbol: DMA13_DriverIRQHandler
+   Definitions
+      At line 979 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 633 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 897 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA13_IRQHandler 0000005E
+
+Symbol: DMA13_IRQHandler
+   Definitions
+      At line 631 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 85 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 632 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA14_DriverIRQHandler 000000EE
+
+Symbol: DMA14_DriverIRQHandler
+   Definitions
+      At line 980 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 640 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 898 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA14_IRQHandler 00000062
+
+Symbol: DMA14_IRQHandler
+   Definitions
+      At line 638 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 86 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 639 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA15_DriverIRQHandler 000000EE
+
+Symbol: DMA15_DriverIRQHandler
+   Definitions
+      At line 981 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 647 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 899 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA15_IRQHandler 00000066
+
+Symbol: DMA15_IRQHandler
+   Definitions
+      At line 645 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 87 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 646 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA1_DriverIRQHandler 000000EE
+
+Symbol: DMA1_DriverIRQHandler
+   Definitions
+      At line 967 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 549 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 885 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA1_IRQHandler 0000002E
+
+Symbol: DMA1_IRQHandler
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 547 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 73 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 548 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA2_DriverIRQHandler 000000EE
+
+Symbol: DMA2_DriverIRQHandler
+   Definitions
+      At line 968 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 556 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 886 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA2_IRQHandler 00000032
+
+Symbol: DMA2_IRQHandler
+   Definitions
+      At line 554 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 74 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 555 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA3_DriverIRQHandler 000000EE
+
+Symbol: DMA3_DriverIRQHandler
+   Definitions
+      At line 969 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 563 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 887 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA3_IRQHandler 00000036
+
+Symbol: DMA3_IRQHandler
+   Definitions
+      At line 561 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 75 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 562 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA4_DriverIRQHandler 000000EE
+
+Symbol: DMA4_DriverIRQHandler
+   Definitions
+      At line 970 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 570 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 888 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA4_IRQHandler 0000003A
+
+Symbol: DMA4_IRQHandler
+   Definitions
+      At line 568 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 76 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 569 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Relocatable symbols
+
+
+DMA5_DriverIRQHandler 000000EE
+
+Symbol: DMA5_DriverIRQHandler
+   Definitions
+      At line 971 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 577 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 889 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA5_IRQHandler 0000003E
+
+Symbol: DMA5_IRQHandler
+   Definitions
+      At line 575 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 77 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 576 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA6_DriverIRQHandler 000000EE
+
+Symbol: DMA6_DriverIRQHandler
+   Definitions
+      At line 972 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 584 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 890 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA6_IRQHandler 00000042
+
+Symbol: DMA6_IRQHandler
+   Definitions
+      At line 582 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 78 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 583 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA7_DriverIRQHandler 000000EE
+
+Symbol: DMA7_DriverIRQHandler
+   Definitions
+      At line 973 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 591 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 891 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA7_IRQHandler 00000046
+
+Symbol: DMA7_IRQHandler
+   Definitions
+      At line 589 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 79 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 590 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA8_DriverIRQHandler 000000EE
+
+Symbol: DMA8_DriverIRQHandler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 974 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 598 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 892 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA8_IRQHandler 0000004A
+
+Symbol: DMA8_IRQHandler
+   Definitions
+      At line 596 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 80 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 597 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA9_DriverIRQHandler 000000EE
+
+Symbol: DMA9_DriverIRQHandler
+   Definitions
+      At line 975 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 605 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 893 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA9_IRQHandler 0000004E
+
+Symbol: DMA9_IRQHandler
+   Definitions
+      At line 603 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 81 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 604 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA_Error_DriverIRQHandler 000000EE
+
+Symbol: DMA_Error_DriverIRQHandler
+   Definitions
+      At line 982 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 654 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 900 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DMA_Error_IRQHandler 0000006A
+
+Symbol: DMA_Error_IRQHandler
+   Definitions
+      At line 652 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 88 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 653 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+DebugMon_Handler 00000024
+
+Symbol: DebugMon_Handler
+   Definitions
+      At line 525 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 66 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 526 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Relocatable symbols
+
+DefaultISR 000000EE
+
+Symbol: DefaultISR
+   Definitions
+      At line 1047 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 158 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 159 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 160 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 161 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 162 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 163 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 164 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 165 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 166 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 167 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 168 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 169 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 170 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 171 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 172 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 173 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 174 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 175 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 176 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 177 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 178 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 179 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 180 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 181 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 182 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 183 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 184 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 185 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 186 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 187 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 188 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 189 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 190 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 191 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 192 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 193 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 194 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 195 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 196 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 197 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 198 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 199 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 200 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 201 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 202 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 203 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 204 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 205 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 206 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 207 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 208 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 209 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 210 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 211 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 212 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 213 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 214 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 215 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 216 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 217 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 218 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 219 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 220 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 221 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 222 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 223 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 224 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 225 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 226 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 227 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 228 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 229 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 230 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 231 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 232 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 233 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 234 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 235 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 236 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 237 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 238 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 239 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 240 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 241 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 242 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 243 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 244 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 245 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 246 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 247 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 248 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 249 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 250 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 251 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 252 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 253 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 254 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 255 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 256 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 257 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 258 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 259 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 260 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 261 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 262 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 263 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 264 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 265 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 266 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 267 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 268 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 269 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 270 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 271 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 272 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 273 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 274 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 275 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 276 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 277 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 278 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 279 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 280 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 281 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 282 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 283 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 284 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 285 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 286 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 287 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 288 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 289 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 290 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 291 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 292 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 293 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 294 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 295 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 296 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 297 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 298 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 299 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 300 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 301 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 302 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 303 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 304 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 305 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 306 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 307 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 308 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 309 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 310 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 965 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 1048 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+Default_Handler 000000EE
+
+Symbol: Default_Handler
+   Definitions
+      At line 883 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      None
+Comment: Default_Handler unused
+ENET_1588_Timer_DriverIRQHandler 000000EE
+
+Symbol: ENET_1588_Timer_DriverIRQHandler
+   Definitions
+      At line 1043 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 857 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 961 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_1588_Timer_IRQHandler 000000DE
+
+Symbol: ENET_1588_Timer_IRQHandler
+   Definitions
+      At line 855 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 154 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 856 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Error_DriverIRQHandler 000000EE
+
+Symbol: ENET_Error_DriverIRQHandler
+   Definitions
+      At line 1046 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 878 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 964 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Error_IRQHandler 000000EA
+
+Symbol: ENET_Error_IRQHandler
+   Definitions
+      At line 876 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 157 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 877 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Receive_DriverIRQHandler 000000EE
+
+Symbol: ENET_Receive_DriverIRQHandler
+   Definitions
+      At line 1045 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 871 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 963 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Receive_IRQHandler 000000E6
+
+Symbol: ENET_Receive_IRQHandler
+   Definitions
+      At line 869 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 156 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 870 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Transmit_DriverIRQHandler 000000EE
+
+Symbol: ENET_Transmit_DriverIRQHandler
+   Definitions
+      At line 1044 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 864 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 962 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+ENET_Transmit_IRQHandler 000000E2
+
+Symbol: ENET_Transmit_IRQHandler
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 862 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 155 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 863 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+FTFE_IRQHandler 000000EE
+
+Symbol: FTFE_IRQHandler
+   Definitions
+      At line 984 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 90 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 902 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+FTM0_IRQHandler 000000EE
+
+Symbol: FTM0_IRQHandler
+   Definitions
+      At line 1008 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 114 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 926 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+FTM1_IRQHandler 000000EE
+
+Symbol: FTM1_IRQHandler
+   Definitions
+      At line 1009 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 115 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 927 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+FTM2_IRQHandler 000000EE
+
+Symbol: FTM2_IRQHandler
+   Definitions
+      At line 1010 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 116 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 928 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+FTM3_IRQHandler 000000EE
+
+Symbol: FTM3_IRQHandler
+   Definitions
+      At line 1037 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 143 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 955 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+HardFault_Handler 0000001A
+
+Symbol: HardFault_Handler
+   Definitions
+      At line 500 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 57 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 501 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Relocatable symbols
+
+
+I2C0_DriverIRQHandler 000000EE
+
+Symbol: I2C0_DriverIRQHandler
+   Definitions
+      At line 990 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 661 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 908 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2C0_IRQHandler 0000006E
+
+Symbol: I2C0_IRQHandler
+   Definitions
+      At line 659 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 96 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 660 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2C1_DriverIRQHandler 000000EE
+
+Symbol: I2C1_DriverIRQHandler
+   Definitions
+      At line 991 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 668 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 909 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2C1_IRQHandler 00000072
+
+Symbol: I2C1_IRQHandler
+   Definitions
+      At line 666 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 97 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 667 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2C2_DriverIRQHandler 000000EE
+
+Symbol: I2C2_DriverIRQHandler
+   Definitions
+      At line 1040 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 801 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 958 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2C2_IRQHandler 000000BE
+
+Symbol: I2C2_IRQHandler
+   Definitions
+      At line 799 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 146 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 800 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2S0_Rx_DriverIRQHandler 000000EE
+
+Symbol: I2S0_Rx_DriverIRQHandler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 995 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 696 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 913 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2S0_Rx_IRQHandler 00000082
+
+Symbol: I2S0_Rx_IRQHandler
+   Definitions
+      At line 694 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 101 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 695 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2S0_Tx_DriverIRQHandler 000000EE
+
+Symbol: I2S0_Tx_DriverIRQHandler
+   Definitions
+      At line 994 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 689 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 912 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+I2S0_Tx_IRQHandler 0000007E
+
+Symbol: I2S0_Tx_IRQHandler
+   Definitions
+      At line 687 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 100 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 688 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+LLWU_IRQHandler 000000EE
+
+Symbol: LLWU_IRQHandler
+   Definitions
+      At line 987 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 93 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 905 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+LPTMR0_IRQHandler 000000EE
+
+Symbol: LPTMR0_IRQHandler
+   Definitions
+      At line 1024 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 130 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 942 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+LVD_LVW_IRQHandler 000000EE
+
+Symbol: LVD_LVW_IRQHandler
+   Definitions
+      At line 986 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 92 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 904 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Relocatable symbols
+
+MCG_IRQHandler 000000EE
+
+Symbol: MCG_IRQHandler
+   Definitions
+      At line 1023 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 129 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 941 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+MCM_IRQHandler 000000EE
+
+Symbol: MCM_IRQHandler
+   Definitions
+      At line 983 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 89 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 901 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+MemManage_Handler 0000001C
+
+Symbol: MemManage_Handler
+   Definitions
+      At line 505 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 58 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 506 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+NMI_Handler 00000018
+
+Symbol: NMI_Handler
+   Definitions
+      At line 495 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 56 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 496 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PDB0_IRQHandler 000000EE
+
+Symbol: PDB0_IRQHandler
+   Definitions
+      At line 1018 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 124 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 936 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PIT0_IRQHandler 000000EE
+
+Symbol: PIT0_IRQHandler
+   Definitions
+      At line 1014 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 120 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 932 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PIT1_IRQHandler 000000EE
+
+Symbol: PIT1_IRQHandler
+   Definitions
+      At line 1015 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 121 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 933 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PIT2_IRQHandler 000000EE
+
+Symbol: PIT2_IRQHandler
+   Definitions
+      At line 1016 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 122 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 934 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PIT3_IRQHandler 000000EE
+
+Symbol: PIT3_IRQHandler
+   Definitions
+      At line 1017 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 123 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 935 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PORTA_IRQHandler 000000EE
+
+Symbol: PORTA_IRQHandler
+   Definitions
+      At line 1025 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 131 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 943 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PORTB_IRQHandler 000000EE
+
+Symbol: PORTB_IRQHandler
+   Definitions
+      At line 1026 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 132 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 944 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PORTC_IRQHandler 000000EE
+
+Symbol: PORTC_IRQHandler
+   Definitions
+      At line 1027 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 133 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 945 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PORTD_IRQHandler 000000EE
+
+Symbol: PORTD_IRQHandler
+   Definitions
+      At line 1028 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 134 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 946 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PORTE_IRQHandler 000000EE
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: PORTE_IRQHandler
+   Definitions
+      At line 1029 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 135 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 947 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+PendSV_Handler 00000026
+
+Symbol: PendSV_Handler
+   Definitions
+      At line 530 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 68 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 531 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+RNG_IRQHandler 000000EE
+
+Symbol: RNG_IRQHandler
+   Definitions
+      At line 989 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 95 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 907 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+RTC_IRQHandler 000000EE
+
+Symbol: RTC_IRQHandler
+   Definitions
+      At line 1012 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 118 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 930 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+RTC_Seconds_IRQHandler 000000EE
+
+Symbol: RTC_Seconds_IRQHandler
+   Definitions
+      At line 1013 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 119 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 931 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+Read_Collision_IRQHandler 000000EE
+
+Symbol: Read_Collision_IRQHandler
+   Definitions
+      At line 985 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 91 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 903 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+Reserved71_IRQHandler 000000EE
+
+Symbol: Reserved71_IRQHandler
+   Definitions
+      At line 1021 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 127 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 939 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 470 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 55 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 471 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SDHC_DriverIRQHandler 000000EE
+
+Symbol: SDHC_DriverIRQHandler
+   Definitions
+      At line 1042 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 850 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 960 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SDHC_IRQHandler 000000DA
+
+Symbol: SDHC_IRQHandler
+   Definitions
+      At line 848 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 153 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 849 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI0_DriverIRQHandler 000000EE
+
+Symbol: SPI0_DriverIRQHandler
+   Definitions
+      At line 992 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 675 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 910 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI0_IRQHandler 00000076
+
+Symbol: SPI0_IRQHandler
+   Definitions
+      At line 673 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 98 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 674 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI1_DriverIRQHandler 000000EE
+
+Symbol: SPI1_DriverIRQHandler
+   Definitions
+      At line 993 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 682 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 911 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI1_IRQHandler 0000007A
+
+
+
+
+ARM Macro Assembler    Page 20 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: SPI1_IRQHandler
+   Definitions
+      At line 680 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 99 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 681 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI2_DriverIRQHandler 000000EE
+
+Symbol: SPI2_DriverIRQHandler
+   Definitions
+      At line 1031 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 766 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 949 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SPI2_IRQHandler 000000AA
+
+Symbol: SPI2_IRQHandler
+   Definitions
+      At line 764 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 137 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 765 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SVC_Handler 00000022
+
+Symbol: SVC_Handler
+   Definitions
+      At line 520 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 65 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 521 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SWI_IRQHandler 000000EE
+
+Symbol: SWI_IRQHandler
+   Definitions
+      At line 1030 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 136 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 948 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+SysTick_Handler 00000028
+
+Symbol: SysTick_Handler
+   Definitions
+      At line 535 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 69 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 536 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART0_ERR_DriverIRQHandler
+   Definitions
+      At line 998 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 717 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 21 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 916 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_ERR_IRQHandler 0000008E
+
+Symbol: UART0_ERR_IRQHandler
+   Definitions
+      At line 715 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 104 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 716 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_LON_DriverIRQHandler 000000EE
+
+Symbol: UART0_LON_DriverIRQHandler
+   Definitions
+      At line 996 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 703 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 914 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_LON_IRQHandler 00000086
+
+Symbol: UART0_LON_IRQHandler
+   Definitions
+      At line 701 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 102 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 702 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART0_RX_TX_DriverIRQHandler
+   Definitions
+      At line 997 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 710 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 915 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART0_RX_TX_IRQHandler 0000008A
+
+Symbol: UART0_RX_TX_IRQHandler
+   Definitions
+      At line 708 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 103 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 709 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART1_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART1_ERR_DriverIRQHandler
+   Definitions
+      At line 1000 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 731 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 918 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART1_ERR_IRQHandler 00000096
+
+Symbol: UART1_ERR_IRQHandler
+
+
+
+ARM Macro Assembler    Page 22 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 729 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 106 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 730 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART1_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART1_RX_TX_DriverIRQHandler
+   Definitions
+      At line 999 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 724 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 917 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART1_RX_TX_IRQHandler 00000092
+
+Symbol: UART1_RX_TX_IRQHandler
+   Definitions
+      At line 722 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 105 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 723 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART2_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART2_ERR_DriverIRQHandler
+   Definitions
+      At line 1002 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 745 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 920 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART2_ERR_IRQHandler 0000009E
+
+Symbol: UART2_ERR_IRQHandler
+   Definitions
+      At line 743 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 108 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 744 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART2_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART2_RX_TX_DriverIRQHandler
+   Definitions
+      At line 1001 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 738 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 919 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART2_RX_TX_IRQHandler 0000009A
+
+Symbol: UART2_RX_TX_IRQHandler
+   Definitions
+      At line 736 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 107 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 737 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+ARM Macro Assembler    Page 23 Alphabetic symbol ordering
+Relocatable symbols
+
+
+UART3_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART3_ERR_DriverIRQHandler
+   Definitions
+      At line 1004 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 759 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 922 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART3_ERR_IRQHandler 000000A6
+
+Symbol: UART3_ERR_IRQHandler
+   Definitions
+      At line 757 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 110 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 758 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART3_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART3_RX_TX_DriverIRQHandler
+   Definitions
+      At line 1003 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 752 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 921 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART3_RX_TX_IRQHandler 000000A2
+
+Symbol: UART3_RX_TX_IRQHandler
+   Definitions
+      At line 750 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 109 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 751 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART4_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART4_ERR_DriverIRQHandler
+   Definitions
+      At line 1033 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 780 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 951 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART4_ERR_IRQHandler 000000B2
+
+Symbol: UART4_ERR_IRQHandler
+   Definitions
+      At line 778 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 139 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 779 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART4_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART4_RX_TX_DriverIRQHandler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 24 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 1032 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 773 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 950 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART4_RX_TX_IRQHandler 000000AE
+
+Symbol: UART4_RX_TX_IRQHandler
+   Definitions
+      At line 771 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 138 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 772 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART5_ERR_DriverIRQHandler 000000EE
+
+Symbol: UART5_ERR_DriverIRQHandler
+   Definitions
+      At line 1035 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 794 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 953 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART5_ERR_IRQHandler 000000BA
+
+Symbol: UART5_ERR_IRQHandler
+   Definitions
+      At line 792 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 141 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 793 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART5_RX_TX_DriverIRQHandler 000000EE
+
+Symbol: UART5_RX_TX_DriverIRQHandler
+   Definitions
+      At line 1034 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 787 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 952 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UART5_RX_TX_IRQHandler 000000B6
+
+Symbol: UART5_RX_TX_IRQHandler
+   Definitions
+      At line 785 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 140 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 786 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+USB0_IRQHandler 000000EE
+
+Symbol: USB0_IRQHandler
+   Definitions
+      At line 1019 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 125 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 937 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+
+
+
+ARM Macro Assembler    Page 25 Alphabetic symbol ordering
+Relocatable symbols
+
+USBDCD_IRQHandler 000000EE
+
+Symbol: USBDCD_IRQHandler
+   Definitions
+      At line 1020 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 126 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 938 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+UsageFault_Handler 00000020
+
+Symbol: UsageFault_Handler
+   Definitions
+      At line 515 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 60 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 516 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+WDOG_EWM_IRQHandler 000000EE
+
+Symbol: WDOG_EWM_IRQHandler
+   Definitions
+      At line 988 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 94 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+      At line 906 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+
+143 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+BackDoorK0 000000FF
+
+Symbol: BackDoorK0
+   Definitions
+      At line 328 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 459 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK0 used once
+BackDoorK1 000000FF
+
+Symbol: BackDoorK1
+   Definitions
+      At line 329 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 459 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK1 used once
+BackDoorK2 000000FF
+
+Symbol: BackDoorK2
+   Definitions
+      At line 330 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 459 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK2 used once
+BackDoorK3 000000FF
+
+Symbol: BackDoorK3
+   Definitions
+      At line 331 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 459 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK3 used once
+BackDoorK4 000000FF
+
+Symbol: BackDoorK4
+   Definitions
+      At line 332 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 460 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK4 used once
+BackDoorK5 000000FF
+
+Symbol: BackDoorK5
+   Definitions
+      At line 333 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 460 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK5 used once
+BackDoorK6 000000FF
+
+Symbol: BackDoorK6
+   Definitions
+      At line 334 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 460 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK6 used once
+BackDoorK7 000000FF
+
+Symbol: BackDoorK7
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 335 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 460 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: BackDoorK7 used once
+FDPROT 000000FF
+
+Symbol: FDPROT
+   Definitions
+      At line 409 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 462 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FDPROT used once
+FEPROT 000000FF
+
+Symbol: FEPROT
+   Definitions
+      At line 423 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 462 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FEPROT used once
+FOPT 000000FF
+
+Symbol: FOPT
+   Definitions
+      At line 433 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 462 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FOPT used once
+FPROT0 000000FF
+
+Symbol: FPROT0
+   Definitions
+      At line 352 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 461 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FPROT0 used once
+FPROT1 000000FF
+
+Symbol: FPROT1
+   Definitions
+      At line 366 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 461 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FPROT1 used once
+FPROT2 000000FF
+
+Symbol: FPROT2
+   Definitions
+      At line 380 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 461 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FPROT2 used once
+FPROT3 000000FF
+
+Symbol: FPROT3
+   Definitions
+      At line 394 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 461 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FPROT3 used once
+FSEC 000000FE
+
+Symbol: FSEC
+   Definitions
+      At line 453 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 462 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: FSEC used once
+__Vectors_Size 00000400
+
+Symbol: __Vectors_Size
+   Definitions
+      At line 314 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 51 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: __Vectors_Size used once
+nFDPROT 00000000
+
+Symbol: nFDPROT
+   Definitions
+      At line 408 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 409 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFDPROT used once
+nFEPROT 00000000
+
+Symbol: nFEPROT
+   Definitions
+      At line 422 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 423 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFEPROT used once
+nFPROT0 00000000
+
+Symbol: nFPROT0
+   Definitions
+      At line 351 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 352 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFPROT0 used once
+nFPROT1 00000000
+
+Symbol: nFPROT1
+   Definitions
+      At line 365 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 366 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFPROT1 used once
+nFPROT2 00000000
+
+Symbol: nFPROT2
+   Definitions
+      At line 379 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 380 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFPROT2 used once
+nFPROT3 00000000
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: nFPROT3
+   Definitions
+      At line 393 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 394 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: nFPROT3 used once
+23 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$ARM_LIB_STACK$$ZI$$Limit 00000000
+
+Symbol: Image$$ARM_LIB_STACK$$ZI$$Limit
+   Definitions
+      At line 52 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 54 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: Image$$ARM_LIB_STACK$$ZI$$Limit used once
+SystemInit 00000000
+
+Symbol: SystemInit
+   Definitions
+      At line 472 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 485 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: SystemInit used once
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 473 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+   Uses
+      At line 488 in file RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+Comment: __main used once
+3 symbols
+515 symbols in table
