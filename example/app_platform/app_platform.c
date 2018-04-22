@@ -20,14 +20,25 @@
 
 
 #include <stdio.h>
+
+#ifdef FRDM_K64F
+#include "MK64F12.h"
+//#include "board.h"
+
+#include "pin_mux.h"
+#include "clock_config.h"
+#else
 #include "Device.h"                     // Keil::Board Support:V2M-MPS2:Common
-#include "RTE_Components.h"             // Component selection
 #include "Board_LED.h"                  // ::Board Support:LED
 #include "Board_Buttons.h"              // ::Board Support:Buttons
 #include "Board_Touch.h"                // ::Board Support:Touchscreen
 #include "Board_GLCD.h"                 // ::Board Support:Graphic LCD
 #include "GLCD_Config.h"                // Keil.SAM4E-EK::Board Support:Graphic LCD
 
+
+#endif
+
+#include "RTE_Components.h"             // Component selection
 #include ".\stdout_USART.h"
 
 /*============================ MACROS ========================================*/
@@ -55,11 +66,18 @@ bool app_platform_init( void )
 {
     do {
         
+#ifdef FRDM_K64F
+        BOARD_InitPins();
+        BOARD_BootClockRUN();
+        
+        SystemCoreClockUpdate();
+#else
         SystemCoreClockUpdate();
 
         LED_Initialize();                       /* Initializ LEDs                 */
         Buttons_Initialize();                   /* Initializ Push Buttons         */
-        
+#endif
+
     #ifdef RTE_Compiler_IO_STDOUT_User
         if (!stdout_init()) {
             break;

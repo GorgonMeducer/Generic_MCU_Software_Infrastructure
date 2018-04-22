@@ -324,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -334,7 +335,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>__USE_LCD __USE_TIMER0 __USE_FPGA __USER_DEFINED_APP_CFG_H__</Define>
+              <Define>__USE_FPGA __USER_DEFINED_APP_CFG_H__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -689,36 +690,927 @@
         </Group>
       </Groups>
     </Target>
+    <Target>
+      <TargetName>FRDM-K64</TargetName>
+      <ToolsetNumber>0x4</ToolsetNumber>
+      <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
+      <TargetOption>
+        <TargetCommonOption>
+          <Device>MK64FN1M0xxx12</Device>
+          <Vendor>NXP</Vendor>
+          <PackID>Keil.Kinetis_K60_DFP.1.5.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
+          <Cpu>IRAM(0x20000000,0x00030000) IRAM2(0x1FFF0000,0x00010000) IROM(0x00000000,0x00100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
+          <FlashUtilSpec></FlashUtilSpec>
+          <StartupFile></StartupFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0MK_P1M0 -FS00 -FL0100000 -FP0($$Device:MK64FN1M0xxx12$Flash\MK_P1M0.FLM))</FlashDriverDll>
+          <DeviceId>7425</DeviceId>
+          <RegisterFile>$$Device:MK64FN1M0xxx12$Device\Include\MK64F12.h</RegisterFile>
+          <MemoryEnv></MemoryEnv>
+          <Cmp></Cmp>
+          <Asm></Asm>
+          <Linker></Linker>
+          <OHString></OHString>
+          <InfinionOptionDll></InfinionOptionDll>
+          <SLE66CMisc></SLE66CMisc>
+          <SLE66AMisc></SLE66AMisc>
+          <SLE66LinkerMisc></SLE66LinkerMisc>
+          <SFDFile>$$Device:MK64FN1M0xxx12$SVD\MK64F12.svd</SFDFile>
+          <bCustSvd>0</bCustSvd>
+          <UseEnv>0</UseEnv>
+          <BinPath></BinPath>
+          <IncludePath></IncludePath>
+          <LibPath></LibPath>
+          <RegisterFilePath></RegisterFilePath>
+          <DBRegisterFilePath></DBRegisterFilePath>
+          <TargetStatus>
+            <Error>0</Error>
+            <ExitCodeStop>0</ExitCodeStop>
+            <ButtonStop>0</ButtonStop>
+            <NotGenerated>0</NotGenerated>
+            <InvalidFlash>1</InvalidFlash>
+          </TargetStatus>
+          <OutputDirectory>.\Out\</OutputDirectory>
+          <OutputName>Blinky</OutputName>
+          <CreateExecutable>1</CreateExecutable>
+          <CreateLib>0</CreateLib>
+          <CreateHexFile>1</CreateHexFile>
+          <DebugInformation>1</DebugInformation>
+          <BrowseInformation>1</BrowseInformation>
+          <ListingPath>.\Out\</ListingPath>
+          <HexFormatSelection>1</HexFormatSelection>
+          <Merge32K>0</Merge32K>
+          <CreateBatchFile>0</CreateBatchFile>
+          <BeforeCompile>
+            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg2>0</RunUserProg2>
+            <UserProg1Name>armcc -E ..\..\Blinky.c --c99 -o output.log</UserProg1Name>
+            <UserProg2Name></UserProg2Name>
+            <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
+            <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopU1X>0</nStopU1X>
+            <nStopU2X>0</nStopU2X>
+          </BeforeCompile>
+          <BeforeMake>
+            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg2>0</RunUserProg2>
+            <UserProg1Name></UserProg1Name>
+            <UserProg2Name></UserProg2Name>
+            <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
+            <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopB1X>0</nStopB1X>
+            <nStopB2X>0</nStopB2X>
+          </BeforeMake>
+          <AfterMake>
+            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg2>0</RunUserProg2>
+            <UserProg1Name></UserProg1Name>
+            <UserProg2Name></UserProg2Name>
+            <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
+            <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopA1X>0</nStopA1X>
+            <nStopA2X>0</nStopA2X>
+          </AfterMake>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SVCSIdString></SVCSIdString>
+        </TargetCommonOption>
+        <CommonProperty>
+          <UseCPPCompiler>0</UseCPPCompiler>
+          <RVCTCodeConst>0</RVCTCodeConst>
+          <RVCTZI>0</RVCTZI>
+          <RVCTOtherData>0</RVCTOtherData>
+          <ModuleSelection>0</ModuleSelection>
+          <IncludeInBuild>1</IncludeInBuild>
+          <AlwaysBuild>0</AlwaysBuild>
+          <GenerateAssemblyFile>0</GenerateAssemblyFile>
+          <AssembleAssemblyFile>0</AssembleAssemblyFile>
+          <PublicsOnly>0</PublicsOnly>
+          <StopOnExitCode>3</StopOnExitCode>
+          <CustomArgument></CustomArgument>
+          <IncludeLibraryModules></IncludeLibraryModules>
+          <ComprImg>1</ComprImg>
+        </CommonProperty>
+        <DllOption>
+          <SimDllName>SARMCM3.DLL</SimDllName>
+          <SimDllArguments></SimDllArguments>
+          <SimDlgDll>DCM.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM4</SimDlgDllArguments>
+          <TargetDllName>SARMCM3.DLL</TargetDllName>
+          <TargetDllArguments></TargetDllArguments>
+          <TargetDlgDll>TCM.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM4</TargetDlgDllArguments>
+        </DllOption>
+        <DebugOption>
+          <OPTHX>
+            <HexSelection>1</HexSelection>
+            <HexRangeLowAddress>0</HexRangeLowAddress>
+            <HexRangeHighAddress>0</HexRangeHighAddress>
+            <HexOffset>0</HexOffset>
+            <Oh166RecLen>16</Oh166RecLen>
+          </OPTHX>
+        </DebugOption>
+        <Utilities>
+          <Flash1>
+            <UseTargetDll>0</UseTargetDll>
+            <UseExternalTool>1</UseExternalTool>
+            <RunIndependent>0</RunIndependent>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
+            <Capability>1</Capability>
+            <DriverSelection>4096</DriverSelection>
+          </Flash1>
+          <bUseTDR>1</bUseTDR>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
+          <Flash3></Flash3>
+          <Flash4></Flash4>
+          <pFcarmOut></pFcarmOut>
+          <pFcarmGrp></pFcarmGrp>
+          <pFcArmRoot></pFcArmRoot>
+          <FcArmLst>0</FcArmLst>
+        </Utilities>
+        <TargetArmAds>
+          <ArmAdsMisc>
+            <GenerateListings>0</GenerateListings>
+            <asHll>1</asHll>
+            <asAsm>1</asAsm>
+            <asMacX>1</asMacX>
+            <asSyms>1</asSyms>
+            <asFals>1</asFals>
+            <asDbgD>1</asDbgD>
+            <asForm>1</asForm>
+            <ldLst>0</ldLst>
+            <ldmm>1</ldmm>
+            <ldXref>1</ldXref>
+            <BigEnd>0</BigEnd>
+            <AdsALst>1</AdsALst>
+            <AdsACrf>1</AdsACrf>
+            <AdsANop>0</AdsANop>
+            <AdsANot>0</AdsANot>
+            <AdsLLst>1</AdsLLst>
+            <AdsLmap>1</AdsLmap>
+            <AdsLcgr>1</AdsLcgr>
+            <AdsLsym>1</AdsLsym>
+            <AdsLszi>1</AdsLszi>
+            <AdsLtoi>1</AdsLtoi>
+            <AdsLsun>1</AdsLsun>
+            <AdsLven>1</AdsLven>
+            <AdsLsxf>1</AdsLsxf>
+            <RvctClst>0</RvctClst>
+            <GenPPlst>0</GenPPlst>
+            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <RvctDeviceName></RvctDeviceName>
+            <mOS>0</mOS>
+            <uocRom>0</uocRom>
+            <uocRam>0</uocRam>
+            <hadIROM>1</hadIROM>
+            <hadIRAM>1</hadIRAM>
+            <hadXRAM>0</hadXRAM>
+            <uocXRam>0</uocXRam>
+            <RvdsVP>2</RvdsVP>
+            <hadIRAM2>1</hadIRAM2>
+            <hadIROM2>0</hadIROM2>
+            <StupSel>8</StupSel>
+            <useUlib>1</useUlib>
+            <EndSel>0</EndSel>
+            <uLtcg>0</uLtcg>
+            <nSecure>0</nSecure>
+            <RoSelD>3</RoSelD>
+            <RwSelD>4</RwSelD>
+            <CodeSel>0</CodeSel>
+            <OptFeed>0</OptFeed>
+            <NoZi1>0</NoZi1>
+            <NoZi2>0</NoZi2>
+            <NoZi3>0</NoZi3>
+            <NoZi4>0</NoZi4>
+            <NoZi5>0</NoZi5>
+            <Ro1Chk>0</Ro1Chk>
+            <Ro2Chk>0</Ro2Chk>
+            <Ro3Chk>0</Ro3Chk>
+            <Ir1Chk>1</Ir1Chk>
+            <Ir2Chk>0</Ir2Chk>
+            <Ra1Chk>0</Ra1Chk>
+            <Ra2Chk>0</Ra2Chk>
+            <Ra3Chk>0</Ra3Chk>
+            <Im1Chk>1</Im1Chk>
+            <Im2Chk>0</Im2Chk>
+            <OnChipMemories>
+              <Ocm1>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm1>
+              <Ocm2>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm2>
+              <Ocm3>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm3>
+              <Ocm4>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm4>
+              <Ocm5>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm5>
+              <Ocm6>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </Ocm6>
+              <IRAM>
+                <Type>0</Type>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x30000</Size>
+              </IRAM>
+              <IROM>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x100000</Size>
+              </IROM>
+              <XRAM>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </XRAM>
+              <OCR_RVCT1>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT1>
+              <OCR_RVCT2>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT2>
+              <OCR_RVCT3>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT3>
+              <OCR_RVCT4>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x100000</Size>
+              </OCR_RVCT4>
+              <OCR_RVCT5>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT5>
+              <OCR_RVCT6>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT6>
+              <OCR_RVCT7>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT7>
+              <OCR_RVCT8>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT8>
+              <OCR_RVCT9>
+                <Type>0</Type>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x30000</Size>
+              </OCR_RVCT9>
+              <OCR_RVCT10>
+                <Type>0</Type>
+                <StartAddress>0x1fff0000</StartAddress>
+                <Size>0x10000</Size>
+              </OCR_RVCT10>
+            </OnChipMemories>
+            <RvctStartVector></RvctStartVector>
+          </ArmAdsMisc>
+          <Cads>
+            <interw>1</interw>
+            <Optim>4</Optim>
+            <oTime>0</oTime>
+            <SplitLS>0</SplitLS>
+            <OneElfS>1</OneElfS>
+            <Strict>0</Strict>
+            <EnumInt>0</EnumInt>
+            <PlainCh>0</PlainCh>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
+            <wLevel>2</wLevel>
+            <uThumb>0</uThumb>
+            <uSurpInc>0</uSurpInc>
+            <uC99>1</uC99>
+            <uGnu>0</uGnu>
+            <useXO>0</useXO>
+            <v6Lang>5</v6Lang>
+            <v6LangP>3</v6LangP>
+            <vShortEn>0</vShortEn>
+            <vShortWch>0</vShortWch>
+            <v6Lto>1</v6Lto>
+            <v6WtE>0</v6WtE>
+            <v6Rtti>0</v6Rtti>
+            <VariousControls>
+              <MiscControls>--diag_suppress=66,1296,186 --library_type=standardlib --library_interface=armcc</MiscControls>
+              <Define>__USER_DEFINED_APP_CFG_H__ DEBUG, CPU_MK64FN1M0VLL12, FRDM_K64F, FREEDOM</Define>
+              <Undefine></Undefine>
+              <IncludePath>..;../../../../../../CMSIS/Driver/Include;../../../..;../../../../../../CMSIS/Include;../../../../../../devices;../../../../../../devices/MK64F12/drivers;../../../../../../devices/MK64F12/cmsis_drivers;../../../../../../devices/MK64F12/utilities/io;../../../../../../devices/MK64F12/utilities/str;../../../../../../devices/MK64F12/utilities/log;../../../../../../devices/MK64F12/utilities;../../../../../../devices/MK64F12</IncludePath>
+            </VariousControls>
+          </Cads>
+          <Aads>
+            <interw>1</interw>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
+            <thumb>0</thumb>
+            <SplitLS>0</SplitLS>
+            <SwStkChk>0</SwStkChk>
+            <NoWarn>0</NoWarn>
+            <uSurpInc>0</uSurpInc>
+            <useXO>0</useXO>
+            <uClangAs>0</uClangAs>
+            <VariousControls>
+              <MiscControls></MiscControls>
+              <Define></Define>
+              <Undefine></Undefine>
+              <IncludePath></IncludePath>
+            </VariousControls>
+          </Aads>
+          <LDads>
+            <umfTarg>0</umfTarg>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
+            <noStLib>0</noStLib>
+            <RepFail>1</RepFail>
+            <useFile>0</useFile>
+            <TextAddressRange>0x00000000</TextAddressRange>
+            <DataAddressRange>0x20000000</DataAddressRange>
+            <pXoBase></pXoBase>
+            <ScatterFile>.\RTE\Device\MK64FN1M0xxx12\MK64FN1M0xxx12_flash.scf</ScatterFile>
+            <IncludeLibs></IncludeLibs>
+            <IncludeLibsPath></IncludeLibsPath>
+            <Misc></Misc>
+            <LinkerInputFile></LinkerInputFile>
+            <DisabledWarnings></DisabledWarnings>
+          </LDads>
+        </TargetArmAds>
+      </TargetOption>
+      <Groups>
+        <Group>
+          <GroupName>Source Files</GroupName>
+          <Files>
+            <File>
+              <FileName>system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\system.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_cfg.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Documentation</GroupName>
+          <Files>
+            <File>
+              <FileName>Abstract.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Abstract.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>gmsi</GroupName>
+          <Files>
+            <File>
+              <FileName>ooc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\ooc.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\arm\signal.c</FilePath>
+            </File>
+            <File>
+              <FileName>gmsi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\gmsi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\bsp\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>component.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\component.c</FilePath>
+            </File>
+            <File>
+              <FileName>bootloader.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\bootloader\bootloader.c</FilePath>
+            </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\key\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>key_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\key\key_queue\key_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>mal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\memory\mal\mal.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdf_w25qxxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\memory\mal\sdf_w25qxxx\sdf_w25qxxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>sram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\memory\mal\sram\sram.c</FilePath>
+            </File>
+            <File>
+              <FileName>page.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\memory\page\page.c</FilePath>
+            </File>
+            <File>
+              <FileName>sw_sdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\hal\component\sw_sdio\sw_sdio.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\crc\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc7.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\crc\crc7.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\crc\crc8.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\crc\crc16.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\crc\crc32.c</FilePath>
+            </File>
+            <File>
+              <FileName>es_simple_frame.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\frame\es_simple_frame\es_simple_frame.c</FilePath>
+            </File>
+            <File>
+              <FileName>xmodem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\xmodem\xmodem.c</FilePath>
+            </File>
+            <File>
+              <FileName>random.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\encryption\random\random.c</FilePath>
+            </File>
+            <File>
+              <FileName>memory.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\memory.c</FilePath>
+            </File>
+            <File>
+              <FileName>epool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\epool\epool.c</FilePath>
+            </File>
+            <File>
+              <FileName>scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\scheduler\scheduler.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\scheduler\shell.c</FilePath>
+            </File>
+            <File>
+              <FileName>task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\scheduler\task.c</FilePath>
+            </File>
+            <File>
+              <FileName>service.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\service.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream2block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
+            </File>
+            <File>
+              <FileName>environment_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>t_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_pool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_pool.h</FilePath>
+            </File>
+            <File>
+              <FileName>t_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\t_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>template.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\utilities\template\template.h</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.c</FilePath>
+            </File>
+            <File>
+              <FileName>telegraph_engine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\communication\telegraph_engine\telegraph_engine.h</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\time.h</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>multiple_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\time\multiple_delay\multiple_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block_queue\block_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>block.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.c</FilePath>
+            </File>
+            <File>
+              <FileName>block.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\sources\gmsi\service\memory\block\block.h</FilePath>
+            </File>
+            <File>
+              <FileName>README.md</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\README.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_platform</GroupName>
+          <Files>
+            <File>
+              <FileName>app_platform.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\app_platform.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\app_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>stdout_USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\app_platform\stdout_USART.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>::Board Support</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>1</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <uClangAs>2</uClangAs>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS Driver</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <uClangAs>2</uClangAs>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+        </Group>
+        <Group>
+          <GroupName>::Compiler</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>1</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <uClangAs>2</uClangAs>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+        </Group>
+        <Group>
+          <GroupName>::Device</GroupName>
+        </Group>
+      </Groups>
+    </Target>
   </Targets>
 
   <RTE>
     <apis>
-      <api Capiversion="1.00" Cclass="Board Support" Cgroup="Buttons" exclusive="0">
-        <package name="MDK-Middleware" schemaVersion="1.0" url="http://www.keil.com/pack/" vendor="Keil" version="6.2.0"/>
+      <api Capiversion="1.0.0" Cclass="Board Support" Cgroup="Buttons" exclusive="0">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.5.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.00" Cclass="Board Support" Cgroup="Graphic LCD" exclusive="0">
-        <package name="MDK-Middleware" schemaVersion="1.0" url="http://www.keil.com/pack/" vendor="Keil" version="6.2.0"/>
+      <api Capiversion="1.0.0" Cclass="Board Support" Cgroup="Graphic LCD" exclusive="0">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.5.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.00" Cclass="Board Support" Cgroup="LED" exclusive="0">
-        <package name="MDK-Middleware" schemaVersion="1.0" url="http://www.keil.com/pack/" vendor="Keil" version="6.2.0"/>
+      <api Capiversion="1.0.0" Cclass="Board Support" Cgroup="LED" exclusive="0">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.5.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.00" Cclass="Board Support" Cgroup="Touchscreen" exclusive="0">
-        <package name="MDK-Middleware" schemaVersion="1.0" url="http://www.keil.com/pack/" vendor="Keil" version="6.2.0"/>
+      <api Capiversion="1.0.1" Cclass="Board Support" Cgroup="Touchscreen" exclusive="0">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.5.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </api>
-      <api Capiversion="2.02" Cclass="CMSIS Driver" Cgroup="USART" exclusive="0">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0-Beta6"/>
+      <api Capiversion="2.3.0" Cclass="CMSIS Driver" Cgroup="USART" exclusive="0">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.2.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
@@ -728,47 +1620,50 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.0.2" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.2.0"/>
         <targetInfos>
+          <targetInfo name="FRDM-K64"/>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
       <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDIN" Cvariant="User" Cvendor="Keil" Cversion="1.2.1" condition="ARMCC Cortex-M">
         <package name="ARM_Compiler" schemaVersion="1.4.9" url="http://www.keil.com/pack/" vendor="Keil" version="1.3.3"/>
         <targetInfos>
+          <targetInfo name="FRDM-K64"/>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
-      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="Keil" Cversion="1.2.1" condition="ARMCC Cortex-M" isTargetSpecific="1">
+      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="Keil" Cversion="1.2.1" condition="ARMCC Cortex-M">
         <package name="ARM_Compiler" schemaVersion="1.4.9" url="http://www.keil.com/pack/" vendor="Keil" version="1.3.3"/>
         <targetInfos>
+          <targetInfo name="FRDM-K64"/>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
-      <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Buttons" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
-        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1"/>
+      <component Capiversion="1.0.0" Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Buttons" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
       <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Common" Cvendor="Keil" Cversion="2.0.0" condition="CMSDK CMSIS Device">
-        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1"/>
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
-      <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Graphic LCD" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
-        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1"/>
+      <component Capiversion="1.0.0" Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Graphic LCD" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
-      <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="LED" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
-        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1"/>
+      <component Capiversion="1.0.0" Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="LED" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
-      <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Touchscreen" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
-        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1"/>
+      <component Capiversion="1.0.0" Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Touchscreen" Cvendor="Keil" Cversion="2.0.0" condition="V2M-MPS2 Common">
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
@@ -785,8 +1680,192 @@
           <targetInfo name="V2M-MPS2"/>
         </targetInfos>
       </component>
+      <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f">
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="clock" Cvendor="NXP" Cversion="2.1.0" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="common" Cvendor="NXP" Cversion="2.0.0" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="dmamux" Cvendor="NXP" Cversion="2.0.2" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="edma" Cvendor="NXP" Cversion="2.1.2" condition="device.MK64F12_driver.common_driver.dmamux">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="flash" Cvendor="NXP" Cversion="2.4.1" condition="device.MK64F12">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="gpio" Cvendor="NXP" Cversion="2.2.1" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="port" Cvendor="NXP" Cversion="2.0.2" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="smc" Cvendor="NXP" Cversion="2.0.3" condition="device.MK64F12_driver.flash">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Drivers" Csub="uart" Cvendor="NXP" Cversion="2.1.5" condition="device.MK64F12_driver.common">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="SDK Project Template" Csub="RTE_Device" Cvendor="NXP" Cversion="1.0.0">
+        <package license="Licenses.txt" name="MKV31F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="V2M-MPS2"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4">
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </component>
     </components>
     <files>
+      <file attr="config" category="sourceC" name="project_template\board.c" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\board.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="project_template\board.h" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\board.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\clock_config.c" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\clock_config.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="project_template\clock_config.h" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\clock_config.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\peripherals.c" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\peripherals.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="project_template\peripherals.h" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\peripherals.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\pin_mux.c" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\pin_mux.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="project_template\pin_mux.h" version="1.0.0">
+        <instance index="0">RTE\Board_Support\MK64FN1M0xxx12\pin_mux.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="frdmk64f" Cvendor="NXP" Cversion="1.0.0" condition="project_template.frdmk64f"/>
+        <package license="Licenses.txt" name="FRDM-K64F_BSP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\board.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\board.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="project_template\board.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\board.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\clock_config.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\clock_config.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="project_template\clock_config.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\clock_config.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\peripherals.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\peripherals.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="project_template\peripherals.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\peripherals.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="project_template\pin_mux.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\pin_mux.c</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="project_template\pin_mux.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Board_Support\pin_mux.h</instance>
+        <component Cclass="Board Support" Cgroup="SDK Project Template" Csub="project_template" Cvariant="MKV30F12810" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV30F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
       <file attr="config" category="source" condition="CMSDK_CM3" name="Device\Source\CMSDK_CM3\startup_CMSDK_CM3.s">
         <instance index="0" removed="1">RTE\Device\CMSDK_CM3\startup_CMSDK_CM3.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" Dname="CMSDK_CM3" condition="CMSDK Device"/>
@@ -812,15 +1891,29 @@
         <targetInfos/>
       </file>
       <file attr="config" category="header" name="CMSIS\Config\RTE_Device.h" version="1.0.0">
-        <instance index="0">RTE\Device\CMSDK_CM7_SP\RTE_Device.h</instance>
+        <instance index="0" removed="1">RTE\Device\CMSDK_CM7_DP\RTE_Device.h</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="CMSDK_CM7 CMSIS Device"/>
         <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="source" condition="ARMCC" name="Device\CMSDK_CM7\Source\ARM\startup_CMSDK_CM7.s" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\CMSDK_CM7_DP\startup_CMSDK_CM7.s</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="CMSDK_CM7 CMSIS Device"/>
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="source" name="Device\CMSDK_CM7\Source\system_CMSDK_CM7.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\CMSDK_CM7_DP\system_CMSDK_CM7.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="CMSDK_CM7 CMSIS Device"/>
+        <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="template\RTE_Device.h" version="1.0.0">
+        <instance index="0">RTE\Device\CMSDK_CM7_SP\RTE_Device.h</instance>
+        <component Cclass="Device" Cgroup="SDK Project Template" Csub="RTE_Device" Cvendor="NXP" Cversion="1.0.0"/>
+        <package license="Licenses.txt" name="MKV31F12810_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
         <targetInfos>
-          <targetInfo name="FastModels"/>
-          <targetInfo name="Simulator"/>
           <targetInfo name="V2M-MPS2"/>
-          <targetInfo name="V2M-MPS2 Trace (ETB)"/>
-          <targetInfo name="V2M-MPS2 Trace (TPIU)"/>
         </targetInfos>
       </file>
       <file attr="config" category="source" condition="ARMCC" name="Device\CMSDK_CM7\Source\ARM\startup_CMSDK_CM7.s" version="1.0.0">
@@ -858,6 +1951,76 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="CMSDK_Pelican CMSIS Device"/>
         <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.3"/>
         <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="MK64F12.h" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\MK64F12.h</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="MK64F12_features.h" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\MK64F12_features.h</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="linkerScript" condition="devices.MK64FN1M0xxx12_mdk" name="arm\MK64FN1M0xxx12_flash.scf" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\MK64FN1M0xxx12_flash.scf</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="linkerScript" condition="devices.MK64FN1M0xxx12_mdk" name="arm\MK64FN1M0xxx12_ram.scf" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\MK64FN1M0xxx12_ram.scf</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="template\RTE_Device.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\MK64FN1M0xxx12\RTE_Device.h</instance>
+        <component Cclass="Device" Cgroup="SDK Project Template" Csub="RTE_Device" Cvendor="NXP" Cversion="1.0.0" condition="device.MK64F12_device.device_device_driver.dmamux_driver.edma"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="fsl_device_registers.h" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\fsl_device_registers.h</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceAsm" condition="mdk" name="arm\startup_MK64F12.s" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="system_MK64F12.c" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\system_MK64F12.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" name="system_MK64F12.h" version="1.0.0">
+        <instance index="0">RTE\Device\MK64FN1M0xxx12\system_MK64F12.h</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="NXP" Cversion="1.0.0" condition="devices.MK64F12_platform.Include_core_cm4"/>
+        <package license="Licenses.txt" name="MK64F12_DFP" schemaVersion="1.4" url="http://mcuxpresso.nxp.com/cmsis_pack/repo/" vendor="NXP" version="10.0.0"/>
+        <targetInfos>
+          <targetInfo name="FRDM-K64"/>
+        </targetInfos>
       </file>
     </files>
   </RTE>
