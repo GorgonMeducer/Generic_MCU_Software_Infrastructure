@@ -7,14 +7,14 @@ fvp_mps2.telnetterminal0.start_telnet=1               # (bool  , init-time) defa
 fvp_mps2.telnetterminal0.start_port=0x1388            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
 fvp_mps2.telnetterminal0.quiet=0                      # (bool  , init-time) default = '0'      : Avoid output on stdout/stderr
 fvp_mps2.telnetterminal0.terminal_command=""          # (string, init-time) default = ''       : Commandline to launch a terminal application and connect to the opened TCP port. Keywords %port and %title will be replaced with the opened port number and component name respectively. An empty string (default behaviour) will launch xterm (Linux) or telnet.exe (Windows)
-fvp_mps2.telnetterminal1.mode="telnet"                # (string, init-time) default = 'telnet' : Terminal initialisation mode
-fvp_mps2.telnetterminal1.start_telnet=1               # (bool  , init-time) default = '1'      : Start telnet if nothing connected
-fvp_mps2.telnetterminal1.start_port=0x1388            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
+fvp_mps2.telnetterminal1.mode="raw"                   # (string, init-time) default = 'telnet' : Terminal initialisation mode
+fvp_mps2.telnetterminal1.start_telnet=0               # (bool  , init-time) default = '1'      : Start telnet if nothing connected
+fvp_mps2.telnetterminal1.start_port=0x1389            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
 fvp_mps2.telnetterminal1.quiet=0                      # (bool  , init-time) default = '0'      : Avoid output on stdout/stderr
 fvp_mps2.telnetterminal1.terminal_command=""          # (string, init-time) default = ''       : Commandline to launch a terminal application and connect to the opened TCP port. Keywords %port and %title will be replaced with the opened port number and component name respectively. An empty string (default behaviour) will launch xterm (Linux) or telnet.exe (Windows)
-fvp_mps2.telnetterminal2.mode="telnet"                # (string, init-time) default = 'telnet' : Terminal initialisation mode
-fvp_mps2.telnetterminal2.start_telnet=1               # (bool  , init-time) default = '1'      : Start telnet if nothing connected
-fvp_mps2.telnetterminal2.start_port=0x1388            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
+fvp_mps2.telnetterminal2.mode="raw"                # (string, init-time) default = 'telnet' : Terminal initialisation mode
+fvp_mps2.telnetterminal2.start_telnet=0               # (bool  , init-time) default = '1'      : Start telnet if nothing connected
+fvp_mps2.telnetterminal2.start_port=0x138A            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
 fvp_mps2.telnetterminal2.quiet=0                      # (bool  , init-time) default = '0'      : Avoid output on stdout/stderr
 fvp_mps2.telnetterminal2.terminal_command=""          # (string, init-time) default = ''       : Commandline to launch a terminal application and connect to the opened TCP port. Keywords %port and %title will be replaced with the opened port number and component name respectively. An empty string (default behaviour) will launch xterm (Linux) or telnet.exe (Windows)
 fvp_mps2.UART0.out_file=""                            # (string, init-time) default = ''       : Output file to hold data written by the UART (use '-' to send all output to stdout)
