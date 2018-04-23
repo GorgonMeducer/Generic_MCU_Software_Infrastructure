@@ -53,10 +53,10 @@
         BLOCK.Heap.Init(&s_t##__NAME##_BlockPool);                              \
         return STREAM_BUFFER.Init(&s_t##__NAME##StreamBuffer, ptCFG);           \
     }                                                                           \
-    private bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast16_t hwSize)\
+    private bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast32_t wSize)\
     {                                                                           \
         return BLOCK.Heap.Add(&s_t##__NAME##_BlockPool,                         \
-                pBuffer, hwSize, sizeof(__NAME##_stream_buffer_block_t));       \
+                pBuffer, wSize, sizeof(__NAME##_stream_buffer_block_t));       \
     }                                                                           \
     private __NAME##_stream_buffer_block_t * __NAME##_stream_exchange_block(    \
                               __NAME##_stream_buffer_block_t *ptOld)            \
@@ -102,12 +102,12 @@
     const struct {                                                              \
                                                                                 \
         bool (*Init)(stream_buffer_cfg_t *);                                    \
-        bool (*AddBuffer)(void *, uint_fast16_t );                              \
+        bool (*AddBuffer)(void *, uint_fast32_t );                              \
                                                                                 \
         struct {                                                                \
-            bool    (*WriteByte)(uint8_t);                                      \
-            int32_t (*Write)(uint8_t *, uint_fast16_t );                        \
-            bool    (*Flush)(void);                                             \
+            bool            (*WriteByte)(uint_fast8_t);                         \
+            int_fast32_t    (*Write)(uint8_t *, uint_fast32_t );                \
+            bool            (*Flush)(void);                                     \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -121,16 +121,16 @@
         
 #define __DEF_OUTPUT_STREAM_BUFFER(__NAME, __BLOCK_SIZE)                        \
     __STREAM_BUFFER_COMMON(__NAME, (__BLOCK_SIZE))                              \
-    private bool __NAME##_stream_write_byte(uint8_t chData)                     \
+    private bool __NAME##_stream_write_byte(uint_fast8_t chData)                \
     {                                                                           \
         return STREAM_BUFFER.Stream.WriteByte(                                  \
                                         &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
-    private int32_t __NAME##_stream_write(uint8_t *pchSrc, uint_fast16_t hwSize)\
+    private int_fast32_t __NAME##_stream_write(uint8_t *pchSrc, uint_fast32_t wSize)\
     {                                                                           \
         return STREAM_BUFFER.Stream.Write(  &s_t##__NAME##StreamBuffer,         \
                                             pchSrc,                             \
-                                            hwSize);                            \
+                                            wSize);                            \
     }                                                                           \
     private bool __NAME##_stream_flush(void)                                    \
     {                                                                           \
@@ -202,12 +202,13 @@
             s_t##__NAME##StreamOutService.hwSize =                              \
                 BLOCK.Size.Get(ref_obj_as((*ptBlock), block_t));                \
             s_t##__NAME##StreamOutService.hwIndex = 0;                          \
-            SAFE_ATOM_CODE(                                                     \
-            __NAME##_serial_port_enable_tx_cpl_interrupt();                     \
                                                                                 \
-            __NAME##_serial_port_fill_byte(                                     \
-                s_t##__NAME##StreamOutService.pchBuffer                         \
-                    [s_t##__NAME##StreamOutService.hwIndex++]);                 \
+            SAFE_ATOM_CODE(                                                     \
+                __NAME##_serial_port_enable_tx_cpl_interrupt();                 \
+                                                                                \
+                __NAME##_serial_port_fill_byte(                                 \
+                    s_t##__NAME##StreamOutService.pchBuffer                     \
+                        [s_t##__NAME##StreamOutService.hwIndex++]);             \
             )                                                                   \
         }                                                                       \
     }                                                                           \
@@ -273,11 +274,11 @@
     const struct {                                                              \
                                                                                 \
         bool (*Init)(stream_buffer_cfg_t *);                                    \
-        bool (*AddBuffer)(void *, uint_fast16_t );                              \
+        bool (*AddBuffer)(void *, uint_fast32_t );                              \
                                                                                 \
         struct {                                                                \
-            bool    (*ReadByte)(uint8_t *);                                     \
-            int32_t (*Read)(uint8_t *, uint_fast16_t );                         \
+            bool            (*ReadByte)(uint8_t *);                             \
+            int_fast32_t    (*Read)(uint8_t *, uint_fast32_t );                 \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -297,7 +298,7 @@
         return STREAM_BUFFER.Stream.ReadByte(                                   \
                                         &s_t##__NAME##StreamBuffer, pchData);   \
     }                                                                           \
-    private int32_t __NAME##_stream_read(uint8_t *pchSrc, uint_fast16_t hwSize) \
+    private int_fast32_t __NAME##_stream_read(uint8_t *pchSrc, uint_fast32_t hwSize) \
     {                                                                           \
         return STREAM_BUFFER.Stream.Read(  &s_t##__NAME##StreamBuffer,          \
                                             pchSrc,                             \
@@ -446,7 +447,7 @@
 
 
 //! \note no thread safe queue is required
-EXTERN_QUEUE_U8(StreamBufferQueue, uint_fast16_t, bool)
+EXTERN_QUEUE_U8(StreamBufferQueue, uint_fast32_t, bool)
     
 END_EXTERN_QUEUE_U8(StreamBufferQueue)
 
@@ -512,23 +513,23 @@ typedef struct {
 
 def_interface(i_stream_buffer_t)
 
-    bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
+    bool                (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     stream_buffer_status_t
-                (*Status)       (stream_buffer_t *);
-    bool        (*Dispose)      (stream_buffer_t *);
+                        (*Status)       (stream_buffer_t *);
+    bool                (*Dispose)      (stream_buffer_t *);
     struct {
-        bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
-        bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
-        int32_t (*Read)         (stream_buffer_t *, uint8_t *, uint_fast16_t );
-        int32_t (*Write)        (stream_buffer_t *, uint8_t *, uint_fast16_t );
-        bool    (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
-        bool    (*Flush)        (stream_buffer_t *ptObj);
+        bool            (*ReadByte)     (stream_buffer_t *, uint8_t *);
+        bool            (*WriteByte)    (stream_buffer_t *, uint_fast8_t);
+        int_fast32_t    (*Read)         (stream_buffer_t *, uint8_t *, uint_fast32_t );
+        int_fast32_t    (*Write)        (stream_buffer_t *, uint8_t *, uint_fast32_t );
+        bool            (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
+        bool            (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
     struct {
-        block_t*(*Exchange)     (stream_buffer_t *, block_t *);
-        block_t*(*GetNext)      (stream_buffer_t *);
-        void    (*Return)       (stream_buffer_t *, block_t *);
+        block_t*        (*Exchange)     (stream_buffer_t *, block_t *);
+        block_t*        (*GetNext)      (stream_buffer_t *);
+        void            (*Return)       (stream_buffer_t *, block_t *);
     } Block;
     
     

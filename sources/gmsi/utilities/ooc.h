@@ -297,8 +297,8 @@ END_EXTERN_CLASS(DELEGATE)
 //! \name interface: u32_property_t
 //! @{
 DEF_INTERFACE(u32_property_t)
-    bool (*Set)(uint32_t wValue);
-    uint32_t (*Get)(void);
+    bool (*Set)(uint_fast32_t wValue);
+    uint_fast32_t (*Get)(void);
 END_DEF_INTERFACE(u32_property_t)
 //! @}
 
@@ -322,8 +322,8 @@ END_DEF_INTERFACE(u8_property_t)
 //! \name interface: i32_property_t
 //! @{
 DEF_INTERFACE(i32_property_t)
-    bool (*Set)(int32_t wValue);
-    int32_t (*Get)(void);
+    bool (*Set)(int_fast32_t wValue);
+    int_fast32_t (*Get)(void);
 END_DEF_INTERFACE(i32_property_t)
 //! @}
 

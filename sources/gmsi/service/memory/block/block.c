@@ -94,7 +94,9 @@ private bool write_block_buffer( block_t *ptObj,
                                 uint_fast16_t hwOffsite);
 private uint32_t get_free_block_count(block_pool_t *ptObj);
 /*============================ GLOBAL VARIABLES ==============================*/
-
+#if defined(LIB_GENERATION)
+ROOT
+#endif
 const i_block_t BLOCK = {
     .Heap = {
         .Init =         &block_pool_init,

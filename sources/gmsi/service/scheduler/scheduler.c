@@ -146,6 +146,9 @@ extern void leave_critical_section(critical_section_t *);
 
 #if TASK_SCHEDULER == ENABLED
 
+#if defined(LIB_GENERATION)
+ROOT
+#endif
 SECTION(".api_table")
 //! \brief ES-scheduler
 const scheduler_t SCHEDULER = 

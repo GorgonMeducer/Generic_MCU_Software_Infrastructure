@@ -62,17 +62,17 @@ bool pool_init(pool_t *ptPool)
 
 bool pool_add_heap_ex( pool_t *ptPool, 
                     void *ptBuffer,
-                    uint16_t hwPoolSize, 
-                    uint16_t hwItemSize,
+                    uint_fast32_t wPoolSize, 
+                    uint_fast32_t wItemSize,
                     pool_item_init_event_handler_t *fnHandler)
 {
     class_internal(ptPool, ptThis, pool_t);
     
     if ((NULL == ptPool)
     ||  (NULL == ptBuffer)
-    ||  (0 == hwPoolSize)
-    ||  (sizeof(void *) > hwItemSize)
-    ||  (hwPoolSize < hwItemSize)) {
+    ||  (0 == wPoolSize)
+    ||  (sizeof(void *) > wItemSize)
+    ||  (wPoolSize < wItemSize)) {
         return false;
     }
 
@@ -84,13 +84,13 @@ bool pool_add_heap_ex( pool_t *ptPool,
         )
         
         if (NULL != fnHandler) {
-            (*fnHandler)(ptBuffer, hwItemSize);
+            (*fnHandler)(ptBuffer, wItemSize);
         }
-        ptBuffer = (void *)((uint8_t *)ptBuffer + hwItemSize);
+        ptBuffer = (void *)((uint8_t *)ptBuffer + wItemSize);
         
-        hwPoolSize -= hwItemSize;
+        wPoolSize -= wItemSize;
         
-    } while( hwPoolSize >= hwItemSize);
+    } while( wPoolSize >= wItemSize);
 
 
     return true;
@@ -98,10 +98,10 @@ bool pool_add_heap_ex( pool_t *ptPool,
 
 bool pool_add_heap( pool_t *ptPool, 
                     void *ptBuffer,
-                    uint16_t hwPoolSize, 
-                    uint16_t hwItemSize)
+                    uint_fast32_t wPoolSize, 
+                    uint_fast32_t wItemSize)
 {
-    return pool_add_heap_ex(ptPool, ptBuffer, hwPoolSize, hwItemSize, NULL);
+    return pool_add_heap_ex(ptPool, ptBuffer, wPoolSize, wItemSize, NULL);
 }
 
 void *pool_new(pool_t *ptPool)
@@ -142,9 +142,9 @@ void pool_free(pool_t *ptPool, void *ptItem)
     )
 }
 
-uint16_t pool_get_item_count(pool_t *ptPool)
+uint_fast32_t pool_get_item_count(pool_t *ptPool)
 {
-    uint_fast16_t tCount = 0;
+    uint_fast32_t tCount = 0;
     class_internal(ptPool, ptThis, pool_t);
     
     do {

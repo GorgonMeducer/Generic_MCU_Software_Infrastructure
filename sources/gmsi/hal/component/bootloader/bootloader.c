@@ -16,12 +16,9 @@
 ****************************************************************************/
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-
-
-#if USE_COMPONENT_BOOTLOADER == ENABLED
-
 #include "..\..\..\service\service.h"
 
+#if USE_COMPONENT_BOOTLOADER == ENABLED
 /*============================ MACROS ========================================*/
 #ifndef IAP_VERSION
 #   define IAP_VERSION     1,0

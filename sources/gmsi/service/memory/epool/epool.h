@@ -69,10 +69,10 @@ END_EXTERN_CLASS(__NAME##_pool_t)                                               
                                                                                 \
 extern bool __NAME##_pool_init(__NAME##_pool_t *ptPool);                        \
 extern bool __NAME##_pool_add_heap(                                             \
-    __NAME##_pool_t *ptPool, void *ptBuffer, uint16_t tSize);                   \
+    __NAME##_pool_t *ptPool, void *ptBuffer, uint_fast32_t tSize);              \
 extern __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool);                      \
 extern void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem);        \
-extern uint16_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool);          \
+extern uint_fast32_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool);          \
 extern __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);        
 
 #define DEF_EPOOL(__NAME, __TYPE)                                               \
@@ -95,7 +95,7 @@ bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                
 }                                                                               \
                                                                                 \
 bool __NAME##_pool_add_heap(                                                    \
-    __NAME##_pool_t *ptPool, void *ptBuffer, uint16_t tSize)                    \
+    __NAME##_pool_t *ptPool, void *ptBuffer, uint_fast32_t tSize)               \
 {                                                                               \
     return pool_add_heap(   (pool_t *)ptPool, ptBuffer,                         \
                             tSize, sizeof(__NAME##_pool_item_t));               \
@@ -111,7 +111,7 @@ void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem)                
     pool_free((pool_t *)ptPool, (void *)ptItem);                                \
 }                                                                               \
                                                                                 \
-uint16_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool)                  \
+uint_fast32_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool)                  \
 {                                                                               \
     return pool_get_item_count((pool_t *)ptPool);                               \
 }                                                                               \
@@ -125,11 +125,11 @@ __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                
 DECLARE_CLASS(pool_t)
 EXTERN_CLASS(pool_t)
     __single_list_node_t    *ptFreeList;
-    uint_fast16_t           tCounter;
+    uint_fast32_t           tCounter;
     __EPOOL_MUTEX_TYPE      tMutex;
 END_EXTERN_CLASS(pool_t)
 
-typedef void pool_item_init_event_handler_t(void *pItem, uint_fast16_t hwItemSize);
+typedef void pool_item_init_event_handler_t(void *pItem, uint_fast32_t wItemSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -137,15 +137,15 @@ typedef void pool_item_init_event_handler_t(void *pItem, uint_fast16_t hwItemSiz
 
 extern bool pool_init(pool_t *ptPool);
 extern bool pool_add_heap(pool_t *ptPool, void *ptBuffer,
-                   uint16_t tPoolSize, uint16_t hwItemSize);
+                   uint_fast32_t tPoolSize, uint_fast32_t hwItemSize);
 extern bool pool_add_heap_ex( pool_t *ptPool, 
                     void *ptBuffer,
-                    uint16_t hwPoolSize, 
-                    uint16_t hwItemSize,
+                    uint_fast32_t hwPoolSize, 
+                    uint_fast32_t hwItemSize,
                     pool_item_init_event_handler_t *fnHandler);
 extern void *pool_new(pool_t *ptPool);
 extern void pool_free(pool_t *ptPool, void *ptItem);
-extern uint16_t pool_get_item_count(pool_t *ptPool);
+extern uint_fast32_t pool_get_item_count(pool_t *ptPool);
 extern __EPOOL_MUTEX_TYPE *pool_get_mutex(pool_t *ptPool);
 
 

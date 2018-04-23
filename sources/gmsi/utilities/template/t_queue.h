@@ -107,17 +107,17 @@ EXTERN_CLASS(__NAME##_queue_t)                                              \
 END_EXTERN_CLASS(__NAME##_queue_t)                                          \
                                                                             \
 extern __MUTEX_TYPE *__NAME##_queue_mutex(__NAME##_queue_t *ptQueue);       \
-extern bool __NAME##_queue_init(                                            \
-    __NAME##_queue_t *ptQueue, __TYPE *ptBuffer, __PTR_TYPE tSize);         \
+extern bool __NAME##_queue_init(                                                \
+    __NAME##_queue_t *ptQueue, __TYPE *ptBuffer, __PTR_TYPE tSize, bool bFull); \
 extern bool __NAME##_enqueue(__NAME##_queue_t *ptQueue, __TYPE tObj);       \
-extern int32_t __NAME##_enqueue_block( __NAME##_queue_t *ptQueue,           \
+extern int_fast32_t __NAME##_enqueue_block( __NAME##_queue_t *ptQueue,           \
                                 __TYPE *ptSrc,                              \
-                                uint_fast16_t hwSize);                      \
+                                __PTR_TYPE hwSize);                         \
 extern bool __NAME##_queue_peek(__NAME##_queue_t *ptQueue, __TYPE *ptObj);  \
 extern bool __NAME##_dequeue(__NAME##_queue_t *ptQueue, __TYPE *ptObj);     \
-extern int32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,           \
+extern int_fast32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,           \
                                 __TYPE *ptSrc,                              \
-                                uint_fast16_t hwSize);                      \
+                                __PTR_TYPE hwSize);                         \
 extern __TYPE * __NAME##_dequeue_ref(__NAME##_queue_t *ptQueue);            \
 extern void __NAME##_get_all_peeked(__NAME##_queue_t *ptQueue);             \
 extern void __NAME##_reset_peek(__NAME##_queue_t *ptQueue);                 \
@@ -207,14 +207,14 @@ bool __NAME##_enqueue(__NAME##_queue_t *ptQueue, __TYPE tObj)               \
                                                                             \
     return bResult;                                                         \
 }                                                                           \
-int32_t __NAME##_enqueue_block(__NAME##_queue_t *ptQueue,                   \
+int_fast32_t __NAME##_enqueue_block(__NAME##_queue_t *ptQueue,                   \
                             __TYPE *ptSrc,                                  \
-                            uint_fast16_t hwSize)                           \
+                            __PTR_TYPE wSize)                               \
 {                                                                           \
-    int32_t nResult = -1;                                                   \
+    int_fast32_t nResult = -1;                                              \
     CLASS(__NAME##_queue_t) *ptQ = (CLASS(__NAME##_queue_t) *)ptQueue;      \
     do {                                                                    \
-        if (NULL == ptQ || NULL == ptSrc || 0 == hwSize) {                  \
+        if (NULL == ptQ || NULL == ptSrc || 0 == wSize) {                   \
             break;                                                          \
         }                                                                   \
                                                                             \
@@ -223,13 +223,13 @@ int32_t __NAME##_enqueue_block(__NAME##_queue_t *ptQueue,                   \
                 if ((ptQ->tHead == ptQ->tTail) && (0 != ptQ->tCounter)) {   \
                     break;                                                  \
                 }                                                           \
-                uint32_t wLength;                                           \
+                __PTR_TYPE wLength;                                         \
                 if (ptQ->tTail < ptQ->tHead) {                              \
                     wLength = ptQ->tHead - ptQ->tTail;                      \
                 } else /*if (ptQ->tTail >= ptQ->tHead)*/ {                  \
                     wLength = ptQ->tSize - ptQ->tTail;                      \
                 }                                                           \
-                wLength = MIN(wLength, hwSize);                             \
+                wLength = MIN(wLength, wSize);                              \
                 memcpy( &(ptQ->ptBuffer[ptQ->tTail]),                       \
                         ptSrc,                                              \
                         wLength * sizeof(__TYPE));                          \
@@ -304,14 +304,14 @@ bool __NAME##_dequeue(__NAME##_queue_t *ptQueue, __TYPE *ptObj)             \
                                                                             \
     return bResult;                                                         \
 }                                                                           \
-int32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,                  \
+int_fast32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,                  \
                                 __TYPE *ptSrc,                              \
-                                uint_fast16_t hwSize)                       \
+                                __PTR_TYPE wSize)                           \
 {                                                                           \
-    int32_t nResult = -1;                                                   \
+    int_fast32_t nResult = -1;                                              \
     CLASS(__NAME##_queue_t) *ptQ = (CLASS(__NAME##_queue_t) *)ptQueue;      \
     do {                                                                    \
-        if (NULL == ptQ || NULL == ptSrc || 0 == hwSize) {                  \
+        if (NULL == ptQ || NULL == ptSrc || 0 == wSize) {                   \
             break;                                                          \
         }                                                                   \
                                                                             \
@@ -320,13 +320,13 @@ int32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,                  \
                 if ((ptQ->tHead == ptQ->tTail) && (!(ptQ->tCounter))) {     \
                     break;                                                  \
                 }                                                           \
-                uint32_t wLength;                                           \
+                __PTR_TYPE wLength;                                         \
                 if (ptQ->tHead < ptQ->tTail) {                              \
                     wLength = ptQ->tTail - ptQ->tHead;                      \
                 } else /*if (ptQ->tHead >= ptQ->tTail)*/ {                  \
                     wLength = ptQ->tSize - ptQ->tHead;                      \
                 }                                                           \
-                wLength = MIN(wLength, hwSize);                             \
+                wLength = MIN(wLength, wSize);                              \
                 memcpy( ptSrc,                                              \
                         &(ptQ->ptBuffer[ptQ->tHead]),                       \
                         wLength * sizeof(__TYPE));                          \

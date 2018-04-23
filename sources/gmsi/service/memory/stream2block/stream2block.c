@@ -41,7 +41,7 @@
 
 
 //! \note no thread safe queue is required
-DEF_QUEUE_U8(StreamBufferQueue, uint_fast16_t, bool)
+DEF_QUEUE_U8(StreamBufferQueue, uint_fast32_t, bool)
     
 END_DEF_QUEUE_U8(StreamBufferQueue)
 
@@ -108,23 +108,23 @@ typedef struct {
 
 def_interface(i_stream_buffer_t)
 
-    bool        (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
+    bool                (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
     stream_buffer_status_t
-                (*Status)       (stream_buffer_t *);  
-    bool        (*Dispose)      (stream_buffer_t *);
+                        (*Status)       (stream_buffer_t *);  
+    bool                (*Dispose)      (stream_buffer_t *);
     struct {
-        bool    (*ReadByte)     (stream_buffer_t *, uint8_t *);
-        bool    (*WriteByte)    (stream_buffer_t *, uint8_t);
-        int32_t (*Read)         (stream_buffer_t *, uint8_t *, uint_fast16_t );
-        int32_t (*Write)        (stream_buffer_t *, uint8_t *, uint_fast16_t );
-        bool    (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
-        bool    (*Flush)        (stream_buffer_t *ptObj);
+        bool            (*ReadByte)     (stream_buffer_t *, uint8_t *);
+        bool            (*WriteByte)    (stream_buffer_t *, uint_fast8_t);
+        int_fast32_t    (*Read)         (stream_buffer_t *, uint8_t *, uint_fast32_t );
+        int_fast32_t    (*Write)        (stream_buffer_t *, uint8_t *, uint_fast32_t );
+        bool            (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
+        bool            (*Flush)        (stream_buffer_t *ptObj);
     } Stream;
     
     struct {
-        block_t *(*Exchange)    (stream_buffer_t *, block_t *);
-        block_t *(*GetNext)     (stream_buffer_t *);
-        void    (*Return)       (stream_buffer_t *, block_t *);
+        block_t *       (*Exchange)    (stream_buffer_t *, block_t *);
+        block_t *       (*GetNext)     (stream_buffer_t *);
+        void            (*Return)       (stream_buffer_t *, block_t *);
     } Block;
 
 end_def_interface(i_stream_buffer_t)
@@ -138,13 +138,13 @@ private bool stream_buffer_init(    stream_buffer_t *ptObj,
 private bool stream_read_byte(      stream_buffer_t *ptObj, 
                                     uint8_t *pchData);
 private bool stream_write_byte(     stream_buffer_t *ptObj, 
-                                    uint8_t chData);
-private int32_t stream_read(        stream_buffer_t *ptObj, 
+                                    uint_fast8_t chData);
+private int_fast32_t stream_read(   stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast16_t hwSize);
-private int32_t stream_write(       stream_buffer_t *ptObj, 
+                                    uint_fast32_t hwSize);
+private int_fast32_t stream_write(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast16_t hwSize);
+                                    uint_fast32_t hwSize);
                                     
 private block_t *request_next_buffer_block(
                                     stream_buffer_t *ptObj, 
@@ -162,7 +162,9 @@ private bool stream_dispose (stream_buffer_t *);
 
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-    
+#if defined(LIB_GENERATION)
+ROOT
+#endif
 const i_stream_buffer_t STREAM_BUFFER = {
         .Init =             &stream_buffer_init,
         .Status =           &get_status,
@@ -576,14 +578,14 @@ private bool stream_read_byte(stream_buffer_t *ptObj, uint8_t *pchData)
     return false;
 }
 
-private int32_t stream_read(  stream_buffer_t *ptObj, 
+private int_fast32_t stream_read(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast16_t hwSize)
+                                    uint_fast32_t wSize)
 {
-    int32_t nResult = -1;
+    int_fast32_t nResult = -1;
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
-        if (NULL == ptThis || NULL == pchData || 0 == hwSize) {
+        if (NULL == ptThis || NULL == pchData || 0 == wSize) {
             break;
         } else if (this.bIsOutput) {
             break;
@@ -601,7 +603,7 @@ private int32_t stream_read(  stream_buffer_t *ptObj,
                                         REF_OBJ_AS( this, 
                                                     QUEUE(StreamBufferQueue)), 
                                                     pchData, 
-                                                    hwSize);
+                                                    wSize);
             if (nResult < 0) {
                 this.bIsQueueInitialised = false;
             } else {
@@ -615,14 +617,14 @@ private int32_t stream_read(  stream_buffer_t *ptObj,
 }
 
 
-private int32_t stream_write(  stream_buffer_t *ptObj, 
+private int_fast32_t stream_write(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast16_t hwSize)
+                                    uint_fast32_t wSize)
 {
-    int32_t nResult = -1;
+    int_fast32_t nResult = -1;
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
-        if (NULL == ptThis || NULL == pchData || 0 == hwSize) {
+        if (NULL == ptThis || NULL == pchData || 0 == wSize) {
             break;
         } else if (!this.bIsOutput) {
             break;
@@ -640,7 +642,7 @@ private int32_t stream_write(  stream_buffer_t *ptObj,
                                         REF_OBJ_AS( this, 
                                                     QUEUE(StreamBufferQueue)), 
                                                     pchData, 
-                                                    hwSize);
+                                                    wSize);
             if (nResult < 0) {
                 this.bIsQueueInitialised = false;
             } else {
@@ -655,7 +657,7 @@ private int32_t stream_write(  stream_buffer_t *ptObj,
 
 
 
-private bool stream_write_byte(stream_buffer_t *ptObj, uint8_t chData)
+private bool stream_write_byte(stream_buffer_t *ptObj, uint_fast8_t chData)
 {
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
