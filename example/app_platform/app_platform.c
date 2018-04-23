@@ -47,12 +47,15 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+static void counter_overflow(void);
+
 /*============================ IMPLEMENTATION ================================*/
 
 /* \note please put it into a 1ms timer handler
  */
 void app_platform_1ms_event_handler(void)
 {
+    counter_overflow();
     STREAM_IN_1ms_event_handler();
 }
 
@@ -90,4 +93,31 @@ bool app_platform_init( void )
     return false;
 }
   
+volatile static int32_t s_nCycleCounts = 0;
+
+/*! \brief start performance counter (cycle accurate)
+ */
+void start_counter(void)
+{
+    SAFE_ATOM_CODE(
+        s_nCycleCounts =  (int32_t)SysTick->VAL - (int32_t)SysTick->LOAD;
+    )
+}
+
+static void counter_overflow(void)
+{
+    s_nCycleCounts += SysTick->LOAD;
+}
+
+/*! \brief stop performance counter (cycle accurate)
+ *! \retval cycle elapsed. 
+ */
+int32_t stop_counter(void)
+{
+    SAFE_ATOM_CODE(
+        s_nCycleCounts += (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
+    )
+    return s_nCycleCounts;
+}
+
 /* EOF */
