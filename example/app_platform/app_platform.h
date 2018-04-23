@@ -61,5 +61,14 @@ extern bool app_platform_init( void );
  */
 extern void app_platform_1ms_event_handler(void);
 
+/*! \brief start performance counter (cycle accurate)
+ */
+extern void start_counter(void);
+
+/*! \brief stop performance counter (cycle accurate)
+ *! \retval cycle elapsed. 
+ */
+extern int32_t stop_counter(void);
+
 
 #endif
