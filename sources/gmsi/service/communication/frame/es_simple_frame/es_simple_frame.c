@@ -174,7 +174,9 @@ end_def_interface(i_es_simple_frame_t)
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ GLOBAL VARIABLES ==============================*/
-    
+#if defined(LIB_GENERATION)
+ROOT
+#endif
 const i_es_simple_frame_t ES_SIMPLE_FRAME = {
         .Init =         &es_simple_frame_init,
         .Task =         &task,
@@ -190,7 +192,7 @@ const i_es_simple_frame_t ES_SIMPLE_FRAME = {
 
 private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame)
 {
-    uint_fast16_t hwSize = 0;
+    uint_fast32_t wSize = 0;
     class_internal(ptFrame, ptThis, es_simple_frame_t);
     
     do {
@@ -202,13 +204,13 @@ private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame)
                         fsm(es_simple_frame_decoder));
         
         if (NULL == target.ptBlock ) {
-            hwSize = target.hwSize;
+            wSize = target.wSize;
         } else {
-            hwSize = BLOCK.Size.Capability(target.ptBlock);
+            wSize = BLOCK.Size.Capability(target.ptBlock);
         }
     } while(false);
      
-    return hwSize; 
+    return wSize; 
 }
 
 
@@ -259,7 +261,7 @@ private bool es_simple_frame_init(
                 break;
             }
             
-        } else if (0 == ptCFG->hwSize) {
+        } else if (0 == ptCFG->wSize) {
             //! static buffer mode, empty buffer detected
             break;
         } else {        
@@ -312,7 +314,7 @@ private fsm_initialiser(es_simple_frame_decoder,
             abort_init();
         } else if (    (NULL == ptBlock) 
                     && (    (NULL == tMemory.pchBuffer) 
-                        ||  (0 == tMemory.hwSize)) ) {
+                        ||  (0 == tMemory.wSize)) ) {
             abort_init();
         }
         
@@ -362,7 +364,7 @@ private fsm_implementation(es_simple_frame_decoder)
             if (NULL != this.ptBlock) {
                 this.pchBuffer = BLOCK.Buffer.Get(this.ptBlock);
                 BLOCK.Size.Reset(this.ptBlock);
-                this.hwSize = BLOCK.Size.Get(this.ptBlock);
+                this.wSize = BLOCK.Size.Get(this.ptBlock);
             }
         
             if (NULL == this.ptPipe) {
@@ -371,7 +373,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 fsm_report(GSF_ERR_IO)
             } else if (NULL == this.pchBuffer) {
                 fsm_report(GSF_ERR_INVALID_PTR);
-            } else if (0 == this.hwSize) {
+            } else if (0 == this.wSize) {
                 fsm_report(GSF_ERR_INVALID_PARAMETER);
             }
             this.hwCheckSUM = CRC_INIT;
@@ -418,7 +420,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 if (0 == this.hwLength){
                     /* no data */
                     transfer_to(WAIT_FOR_CHECK_SUM_L);
-                } else if (this.hwLength > this.hwSize) {
+                } else if (this.hwLength > this.wSize) {
                     //! data is too big 
                     this.bUnsupportFrame = true;
                 } 
@@ -559,7 +561,7 @@ private fsm_implementation(es_simple_frame_decoder_wrapper)
                 
                 
                 if (    (ptDecoder->hwLength > 0) 
-                    &&  (ptDecoder->hwLength <= ptDecoder->hwSize)) {
+                    &&  (ptDecoder->hwLength <= ptDecoder->wSize)) {
                     /* get something to reply */
                     transfer_to(TRY_TO_LOCK)
                 }

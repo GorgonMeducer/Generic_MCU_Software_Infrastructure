@@ -74,9 +74,11 @@ def_interface(i_block_t)
     
 end_def_interface(i_block_t)
 
+
+
 /*============================ GLOBAL VARIABLES ==============================*/
 
-extern i_block_t BLOCK;
+extern const i_block_t BLOCK;
 
 /*============================ PROTOTYPES ====================================*/
 

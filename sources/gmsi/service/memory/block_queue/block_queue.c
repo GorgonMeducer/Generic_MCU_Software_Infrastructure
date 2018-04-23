@@ -61,6 +61,9 @@ private block_t *get_item_from_list(block_queue_t *ptObj);
 /*============================ IMPLEMENTATION ================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 
+#if defined(LIB_GENERATION)
+ROOT
+#endif
 const i_block_queue_t BLOCK_QUEUE = {
     .Init =         &block_queue_init,
     .Enqueue =      &append_item_to_list,

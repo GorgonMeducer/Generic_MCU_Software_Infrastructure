@@ -16,3 +16,4 @@ example/build/mdk/Out/startup_cmsdk_cm7.lst
 example/build/mdk/Out/Blinky.fed
 *._2i
 example/build/mdk/Out/Blinky.l2p
+sources/gmsi/service/gui/tgui/grid/example.lib
