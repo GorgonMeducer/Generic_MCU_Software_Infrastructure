@@ -41,7 +41,7 @@ typedef enum {
     GSF_ERR_NOT_SUPPORT                =-2,    //!< function not supported
     GSF_ERR_NOT_READY                  =-3,    //!< service not ready yet
     GSF_ERR_NOT_AVAILABLE              =-4,    //!< service not available
-    GSF_ERR_NOT_ACCESSABLE             =-5,    //!< target not acceesable
+    GSF_ERR_NOT_ACCESSIBLE             =-5,    //!< target not accessible
     GSF_ERR_NOT_ENOUGH_RESOURCES       =-6,    //!< no enough resources
     GSF_ERR_FAIL                       =-7,    //!< failed
     GSF_ERR_INVALID_PARAMETER          =-8,    //!< invalid parameter
