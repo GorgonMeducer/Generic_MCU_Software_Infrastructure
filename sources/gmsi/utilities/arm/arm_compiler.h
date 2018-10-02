@@ -294,7 +294,13 @@ __attribute__((always_inline)) static inline void __set_PRIMASK(unsigned int pri
 #elif   defined(__CORTEX_M33__)
 #include "cortex_m33_compiler.h"
 #else
-#error No supported compiler.h file!
+
+//! \brief The mcu memory endian mode
+# define __BIG_ENDIAN__                 false
+
+/*ARM Cortex M4 implementation for interrupt priority shift*/
+# define ARM_INTERRUPT_LEVEL_BITS       4
+
 #endif
 
 /*!  \note using the ANSI-C99 standard type,if the file stdint.h dose not exit

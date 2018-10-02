@@ -76,12 +76,14 @@
 #include ".\preprocessor\mrepeat.h"
      
 //! \brief CPU io
-#if     defined(__CPU_ARM__)                    //!< ARM series
-    #include ".\arm\arm_compiler.h"
-#elif   defined(__CPU_AVR__)                    //!< Atmel AVR series
-    #include ".\avr\avr_compiler.h"
+
+#if     defined(__CPU_AVR__)                    //!< Atmel AVR series
+#   include ".\avr\avr_compiler.h"
+#elif   defined(__CPU_ARM__)                //!< ARM series
+#   include ".\arm\arm_compiler.h"
 #else
-#error No specified MCU type!
+//#warning No specified MCU type! use arm as default
+#   include ".\arm\arm_compiler.h"
 #endif
    
 #ifndef ATOM_INT_SIZE
