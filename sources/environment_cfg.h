@@ -23,7 +23,7 @@
 
 #define __CPU_ARM__                      //!< arm family
 
-#define __CORTEX_M7__                    //!< cortex-m0
+//#define __CORTEX_M7__                    //!< cortex-m0
 //#define __CORTEX_M0P__                   //!< cortex-m0+
 //#define __CORTEX_M1__                    //!< cortex-m1
 //#define __CORTEX_M3__                    //!< cortex-m3
