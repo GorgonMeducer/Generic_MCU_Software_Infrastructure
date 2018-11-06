@@ -508,7 +508,9 @@ key_t get_key(void)
 {
     return KEY_NULL;
 }
- 
+
+
+
 fsm_rt_t menu_task(menu_engine_cb_t *ptThis)
 {
     do {
@@ -531,11 +533,21 @@ fsm_rt_t menu_task(menu_engine_cb_t *ptThis)
     
     return fsm_rt_err;
 }
- 
+
+WEAK_ALIAS(demo_task, menu_task)
+static fsm_rt_t demo_task(menu_engine_cb_t *ptThis);
+
 int main (void) 
 {
     system_init();
     app_init();
+    
+    
+    static volatile uint32_t s_wTemp = 0x4000;
+    
+    s_wTemp = s_wTemp % 500;
+    
+    demo_task(NULL);
     
     while (true) {
     

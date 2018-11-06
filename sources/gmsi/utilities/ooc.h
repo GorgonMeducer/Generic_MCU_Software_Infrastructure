@@ -73,8 +73,7 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
-#define __CLASS(__NAME)             __##__NAME
-#define CLASS(__NAME)               __CLASS(__NAME)
+
 
 
 //! \brief macro for initializing an event
@@ -96,6 +95,15 @@
 #define WHICH(...)                  struct { __VA_ARGS__ };
 
 
+
+/*! \NOTE: Never define __OOC_DEBUG__ unless you know the consequence and how  
+ *!        the issue could be solved. But in anyway, there is nothing you can 
+ *!        do about this header file. 
+ */
+#ifndef __OOC_DEBUG__
+
+#define __CLASS(__NAME)             __##__NAME
+
 #define DECLARE_CLASS(__NAME)                                                   \
      typedef union __NAME __NAME;                
 
@@ -103,8 +111,6 @@
     typedef struct __##__NAME __##__NAME;                                       \
     struct __##__NAME {                                                         \
         __VA_ARGS__
-#define DEF_CLASS(__NAME, ...)      __DEF_CLASS(__NAME, __VA_ARGS__)
-
           
 #define __END_DEF_CLASS(__NAME, ...)                                            \
     };                                                                          \
@@ -114,7 +120,47 @@
                 (sizeof(__##__NAME) + sizeof(uint_fast8_t) - 1)                 \
             /   sizeof(uint_fast8_t)];                                          \
     };
-#define END_DEF_CLASS(__NAME, ...)  __END_DEF_CLASS(__NAME, __VA_ARGS__)
+    
+#define __EXTERN_CLASS(__NAME,...)                                              \
+    union __NAME {                                                              \
+        __VA_ARGS__                                                             \
+        uint_fast8_t __NAME##__chMask[(sizeof(struct{                           \
+        __VA_ARGS__
+
+
+#define __END_EXTERN_CLASS(__NAME, ...)                                         \
+        }) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];                 \
+    };
+    
+#else
+
+#define __CLASS(__NAME)             __NAME
+
+#define DECLARE_CLASS(__NAME)                                                   \
+     typedef struct __NAME __NAME;                
+
+#define __DEF_CLASS(__NAME,...)                                                 \
+    struct __NAME {                                                             \
+        __VA_ARGS__
+          
+#define __END_DEF_CLASS(__NAME, ...)                                            \
+    };                                                                          
+    
+#define __EXTERN_CLASS(__NAME,...)                                              \
+    struct __NAME {                                                             \
+        __VA_ARGS__                                                             
+
+#define __END_EXTERN_CLASS(__NAME, ...)                                         \
+    };
+    
+#endif
+
+#define END_DEF_CLASS(__NAME, ...)      __END_DEF_CLASS(__NAME, __VA_ARGS__)
+#define DEF_CLASS(__NAME, ...)          __DEF_CLASS(__NAME, __VA_ARGS__)
+#define CLASS(__NAME)                   __CLASS(__NAME)
+
+#define EXTERN_CLASS(__NAME, ...)       __EXTERN_CLASS(__NAME, __VA_ARGS__)
+#define END_EXTERN_CLASS(__NAME, ...)   __END_EXTERN_CLASS(__NAME, __VA_ARGS__)
 
 /*! \brief macro for initializing class in compiler-time
  *! \param __TYPE class name
@@ -140,16 +186,7 @@
             __EXTERN_CLASS_OBJ( __TYPE, __OBJ )
 
 
-#define __EXTERN_CLASS(__NAME,...)                                              \
-    union __NAME {                                                              \
-        __VA_ARGS__                                                             \
-        uint_fast8_t __NAME##__chMask[(sizeof(struct{                           \
-        __VA_ARGS__
-#define EXTERN_CLASS(__NAME, ...)   __EXTERN_CLASS(__NAME, __VA_ARGS__)
 
-#define END_EXTERN_CLASS(__NAME, ...)                                           \
-        }) + sizeof(uint_fast8_t) - 1) / sizeof(uint_fast8_t)];                 \
-    };
 
 /*! \note Support for protected members
  */
