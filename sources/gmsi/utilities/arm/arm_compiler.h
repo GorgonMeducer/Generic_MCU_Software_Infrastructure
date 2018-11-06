@@ -99,11 +99,12 @@
 
 //! \brief none standard memory types
 #if __IS_COMPILER_IAR__
-#   define FLASH                const
-#   define EEPROM               const
+#   define ROM_FLASH            _Pragma(__STR(location=".rom.flash")) const
+#   define ROM_EEPROM           _Pragma(__STR(location=".rom.eeprom")) const
 #   define NO_INIT              __no_init
 #   define ROOT                 __root
 #   define INLINE               inline
+#   define NO_INLINE            noinline
 #   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __weak
 #   define RAMFUNC              __ramfunc
@@ -111,17 +112,20 @@
 #   define __ALIGN(__N)         _Pragma(__STR(data_alignment=__N))
 #   define __AT_ADDR(__ADDR)    @ __ADDR
 #   define __SECTION(__SEC)     _Pragma(__STR(location=__SEC))
+#   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
+                                _Pragma(__STR(weak __ORIGIN=__ALIAS))
 
 #   define PACKED               __packed
 #   define UNALIGNED            __packed
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
 
 #elif __IS_COMPILER_GCC__
-#   define FLASH                const
-#   define EEPROM               const
+#   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
+#   define ROM_EEPROM           __attribute__(( section( ".rom.eeprom"))) const
 #   define NO_INIT              __attribute__(( section( ".bss.noinit")))
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               inline
+#   define NO_INLINE            __attribute__((noinline))
 #   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
@@ -129,17 +133,20 @@
 #   define __ALIGN(__N)         __attribute__((aligned (__N)))
 #   define __AT_ADDR(__ADDR)    __attribute__((at(__ADDR))) 
 #   define __SECTION(__SEC)     __attribute__((section (__SEC)))
+#   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
+                                __attribute__((weakref(__STR(__ALIAS))))
 
 #   define PACKED               __attribute__((packed))
 #   define UNALIGNED            __attribute__((packed))
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
 
 #elif __IS_COMPILER_ARM_COMPILER_5__
-#   define FLASH                const
-#   define EEPROM               const
+#   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
+#   define ROM_EEPROM           __attribute__(( section( ".rom.eeprom"))) const
 #   define NO_INIT              __attribute__( ( section( ".bss.noinit"),zero_init) )
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               __inline
+#   define NO_INLINE            __attribute__((noinline))
 #   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
@@ -147,18 +154,20 @@
 #   define __ALIGN(__N)         __attribute__((aligned (__N))) 
 #   define __AT_ADDR(__ADDR)    __attribute__((at(__ADDR)))
 #   define __SECTION(__SEC)     __attribute__((section (__SEC)))
-
-
+#   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
+                                __attribute__((weakref(__STR(__ALIAS))))
+                                
 #   define PACKED               __packed
 #   define UNALIGNED            __packed
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
 
 #elif __IS_COMPILER_ARM_COMPILER_6__
-#   define FLASH                const
-#   define EEPROM               const
+#   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
+#   define ROM_EEPROM           __attribute__(( section( ".rom.eeprom"))) const
 #   define NO_INIT              __attribute__( ( section( ".bss.noinit")) )
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               __inline
+#   define NO_INLINE            __attribute__((noinline))
 #   define ALWAYS_INLINE        __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
@@ -166,6 +175,8 @@
 #   define __ALIGN(__N)         __attribute__((aligned (__N))) 
 #   define __AT_ADDR(__ADDR)    __attribute__((section (".ARM.__at_" #__ADDR)))
 #   define __SECTION(__SEC)     __attribute__((section (__SEC)))
+#   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
+                                __attribute__((weakref(__STR(__ALIAS))))
 
 #   define PACKED               __attribute__((packed))
 #   define UNALIGNED            __unaligned
@@ -173,7 +184,8 @@
 
 #endif
 
-
+#define WEAK_ALIAS(__ORIGIN, __ALIAS)   \
+                            __WEAK_ALIAS(__ORIGIN, __ALIAS)
 #define AT_ADDR(__ADDR)     __AT_ADDR(__ADDR)
 #define ALIGN(__N)          __ALIGN(__N)
 #define SECTION(__SEC)      __SECTION(__SEC)
