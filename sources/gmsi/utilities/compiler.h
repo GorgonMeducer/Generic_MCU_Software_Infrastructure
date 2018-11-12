@@ -23,36 +23,36 @@
 
 //! \note for IAR
 #ifdef __IS_COMPILER_IAR__
-    #undef __IS_COMPILER_IAR__
+#   undef __IS_COMPILER_IAR__
 #endif
 #if defined(__IAR_SYSTEMS_ICC__)
-#define __IS_COMPILER_IAR__                 1
+#   define __IS_COMPILER_IAR__                 1
 #endif
 
 //! \note for gcc
 #ifdef __IS_COMPILER_GCC__
-    #undef __IS_COMPILER_GCC__
+#   undef __IS_COMPILER_GCC__
 #endif
 #if defined(__GNUC__)
-#define __IS_COMPILER_GCC__                 1
+#   define __IS_COMPILER_GCC__                 1
 #endif
 //! @}
 
 //! \note for arm compiler 5
 #ifdef __IS_COMPILER_ARM_COMPILER_5__
-    #undef __IS_COMPILER_ARM_COMPILER_5__
+#   undef __IS_COMPILER_ARM_COMPILER_5__
 #endif
 #if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
-#define __IS_COMPILER_ARM_COMPILER_5__      1
+#   define __IS_COMPILER_ARM_COMPILER_5__      1
 #endif
 //! @}
 
 //! \note for arm compiler 6
 #ifdef __IS_COMPILER_ARM_COMPILER_6__
-    #undef __IS_COMPILER_ARM_COMPILER_6__
+#   undef __IS_COMPILER_ARM_COMPILER_6__
 #endif
 #if ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
-#define __IS_COMPILER_ARM_COMPILER_6__      1
+#   define __IS_COMPILER_ARM_COMPILER_6__      1
 #endif
 //! @}
 
@@ -60,12 +60,12 @@
 /* -------------------  Start of section using anonymous unions  ------------------ */
 #if     __IS_COMPILER_ARM_COMPILER_5__
     //#pragma push
-    #pragma anon_unions
+#   pragma anon_unions
 #elif   __IS_COMPILER_IAR__
-    #pragma language=extended
+#   pragma language=extended
 #elif   __IS_COMPILER_GCC__ || __IS_COMPILER_ARM_COMPILER_6__
     /* anonymous unions are enabled by default */
-#else
+#   else
     #warning Not supported compiler type
 #endif
 
@@ -85,11 +85,6 @@
 //#warning No specified MCU type! use arm as default
 #   include ".\arm\arm_compiler.h"
 #endif
-   
-#ifndef ATOM_INT_SIZE
-#define ATOM_INT_SIZE           2
-#endif 
-     
 
 //! \brief system macros
 #define MAX(__A,__B)  (((__A) > (__B)) ? (__A) : (__B))
@@ -111,18 +106,9 @@
                         (__MASK((__TO)+1)-__MASK(__FROM))
 #endif
 
-#ifndef __CONNECT
-#	define __CONNECT(a, b)			a ## b
+#ifndef UNUSED_PARAM
+# define UNUSED_PARAM(__VAL)    (__VAL) = (__VAL)
 #endif
-
-#ifndef REFERENCE_PARAMETER
-# define REFERENCE_PARAMETER(a)		(a) = (a)
-#endif
-
-#ifndef dimof
-#	define dimof(arr)				(sizeof(arr) / sizeof((arr)[0]))
-#endif
-     
      
 //! \brief This macro convert variable types between different datatypes.
 #define __TYPE_CONVERT(__ADDR,__TYPE)       (*((__TYPE *)(__ADDR)))
