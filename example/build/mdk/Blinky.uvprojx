@@ -392,6 +392,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\app_cfg.h</FilePath>
             </File>
+            <File>
+              <FileName>menu_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\menu_example.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1076,6 +1081,11 @@
               <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>menu_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\menu_example.c</FilePath>
             </File>
           </Files>
         </Group>

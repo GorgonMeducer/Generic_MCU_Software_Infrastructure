@@ -1543,11 +1543,11 @@ ARM Macro Assembler    Page 24
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\out\startup_mk64f12.d -o.\out\startup_mk64f12.o -I.\RTE\Board
 _Support\MK64FN1M0xxx12 -I.\RTE\Device\MK64FN1M0xxx12 -I.\RTE\_FRDM-K64 -IC:\Ke
-il_v5\ARM\PACK\ARM\CMSIS\5.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\NXP\MK64F12_
-DFP\10.0.0\drivers -IC:\Keil_v5\ARM\PACK\Keil\Kinetis_K60_DFP\1.5.0\Device\Incl
-ude --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --
-predefine="_RTE_ SETA 1" --predefine="MK64FN1M0xxx12 SETA 1" --list=.\out\start
-up_mk64f12.lst RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
+il_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\PACK\Keil\Ki
+netis_K60_DFP\1.5.0\Device\Include -IC:\Keil_v5\ARM\PACK\NXP\MK64F12_DFP\10.0.0
+\drivers --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 52
+6" --predefine="_RTE_ SETA 1" --predefine="MK64FN1M0xxx12 SETA 1" --list=.\out\
+startup_mk64f12.lst RTE\Device\MK64FN1M0xxx12\startup_MK64F12.s
 
 
 

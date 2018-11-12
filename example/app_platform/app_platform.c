@@ -51,6 +51,30 @@ static void counter_overflow(void);
 
 /*============================ IMPLEMENTATION ================================*/
 
+ #if __IS_COMPILER_ARM_COMPILER_6__
+__asm(".global __use_no_semihosting\n\t");
+__asm(".global __ARM_use_no_argv\n\t");
+
+void _sys_exit(int ch)
+{
+    while(1);
+}
+
+void _ttywrch(int ch)
+{
+
+}
+
+#include <rt_sys.h>
+
+FILEHANDLE $Sub$$_sys_open(const char *name, int openmode)
+{
+    return 0;
+}
+
+#endif
+
+
 /* \note please put it into a 1ms timer handler
  */
 void app_platform_1ms_event_handler(void)
@@ -104,7 +128,7 @@ void start_counter(void)
     )
 }
 
-static void counter_overflow(void)
+static ALWAYS_INLINE void counter_overflow(void)
 {
     s_nCycleCounts += SysTick->LOAD;
 }
