@@ -23,38 +23,28 @@
 
 /*============================ MACROS ========================================*/
 
-#if __IS_COMPILER_ARM_COMPILER_5__ || __IS_COMPILER_ARM_COMPILER_6__
 //! \brief The safe ATOM code section macro
-# define SAFE_ATOM_CODE(...)     {\
-        istate_t tState = GET_GLOBAL_INTERRUPT_STATE();\
-        __VA_ARGS__;\
-        SET_GLOBAL_INTERRUPT_STATE(tState);\
+#   define SAFE_ATOM_CODE(...)     {                                            \
+        istate_t tState = DISABLE_GLOBAL_INTERRUPT();                           \
+        __VA_ARGS__;                                                            \
+        SET_GLOBAL_INTERRUPT_STATE(tState);                                     \
     }
 
 //! \brief Exit from the safe atom operations
-# define EXIT_SAFE_ATOM_CODE()          SET_GLOBAL_INTERRUPT_STATE(tState);
-#else
-//! \brief The safe ATOM code section macro
-# define SAFE_ATOM_CODE(...)     {\
-        istate_t tState = GET_GLOBAL_INTERRUPT_STATE();\
-        DISABLE_GLOBAL_INTERRUPT();\
-        __VA_ARGS__;\
-        SET_GLOBAL_INTERRUPT_STATE(tState);\
-    }
+#   define EXIT_SAFE_ATOM_CODE()          SET_GLOBAL_INTERRUPT_STATE(tState)   
 
-//! \brief Exit from the safe atom operations
-# define EXIT_SAFE_ATOM_CODE()          SET_GLOBAL_INTERRUPT_STATE(tState);
-#endif
 
-//! \brief ATOM code section macro
+#if 0
+//! \brief ATOM code section macro: deprecated
 # define ATOM_CODE(...)      {\
                 DISABLE_GLOBAL_INTERRUPT();\
                 __VA_ARGS__;\
                 ENABLE_GLOBAL_INTERRUPT();\
             }
+#endif
 
 //! \brief Exit from the atom operations
-# define EXIT_ATOM_CODE()   ENABLE_GLOBAL_INTERRUPT();
+# define EXIT_ATOM_CODE()   ENABLE_GLOBAL_INTERRUPT()
 
 //! \name ES_LOCKER value
 //! @{
@@ -62,23 +52,7 @@
 #define UNLOCKED        false           //!< unlocked
 //! @}
 
-//! \note critical code section protection
-//! \note LOCKER could be only used among FSMs and there should be no ISR involved.
-//! \param __LOCKER ES_LOCKER variable
-//! \param __CODE   target code segment
-#define LOCK(__LOCKER,...)  \
-            {\
-                istate_t tState = GET_GLOBAL_INTERRUPT_STATE();\
-                locker_t *pLocker = &(__LOCKER);\
-                DISABLE_GLOBAL_INTERRUPT();\
-                if (!(*pLocker)) {\
-                    (*pLocker) = LOCKED;\
-                    ENABLE_GLOBAL_INTERRUPT();\
-                    __VA_ARGS__;\
-                    (*pLocker) = UNLOCKED;\
-                }\
-                SET_GLOBAL_INTERRUPT_STATE(tState);\
-            }
+
 
 
 #define LOCK_INIT(__LOCKER)     do {(__LOCKER) = UNLOCKED;}while(false)
@@ -98,19 +72,54 @@
 #define INIT_LOCK(__LOCKER)             init_lock(__LOCKER)
                         
 //! \brief exit lock checker structure
-#define EXIT_LOCK_CHECKER() EXIT_SAFE_ATOM_CODE()
+#define EXIT_LOCK_CHECKER()             EXIT_SAFE_ATOM_CODE()
 
 /*! \note check specified locker and run code segment
  *! \param __LOCKER a ES_LOCKER variable
  *! \param __CODE target code segment
  */
-#define LOCK_CHECKER(__LOCKER, ...)  {\
-                SAFE_ATOM_CODE  (\
-                    if (UNLOCKED == (__LOCKER)) {\
-                        __VA_ARGS__;\
-                    }\
-                )\
+#define LOCK_CHECKER(__LOCKER, ...)  {                                          \
+            {                                                                   \
+                locker_t *pLocker = &(__LOCKER);                                \
+                if (UNLOCKED == (*pLocker))                                     \
+                {                                                               \
+                    SAFE_ATOM_CODE(                                             \
+                        if (UNLOCKED == (*pLocker)) {                           \
+                            __VA_ARGS__;                                        \
+                        }                                                       \
+                    )                                                           \
+                }                                                               \
             }
+            
+//! \note critical code section protection
+//! \note LOCKER could be only used among FSMs and there should be no ISR involved.
+//! \param __LOCKER ES_LOCKER variable
+//! \param __CODE   target code segment
+#if 0
+#define LOCK(__LOCKER,...)                                                      \
+            {                                                                   \
+                locker_t *pLocker = &(__LOCKER);                                \
+                if (UNLOCKED == (*pLocker))                                     \
+                {                                                               \
+                    istate_t tState = GET_GLOBAL_INTERRUPT_STATE();             \
+                    if (UNLOCKED == (*pLocker)) {                               \
+                        (*pLocker) = LOCKED;                                    \
+                        ENABLE_GLOBAL_INTERRUPT();                              \
+                        __VA_ARGS__;                                            \
+                        (*pLocker) = UNLOCKED;                                  \
+                    }                                                           \
+                    SET_GLOBAL_INTERRUPT_STATE(tState);                         \
+                }                                                               \
+            }
+#else
+#define LOCK(__LOCKER,...)                                                      \
+            LOCK_CHECKER((__LOCKER),                                            \
+                (*pLocker) = LOCKED;                                            \
+                ENABLE_GLOBAL_INTERRUPT();                                      \
+                __VA_ARGS__;                                                    \
+                (*pLocker) = UNLOCKED;                                          \
+            )
+#endif
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 typedef volatile bool locker_t;

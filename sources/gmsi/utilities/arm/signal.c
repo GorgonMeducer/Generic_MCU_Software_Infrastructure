@@ -40,9 +40,8 @@ void init_lock(locker_t *ptLock)
     if (NULL == ptLock) {
         return ;
     }
-    SAFE_ATOM_CODE (
-        (*ptLock) = UNLOCKED;
-    )
+    
+    (*ptLock) = UNLOCKED;
 }
 
 /*! \brief try to enter a section
@@ -56,12 +55,14 @@ bool enter_lock(locker_t *ptLock)
     if (NULL == ptLock) {
         return true;
     }
-    SAFE_ATOM_CODE(
-        if (!(*ptLock)) {
-            (*ptLock) = LOCKED;
-            bResult = true;
-        }
-    )
+    if (UNLOCKED == (*ptLock)) {
+        SAFE_ATOM_CODE(
+            if (UNLOCKED == (*ptLock)) {
+                (*ptLock) = LOCKED;
+                bResult = true;
+            }
+        )
+    }
         
     return bResult;
 }
@@ -76,9 +77,8 @@ void leave_lock(locker_t *ptLock)
     if (NULL == ptLock) {
         return ;
     }
-    SAFE_ATOM_CODE(
-        (*ptLock) = UNLOCKED;
-    )
+    
+    (*ptLock) = UNLOCKED;
 }
 
 /*! \brief get locker status
@@ -87,16 +87,11 @@ void leave_lock(locker_t *ptLock)
  */
 bool check_lock(locker_t *ptLock)
 {
-    bool bResult = UNLOCKED;
     if (NULL == ptLock) {
         return false;
     }
-    
-    SAFE_ATOM_CODE(
-        bResult = (*ptLock);
-    )
-    
-    return bResult;
+
+    return (*ptLock);
 }
 
 /* EOF */
