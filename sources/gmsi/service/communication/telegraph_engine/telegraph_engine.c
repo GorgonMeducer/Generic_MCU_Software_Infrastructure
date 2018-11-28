@@ -61,7 +61,7 @@ typedef bool telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTel
 //! \name abstruct class telegraph, user telegraph should inherit from this class
 //! @{
 def_class(telegraph_t)
-    inherit(__single_list_node_t)    
+    implement(__single_list_node_t)    
     telegraph_engine_t      *ptEngine;
     telegraph_handler_t     *fnHandler;
     multiple_delay_item_t   *ptDelayItem;

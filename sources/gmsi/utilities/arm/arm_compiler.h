@@ -22,6 +22,10 @@
 /*============================ INCLUDES ======================================*/
 #include <cmsis_compiler.h>
 
+#if __IS_COMPILER_IAR__
+#   include <intrinsics.h>
+#endif
+
 /*============================ MACROS ========================================*/
 
 #ifndef DEF_REG

@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>0</nTsel>
+        <nTsel>5</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -114,7 +114,7 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>BIN\UL2CM3.DLL</pMon>
+        <pMon>BIN\DbgFM.DLL</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
@@ -125,7 +125,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DbgFM</Key>
-          <Name>-I -S"System Generator:FVP_MPS2_Cortex_M4_MDK" -L"armcortexm4ct" -O135174 -C0 -MC".\FVP\MPS2_Cortex-M\FVP_MPS2_Cortex-M4_MDK.exe" -MF".\FVP_cfg.txt" -MA</Name>
+          <Name>-I -S"System Generator:FVP_MPS2_Cortex_M7_MDK" -L"armcortexm7ct" -O135174 -C0 -MC".\FVP\MPS2_Cortex-M\FVP_MPS2_Cortex-M7_MDK.exe" -MF".\FVP_cfg.txt" -MA</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
+          <Name>(1010=-1,-1,-1,-1,0)(6017=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(6016=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -1080,7 +1080,7 @@
       <GroupNumber>4</GroupNumber>
       <FileNumber>54</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\app_platform\app_platform.c</PathWithFileName>
@@ -1116,7 +1116,7 @@
 
   <Group>
     <GroupName>::Board Support</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>

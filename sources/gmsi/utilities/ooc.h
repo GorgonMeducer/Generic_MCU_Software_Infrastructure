@@ -233,7 +233,11 @@
 
 //! \brief macro for inheritance
 
-#define INHERIT_EX(__TYPE, __NAME)                                              \
+#define INHERIT_EX(__TYPE, __NAME)          __TYPE  __NAME;                                                 
+
+//! \brief macro for inheritance
+
+#define IMPLEMENT_EX(__TYPE, __NAME)                                            \
             union {                                                             \
                 __TYPE  __NAME;                                                 \
                 __TYPE;                                                         \
@@ -249,7 +253,7 @@
  *        interface when defining CLASS, you should use DEF_CLASS_IMPLEMENT 
  *        instead.
  */
-#define __IMPLEMENT(__INTERFACE)    INHERIT_EX(__INTERFACE, base__##__INTERFACE)
+#define __IMPLEMENT(__INTERFACE)    IMPLEMENT_EX(__INTERFACE, base__##__INTERFACE)
 #define IMPLEMENT(__INTERFACE)      __IMPLEMENT(__INTERFACE)  
 
 /*! \note if you have used INHERIT or IMPLEMENT to define a CLASS / INTERFACE, 
@@ -310,6 +314,7 @@
 
 
 typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
+
 
 DECLARE_CLASS( DELEGATE_HANDLE )
 //! \name general event handler

@@ -39,7 +39,7 @@
             
 /*============================ TYPES =========================================*/
 def_structure(__es_simple_frame_fsm_internal)
-    inherit(mem_block_t)
+    implement(mem_block_t)
     uint16_t hwLength;
     uint16_t hwCounter;
     uint16_t hwCheckSUM;
@@ -55,13 +55,13 @@ extern_simple_fsm(es_simple_frame_decoder,
         bool bUnsupportFrame;
         block_t *ptBlock;
         void *pTag;
-        inherit(__es_simple_frame_fsm_internal)
+        implement(__es_simple_frame_fsm_internal)
     ))
     
 extern_simple_fsm(es_simple_frame_encoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
-        inherit(__es_simple_frame_fsm_internal)
+        implement(__es_simple_frame_fsm_internal)
     ))
 
 declare_class(es_simple_frame_t)
@@ -95,7 +95,7 @@ typedef struct {
     i_byte_pipe_t   *ptPipe; 
     void  *fnParser;
     union {
-        inherit(mem_block_t)
+        implement(mem_block_t)
         struct {
             bool        bStaticBufferMode;
             block_t *   ptBlock;
