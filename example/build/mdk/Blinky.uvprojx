@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>7</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -335,7 +335,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>-fms-extensions -Wno-microsoft-anon-tag</MiscControls>
+              <MiscControls>-Omax -fms-extensions -Wno-microsoft-anon-tag</MiscControls>
               <Define>__USE_FPGA __USER_DEFINED_APP_CFG_H__ _MSC_VER</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -372,7 +372,7 @@
             <ScatterFile>.\Blinky.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--Entry=Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -391,6 +391,11 @@
               <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>menu_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\menu_example.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1076,6 +1081,11 @@
               <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\app_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>menu_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\menu_example.c</FilePath>
             </File>
           </Files>
         </Group>

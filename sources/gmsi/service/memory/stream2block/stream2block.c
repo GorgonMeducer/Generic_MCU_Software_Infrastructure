@@ -458,7 +458,7 @@ private bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             BLOCK.Heap.Free( this.ptBlockPool, this.ptUsedByQueue);
         }
         
-        __SB_ATOM_ACCESS (
+         __SB_ATOM_ACCESS (
             //! fetch a block from list, and initialise it as a full queue
             ptBlock = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t) );
             if (NULL == ptBlock) {
@@ -528,12 +528,13 @@ private bool stream_flush(stream_buffer_t *ptObj)
             break ;
         }
         if (this.bIsOutput) {
-            if (0 != GET_QUEUE_COUNT(StreamBufferQueue, 
-                                REF_OBJ_AS(this, QUEUE(StreamBufferQueue)))) {
-                
-                if (!queue_init(ptObj, false)) {
-                    //! queue is empty
-                    this.bIsQueueInitialised = false;
+            if (this.bIsQueueInitialised) {
+                if (0 != GET_QUEUE_COUNT(StreamBufferQueue, 
+                            REF_OBJ_AS(this, QUEUE(StreamBufferQueue)))) {
+                    //! queue is not empty
+                    if (!queue_init(ptObj, false)) {
+                        this.bIsQueueInitialised = false;
+                    }
                 }
             }
             

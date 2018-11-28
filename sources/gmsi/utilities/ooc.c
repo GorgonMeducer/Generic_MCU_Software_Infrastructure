@@ -31,6 +31,7 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
+#if !defined(__OOC_DEBUG__)
 //! \name general event handler
 //! @{
 //DEF_CLASS(DELEGATE_HANDLE)
@@ -54,6 +55,7 @@ struct __delegate {
 };
 //END_EXTERN_CLASS(DELEGATE)
 //! @}
+#endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

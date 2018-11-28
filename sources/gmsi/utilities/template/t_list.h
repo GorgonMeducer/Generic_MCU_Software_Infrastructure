@@ -72,13 +72,12 @@
     do {                                                                        \
         (*(__single_list_node_t **)&(__ITEM)) =                                 \
             (__single_list_node_t *)(__HEAD);                                   \
-        if (NULL == (__HEAD)) {                                                 \
-            break;                                                              \
-        }                                                                       \
-        (*(__single_list_node_t **)&(__HEAD)) =                                 \
-            ((__single_list_node_t *)(__HEAD))->ptNext;                         \
-        if (NULL == (__HEAD)) {                                                 \
-            (__TAIL) = NULL;                                                    \
+            if (NULL != (__HEAD)) {                                             \
+            (*(__single_list_node_t **)&(__HEAD)) =                             \
+                ((__single_list_node_t *)(__HEAD))->ptNext;                     \
+            if (NULL == (__HEAD)) {                                             \
+                (__TAIL) = NULL;                                                \
+            }                                                                   \
         }                                                                       \
     } while(0)
 #define LIST_QUEUE_DEQUEUE(__HEAD, __TAIL, __ITEM)  \
@@ -88,10 +87,9 @@
 #define __LIST_QUEUE_REMOVE(__HEAD, __TAIL, __ITEM)                             \
     do {                                                                        \
         __single_list_node_t **ppList = (__single_list_node_t **)&(__HEAD);     \
-        if (!list_find(ppList, (__single_list_node_t *)(__ITEM))) {             \
-            break;                                                              \
+        if (list_find(ppList, (__single_list_node_t *)(__ITEM))) {              \
+            LIST_QUEUE_DEQUEUE((*ppList), (__TAIL), (__ITEM));                  \
         }                                                                       \
-        LIST_QUEUE_DEQUEUE((*ppList), (__TAIL), (__ITEM));                      \
     } while(0)
 
 #define LIST_QUEUE_REMOVE(__HEAD, __TAIL, __ITEM)   \

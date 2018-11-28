@@ -52,7 +52,7 @@ typedef void timeout_event_handler_t(multiple_delay_report_status_t tStatus, voi
 //! @{
 declare_class(multiple_delay_item_t)
 def_class(multiple_delay_item_t)
-    inherit(__single_list_node_t)                                               //!< list pointer
+    implement(__single_list_node_t)                                               //!< list pointer
     uint32_t wTargetTime;                                                       //!< timeout target time
     multiple_delay_request_priority_t tPriority;                                //!< request priority
     void *pTag;                                                                 //!< object passed to timeout event handler
