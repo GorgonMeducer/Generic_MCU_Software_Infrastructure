@@ -288,7 +288,7 @@ private block_t *new_block(block_pool_t *ptObj)
 private void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
-    class_internal(ptObj, ptTarget, block_t);
+    class_internal(ptItem, ptTarget, block_t);
     do {
         if (NULL == ptThis || NULL == ptItem) {
             break;
@@ -316,7 +316,7 @@ private void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize
     this.Size = hwItemSize;
     this.pchBuffer = ((uint8_t *)&this)+sizeof(this);
     */
-    init(ptThis, NULL, hwItemSize, false);
+    init((block_t *)ptThis, NULL, hwItemSize, false);
 }
 
 private bool block_pool_add_heap(  block_pool_t *ptObj, 
