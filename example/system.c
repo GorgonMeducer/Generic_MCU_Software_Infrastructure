@@ -185,7 +185,7 @@ static void app_init(void)
             block_t tBlock;
             uint8_t chBuffer[FRAME_BUFFER_SIZE + sizeof(block_t)];
         } s_tBuffer;
-        BLOCK.Init(&s_tBuffer.tBlock, sizeof(s_tBuffer) - sizeof(block_t));
+        BLOCK.Init(&s_tBuffer.tBlock, NULL, sizeof(s_tBuffer), false);
     #endif
         //! initialise simple frame service
         ES_SIMPLE_FRAME_CFG(    &s_tFrame, 
@@ -237,12 +237,6 @@ int main (void)
 {
     system_init();
     app_init();
-    
-    
-    static volatile uint32_t s_wTemp = 0x4000;
-    
-    s_wTemp = s_wTemp % 500;
-    
     
     while (true) {
     
