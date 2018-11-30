@@ -246,24 +246,24 @@
 /*! \note When deriving a new class from a base class, you should use INHERIT 
  *        other than IMPLEMENT, although they looks the same now.
  */
-#define __INHERIT(__TYPE)           INHERIT_EX(__TYPE, base__##__TYPE)
+#define __INHERIT(__TYPE)           INHERIT_EX(__TYPE, use_as_##__TYPE)
 #define INHERIT(__TYPE)             __INHERIT(__TYPE)
 
 /*! \note You can only use IMPLEMENT when defining INTERFACE. For Implement 
  *        interface when defining CLASS, you should use DEF_CLASS_IMPLEMENT 
  *        instead.
  */
-#define __IMPLEMENT(__INTERFACE)    IMPLEMENT_EX(__INTERFACE, base__##__INTERFACE)
+#define __IMPLEMENT(__INTERFACE)    IMPLEMENT_EX(__INTERFACE, use_as_##__INTERFACE)
 #define IMPLEMENT(__INTERFACE)      __IMPLEMENT(__INTERFACE)  
 
 /*! \note if you have used INHERIT or IMPLEMENT to define a CLASS / INTERFACE, 
           you can use OBJ_CONVERT_AS to extract the reference to the inherited 
           object. 
   \*/
-#define __OBJ_CONVERT_AS(__OBJ, __INTERFACE)    (__OBJ.base__##__INTERFACE)
+#define __OBJ_CONVERT_AS(__OBJ, __INTERFACE)    (__OBJ.use_as_##__INTERFACE)
 #define OBJ_CONVERT_AS(__OBJ, __INTERFACE)      __OBJ_CONVERT_AS((__OBJ), __INTERFACE)          
 
-#define __REF_OBJ_AS(__OBJ, __TYPE)             (&(__OBJ.base__##__TYPE))
+#define __REF_OBJ_AS(__OBJ, __TYPE)             (&(__OBJ.use_as_##__TYPE))
 #define REF_OBJ_AS(__OBJ, __TYPE)               __REF_OBJ_AS((__OBJ), __TYPE)
 
 #define REF_INTERFACE(__INTERFACE)      const __INTERFACE *ptMethod;

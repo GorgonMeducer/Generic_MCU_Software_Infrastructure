@@ -31,12 +31,11 @@
 //! @{
 declare_class(block_t)
 def_class(block_t)
-    INHERIT(__single_list_node_t)
-    uint32_t wBlockSize;
-    union {
-        uint32_t wSize;                                 //!< memory block
-        uint32_t wBuffer;
-    };
+    implement(__single_list_node_t)
+    uint8_t  *pchBuffer;                            //!< buffer address
+    uint32_t IsReadOnly             : 1;
+    uint32_t BlockSize              : 15;
+    uint32_t Size                   : 16;           //!< memory block
 end_def_class(block_t);
 //! @}
 
@@ -55,7 +54,10 @@ def_interface(i_block_t)
         void        (*Free)(block_pool_t *, block_t *);
         uint32_t    (*Count)(block_pool_t *ptObj);
     } Heap;
-    block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
+    block_t *       (*Init)(block_t *ptBlock, 
+                            void *pBuffer, 
+                            uint_fast16_t hwSize, 
+                            bool bIsReadOnly);
     struct {
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);
@@ -87,7 +89,7 @@ private bool block_pool_add_heap(  block_pool_t *ptObj,
                             void *pBuffer, 
                             uint_fast16_t hwSize, 
                             uint_fast16_t hwItemSize);
-private block_t *init(block_t *ptBlock, uint_fast16_t hwSize);
+private block_t *init(block_t *ptBlock, void *pBuffer, uint_fast16_t hwSize, bool bIsReadOnly);
 private bool write_block_buffer( block_t *ptObj, 
                                 const void *pchSrc, 
                                 uint_fast16_t hwSize, 
@@ -122,15 +124,27 @@ const i_block_t BLOCK = {
 
 
 
-private block_t *init(block_t *ptBlock, uint_fast16_t hwSize)
+private block_t *init(block_t *ptBlock, void *pBuffer, uint_fast16_t hwSize, bool bIsReadOnly)
 {
     class_internal(ptBlock, ptThis, block_t);
     do {
         if (NULL == ptBlock || 0 == hwSize) {
             break;
-        }        
-        this.wBlockSize = hwSize;
-        this.wSize = hwSize;
+        } else if ((NULL == pBuffer) && (hwSize < sizeof(this))) {
+            break;
+        }
+        
+        if (NULL != pBuffer) {
+            this.pchBuffer = pBuffer;
+            this.Size = hwSize;
+        } else {
+            this.pchBuffer = ((uint8_t *)&this)+sizeof(this);
+            this.Size = hwSize - sizeof(this);
+        }
+        
+        this.IsReadOnly = bIsReadOnly ? 1 : 0;
+        this.BlockSize = this.Size >> 1;
+        
     
     } while(false);
     
@@ -145,7 +159,7 @@ private void reset_block_size(block_t *ptObj)
         return ;
     }
     
-    this.wSize = this.wBlockSize;
+    this.Size = this.BlockSize << 1;
 }
 
 private void *get_block_buffer(block_t *ptObj)
@@ -156,7 +170,7 @@ private void *get_block_buffer(block_t *ptObj)
         return NULL;
     }
     
-    return ((uint32_t *)&this.wBuffer)+1;
+    return this.pchBuffer;
 }
 
 private bool write_block_buffer( block_t *ptObj, 
@@ -170,15 +184,18 @@ private bool write_block_buffer( block_t *ptObj,
     do {
         if (NULL == ptThis || NULL == pchSrc || 0 == hwSize) {
             break;
+        } else if (this.IsReadOnly) {
+            break;
         }
-        uint_fast16_t hwMaxSize = this.wBlockSize - hwOffsite;
+        
+        uint_fast16_t hwMaxSize = (this.BlockSize << 1) - hwOffsite;
         if (hwSize > hwMaxSize) {
             hwSize = hwMaxSize;
         }
         
         memcpy(((uint8_t *)get_block_buffer(ptObj))+hwOffsite, pchSrc, hwSize);
         
-        this.wSize = hwSize+hwOffsite;
+        this.Size = hwSize+hwOffsite;
         bResult = true;
     } while(false);
     
@@ -193,7 +210,7 @@ private void set_block_size(block_t *ptObj, uint32_t wSize)
         return ;
     }
     
-    this.wSize = MIN(wSize, this.wBlockSize);
+    this.Size = MIN(wSize, (this.BlockSize << 1));
 }
 
 private uint32_t get_block_capability(block_t *ptObj)
@@ -204,7 +221,7 @@ private uint32_t get_block_capability(block_t *ptObj)
         return 0;
     }
     
-    return this.wBlockSize;
+    return this.BlockSize << 1;
 }
 
 private uint32_t get_block_size(block_t *ptObj)
@@ -215,7 +232,7 @@ private uint32_t get_block_size(block_t *ptObj)
         return 0;
     }
     
-    return this.wSize;
+    return this.Size;
 }
 
 
@@ -271,9 +288,13 @@ private block_t *new_block(block_pool_t *ptObj)
 private void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
-    
+    class_internal(ptObj, ptTarget, block_t);
     do {
         if (NULL == ptThis || NULL == ptItem) {
+            break;
+        }
+        
+        if (target.IsReadOnly) {
             break;
         }
         
@@ -284,13 +305,18 @@ private void free_block(block_pool_t *ptObj, block_t *ptItem)
 
 private void pool_item_init_event_handler(void *ptItem, uint_fast16_t hwItemSize)
 {
+    
     class_internal(ptItem, ptThis, block_t);
+    /*
     if (NULL == ptThis) {
         return;
     }
     
-    this.wBlockSize = hwItemSize - sizeof(block_t);
-    this.wSize = hwItemSize;
+    this.BlockSize = (hwItemSize - sizeof(block_t)) >> 1;
+    this.Size = hwItemSize;
+    this.pchBuffer = ((uint8_t *)&this)+sizeof(this);
+    */
+    init(ptThis, NULL, hwItemSize, false);
 }
 
 private bool block_pool_add_heap(  block_pool_t *ptObj, 
