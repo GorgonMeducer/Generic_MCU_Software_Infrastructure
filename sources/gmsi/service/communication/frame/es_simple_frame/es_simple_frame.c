@@ -403,9 +403,9 @@ private fsm_implementation(es_simple_frame_decoder)
                 }
                 
                 CRC(this.hwCheckSUM, chData);
-                update_state_to(WAIT_FOR_LENGTH_H);
-                
                 ((uint8_t *)&this.hwLength)[0] = chData;
+                
+                update_state_to(WAIT_FOR_LENGTH_H);
             )
                 
             state(WAIT_FOR_LENGTH_H,
@@ -424,9 +424,9 @@ private fsm_implementation(es_simple_frame_decoder)
                     //! data is too big 
                     this.bUnsupportFrame = true;
                 } 
+                this.hwCounter = 0;
                 
                 update_state_to(WAIT_FOR_DATA);
-                this.hwCounter = 0;
             )
               
             state(WAIT_FOR_DATA,
@@ -443,8 +443,6 @@ private fsm_implementation(es_simple_frame_decoder)
                 if (++this.hwCounter >= this.hwLength) {
                     transfer_to(WAIT_FOR_CHECK_SUM_L);
                 }
-                
-                fsm_continue();
             )
               
             state(WAIT_FOR_CHECK_SUM_L,

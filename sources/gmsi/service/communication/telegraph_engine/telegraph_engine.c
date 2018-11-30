@@ -255,7 +255,7 @@ private fsm_implementation(telegraph_engine_task)
                 if (IS_FSM_ERR(tResult)) {
                     fsm_report(tResult);
                 } else if (fsm_rt_cpl != tResult) {
-                    fsm_continue();
+                    fsm_on_going();
                 } 
                 
                 if (NULL == target.fnHandler) {
@@ -275,7 +275,7 @@ private fsm_implementation(telegraph_engine_task)
         
             //! add the target telegraph to listener list
             if (!try_to_listen(this.ptCurrent)) {
-                fsm_continue();
+                fsm_on_going();
             }
             
             transfer_to(FETCH_TELEGRAPH);

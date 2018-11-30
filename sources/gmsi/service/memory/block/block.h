@@ -33,12 +33,11 @@
 //! @{
 declare_class(block_t)
 extern_class(block_t)
-    inherit(__single_list_node_t)
-    uint32_t wBlockSize;
-    union {
-        uint32_t wSize;                                                         //!< memory block
-        uint32_t wBuffer;
-    };
+    implement(__single_list_node_t)
+    uint8_t  *pchBuffer;                            //!< buffer address
+    uint32_t IsReadOnly             : 1;
+    uint32_t BlockSize              : 15;
+    uint32_t Size                   : 16;           //!< memory block
 end_extern_class(block_t)
 //! @}
 
@@ -57,7 +56,10 @@ def_interface(i_block_t)
         void        (*Free)(block_pool_t *, block_t *);
         uint32_t    (*Count)(block_pool_t *ptObj);
     } Heap;
-    block_t *       (*Init)(block_t *ptBlock, uint_fast16_t hwSize);
+    block_t *       (*Init)(block_t *ptBlock, 
+                            void *pBuffer, 
+                            uint_fast16_t hwSize, 
+                            bool bIsReadOnly);
     struct {
         uint32_t    (*Get)(block_t *);
         void        (*Set)(block_t *, uint32_t);

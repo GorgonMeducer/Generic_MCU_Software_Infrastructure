@@ -463,7 +463,7 @@ private fsm_implementation(multiple_delay_task)
             )
             
             if (target.wOldCounter == target.wSavedCounter) {
-                fsm_continue();
+                fsm_on_going();
             }
             
             target.wOldCounter = target.wSavedCounter;
@@ -531,8 +531,6 @@ private fsm_implementation(multiple_delay_task)
                             (multiple_delay_item_t *)ptItem);
                 
             } while(false);
-            
-            fsm_continue();
         )
             
         state(RAISE_LOW_PRIORITY_EVENT,
@@ -557,8 +555,6 @@ private fsm_implementation(multiple_delay_task)
                             (multiple_delay_item_t *)ptItem);
                 
             } while(false);
-            
-            fsm_continue();
         )
 
     )
