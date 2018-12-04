@@ -21,8 +21,8 @@
 /*============================ INCLUDES ======================================*/
 //! \brief import head files
 
-#ifdef __USER_DEFINED_APP_CFG_H__
-#include "..\example\app_cfg.h"
+#ifdef __USER_APP_CFG_H__
+#include __USER_APP_CFG_H__ 
 #else
 
 /*============================ MACROS ========================================*/

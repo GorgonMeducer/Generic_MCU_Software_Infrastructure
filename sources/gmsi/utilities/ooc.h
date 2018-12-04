@@ -20,7 +20,7 @@
 
 /*============================ INCLUDES ======================================*/
 #include <stdint.h>
-
+#include <stdbool.h>
 
 /*! \NOTE the uint_fast8_t used in this header file is defined in stdint.h 
           if you don't have stdint.h supported in your toolchain, you should
@@ -33,25 +33,6 @@
 
 /*============================ MACROS ========================================*/
 #define EVENT_RT_UNREGISTER         4
-
-
-/* -----------------  Start of section using anonymous unions  -------------- */
-#if __IS_COMPILER_ARM_COMPILER_5__
-  //#pragma push
-  #pragma anon_unions
-#elif __IS_COMPILER_ARM_COMPILER_6__
-#elif __IS_COMPILER_IAR__
-  #pragma language=extended
-#elif __IS_COMPILER_GCC__
-  /* anonymous unions are enabled by default */
-#elif defined(__TMS470__)
-/* anonymous unions are enabled by default */
-#elif defined(__TASKING__)
-  #pragma warning 586
-#else
-  #warning Not supported compiler type
-#endif
-
 
 #ifndef this
 #   define this         (*ptThis)
@@ -305,7 +286,7 @@
 
 
 #define __class_internal(__SRC, __DES, __TYPE)                                  \
-            class(__TYPE) *(__DES) = (CLASS(__TYPE) *)(__SRC)   
+            class(__TYPE) *(__DES) = (class(__TYPE) *)(__SRC)   
 #define class_internal(__SRC, __DES, __TYPE)                                    \
             __class_internal(__SRC, __DES, __TYPE)                    
 
@@ -313,28 +294,7 @@
 /*============================ TYPES =========================================*/
 
 
-typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
 
-
-DECLARE_CLASS( DELEGATE_HANDLE )
-//! \name general event handler
-//! @{
-EXTERN_CLASS( DELEGATE_HANDLE )
-    DELEGATE_HANDLE_FUNC   *fnHandler;                                          //!< event handler
-    void                   *pArg;                                               //!< Argument
-    DELEGATE_HANDLE        *ptNext;                                             //!< next 
-END_EXTERN_CLASS(DELEGATE_HANDLE)
-//! @}
-
-DECLARE_CLASS( DELEGATE )
-//! \name event
-//! @{
-EXTERN_CLASS(DELEGATE)
-    DELEGATE_HANDLE     *ptEvent;
-    DELEGATE_HANDLE     *ptBlockedList;
-    DELEGATE_HANDLE     **pptHandler;
-END_EXTERN_CLASS(DELEGATE)
-//! @}
 
 //! \name interface: u32_property_t
 //! @{
@@ -406,40 +366,5 @@ END_DEF_INTERFACE(en_property_t)
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-/*! \brief initialize event 
- *! \param ptEvent target event
- *! \return the address of event item
- */
-extern DELEGATE *delegate_init(DELEGATE *ptEvent);
-
-/*! \brief initialize event handler item
- *! \param ptHandler the target event handler item
- *! \param fnRoutine event handler routine
- *! \param pArg handler extra arguments
- *! \return the address of event handler item
- */
-extern DELEGATE_HANDLE *delegate_handler_init(
-    DELEGATE_HANDLE *ptHandler, DELEGATE_HANDLE_FUNC *fnRoutine, void *pArg);
-
-/*! \brief register event handler to specified event
- *! \param ptEvent target event
- *! \param ptHandler target event handler
- *! \return access result
- */
-extern gsf_err_t register_delegate_handler(DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler);
-
-/*! \brief unregister a specified event handler
- *! \param ptEvent target event
- *! \param ptHandler target event handler
- *! \return access result
- */
-extern gsf_err_t unregister_delegate_handler( DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler);
-
-/*! \brief raise target event
- *! \param ptEvent the target event
- *! \param pArg event argument
- *! \return access result
- */
-extern fsm_rt_t invoke_delegate( DELEGATE *ptEvent, void *pParam);
 #endif
 /* EOF */

@@ -29,6 +29,7 @@
 #include "utilities\tiny_fsm.h"
 #include "utilities\communicate.h"
 #include "utilities\template\template.h"
+#include "utilities\delegate.h"
 
 /*============================ MACROS ========================================*/
 #define ENABLED         1

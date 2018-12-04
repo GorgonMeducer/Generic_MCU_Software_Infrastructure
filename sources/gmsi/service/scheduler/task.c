@@ -49,7 +49,7 @@ NO_INIT safe_task_t *s_pFreeList;
 
 
 //! \brief task key for identifying task control blocks
-static FLASH uint8_t s_chTaskKey[] = "Schedule";
+static ROM_FLASH uint8_t s_chTaskKey[] = "Schedule";
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
@@ -120,7 +120,7 @@ bool task_pop( safe_task_t *pTask )
  *  \retval true the control block is legal
  *  \retval false the control block is illegal
  */
-bool check_task_key( uint8_t FLASH *pchKey )
+bool check_task_key( const uint8_t *pchKey )
 {
     return (pchKey == s_chTaskKey);
 }

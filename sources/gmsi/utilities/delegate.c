@@ -21,8 +21,9 @@
 #include "..\..\environment_cfg.h"
 #endif
 
-#include ".\compiler.h"
-
+#include ".\ooc.h"
+#include ".\app_type.h"
+#include ".\error.h"
 /*============================ MACROS ========================================*/
 #ifndef this
 #   define this             (*ptThis)
@@ -31,7 +32,9 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-#if !defined(__OOC_DEBUG__)
+typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
+
+//#if !defined(__OOC_DEBUG__)
 //! \name general event handler
 //! @{
 //DEF_CLASS(DELEGATE_HANDLE)
@@ -55,7 +58,7 @@ struct __delegate {
 };
 //END_EXTERN_CLASS(DELEGATE)
 //! @}
-#endif
+//#endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

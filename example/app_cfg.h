@@ -86,6 +86,23 @@
 #define DEMO_MULTIPLE_DELAY                 DISABLED
 #define DEMO_FRAME_USE_BLOCK_MODE           ENABLED
 
+
+/*----------------------------------------------------------------------------*
+ * Scheduler Configuration                                                    *
+ *----------------------------------------------------------------------------*/
+//! \name configure safe task service:1.2K for current configuration
+//! @{
+#define TASK_SCHEDULER                      ENABLED
+#define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
+#define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
+#define SAFE_TASK_CALL_STACK                ENABLED
+#define SAFE_TASK_USE_RESERVED_SYSTEM_RAM   DISABLED
+
+
+#define SAFE_TASK_QUEUE_POOL_SIZE           (1ul)       //!< task queue pool size
+#define SAFE_TASK_POOL_SIZE                 (8ul)       //!< task pool size       
+//! @}
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

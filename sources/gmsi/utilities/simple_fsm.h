@@ -18,6 +18,9 @@
 #define __SIMPLE_FSM_H__
 
 /*============================ INCLUDES ======================================*/
+#include <stdint.h>
+#include ".\ooc.h"
+
 /*============================ MACROS ========================================*/
 
 
@@ -163,18 +166,18 @@
 #define init_fsm(__NAME, __FSM, ...)                                            \
         __NAME##_init((__FSM) __VA_ARGS__)
 
-#define fsm_implementation(__NAME, ...)                                         \
-        implement_fsm(__NAME, __VA_ARGS__)
 
-#define fsm_implementation_ex(__NAME, __TYPE, ...)                              \
-        implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
         
-#define __implement_fsm(__NAME, ...)                                            \
-            implement_fsm_ex(__NAME, fsm(__NAME), __VA_ARGS__)
-                                                               
-#define implement_fsm(__NAME, ...)      __implement_fsm(__NAME, __VA_ARGS__)
-        
-#define body(...)                                                               \
+
+#define __implement_fsm_ex(__NAME, __TYPE, ...)                                 \
+    fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )                                \
+    {                                                                           \
+        class(__TYPE) *ptThis = (class(__TYPE) *)ptFSM;                         \
+        if (NULL == ptThis) {                                                   \
+            return fsm_rt_err;                                                  \
+        }                          
+
+#define __body(...)                                                             \
         switch (ptThis->chState) {                                              \
             case 0:                                                             \
                 ptThis->chState++;                                              \
@@ -185,16 +188,24 @@
                                                                                 \
         return fsm_rt_on_going;                                                 \
     }
-    
-#define __implement_fsm_ex(__NAME, __TYPE, ...)                                 \
-    fsm_rt_t __NAME( __TYPE *ptFSM __VA_ARGS__ )                                \
-    {                                                                           \
-        class(__TYPE) *ptThis = (class(__TYPE) *)ptFSM;                         \
-        if (NULL == ptThis) {                                                   \
-            return fsm_rt_err;                                                  \
-        }                                                           
+
+#define body(...)               __body(__VA_ARGS__)
+        
 #define implement_fsm_ex(__NAME, __TYPE, ...)                                   \
             __implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
+
+#define fsm_implementation(__NAME, ...)                                         \
+        implement_fsm(__NAME, __VA_ARGS__)
+
+#define fsm_implementation_ex(__NAME, __TYPE, ...)                              \
+        implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
+        
+#define __implement_fsm(__NAME, ...)                                            \
+            implement_fsm_ex(__NAME, fsm(__NAME), __VA_ARGS__)
+                                                               
+#define implement_fsm(__NAME, ...)      __implement_fsm(__NAME, __VA_ARGS__)
+
+
         
 
 #define __privilege_state(__STATE, ...)                                         \
