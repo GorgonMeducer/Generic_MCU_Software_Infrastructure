@@ -18,56 +18,7 @@
 #ifndef _USE_COMPILER_H_
 #define _USE_COMPILER_H_            
 
-//! \name The macros to identify the compiler
-//! @{
-
-//! \note for IAR
-#ifdef __IS_COMPILER_IAR__
-#   undef __IS_COMPILER_IAR__
-#endif
-#if defined(__IAR_SYSTEMS_ICC__)
-#   define __IS_COMPILER_IAR__                 1
-#endif
-
-//! \note for gcc
-#ifdef __IS_COMPILER_GCC__
-#   undef __IS_COMPILER_GCC__
-#endif
-#if defined(__GNUC__)
-#   define __IS_COMPILER_GCC__                 1
-#endif
-//! @}
-
-//! \note for arm compiler 5
-#ifdef __IS_COMPILER_ARM_COMPILER_5__
-#   undef __IS_COMPILER_ARM_COMPILER_5__
-#endif
-#if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
-#   define __IS_COMPILER_ARM_COMPILER_5__      1
-#endif
-//! @}
-
-//! \note for arm compiler 6
-#ifdef __IS_COMPILER_ARM_COMPILER_6__
-#   undef __IS_COMPILER_ARM_COMPILER_6__
-#endif
-#if ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
-#   define __IS_COMPILER_ARM_COMPILER_6__      1
-#endif
-//! @}
-
-
-/* -------------------  Start of section using anonymous unions  ------------------ */
-#if     __IS_COMPILER_ARM_COMPILER_5__
-    //#pragma push
-#   pragma anon_unions
-#elif   __IS_COMPILER_IAR__
-#   pragma language=extended
-#elif   __IS_COMPILER_GCC__ || __IS_COMPILER_ARM_COMPILER_6__
-    /* anonymous unions are enabled by default */
-#   else
-    #warning Not supported compiler type
-#endif
+/*============================ INCLUDES ======================================*/
 
 #define __STR(__N)      #__N  
 #define STR(__N)        __STR(__N)    
@@ -115,18 +66,18 @@
 #define TYPE_CONVERT(__ADDR, __TYPE)        __TYPE_CONVERT((__ADDR), __TYPE)
 
 //! \brief initialize large object
-# define OBJECT_INIT_ZERO(__OBJECT) \
-            do\
-            {\
-                struct OBJECT_INIT\
-                {\
-                    uint8_t StructMask[sizeof(__OBJECT)];\
-                }NULL_OBJECT = {{0}};\
-                \
-                (*((struct OBJECT_INIT *)&(__OBJECT))) = NULL_OBJECT;\
-            }\
-            while (false)
+# define OBJECT_INIT_ZERO(__OBJECT)                                             \
+            do                                                                  \
+            {                                                                   \
+                memset((void *)&(__OBJECT), 0, sizeof(__OBJECT));               \
+            } while (0)
 
+
+/*!  \note using the ANSI-C99 standard type,if the file stdint.h dose not exit
+ *!        you should define it all by yourself.
+ *!
+ */
+#include ".\app_type.h"
 
 #include ".\ooc.h"
 

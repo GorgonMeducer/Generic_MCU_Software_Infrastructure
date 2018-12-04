@@ -95,7 +95,7 @@ struct _task
     bool                            bStateChanged;      //!< state changed flag
 #endif
     
-    FLASH uint8_t *                 pchKey;             //!< key
+    const uint8_t *                 pchKey;             //!< key
     safe_task_t *                     pNext;
 };
 //! @}
@@ -122,7 +122,7 @@ extern bool task_pool_init(void *pHeap, uint16_t hwSize);
  *  \retval true the control block is legal
  *  \retval false the control block is illegal
  */
-extern bool check_task_key( uint8_t FLASH *pchKey );
+extern bool check_task_key( const uint8_t *pchKey );
 
 #if SAFE_TASK_CALL_STACK == ENABLED
 /*! \brief create a new task control block

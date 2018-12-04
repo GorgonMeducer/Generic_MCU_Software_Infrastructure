@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2017 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2018 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -70,11 +70,12 @@ void SysTick_Handler (void)
 
 static void system_init(void)
 {
+    gmsi_platform_init();
+    
     if (!app_platform_init()) {
         NVIC_SystemReset();
     }
-        
-    
+
     //! initialise multiple delay service
     do {
         NO_INIT static multiple_delay_item_t s_tDelayObjPool[DELAY_OBJ_POOL_SIZE];

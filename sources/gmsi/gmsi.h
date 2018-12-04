@@ -54,6 +54,6 @@ extern const struct {
  *  \retval true platform initialization succeeded.
  *  \retval false platform initialization failed
  */
-extern bool platform_init( void );
+extern bool gmsi_platform_init( void );
 
 #endif

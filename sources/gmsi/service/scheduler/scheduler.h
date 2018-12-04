@@ -99,7 +99,7 @@
 #define ARG(__NAME)        CLASS(__NAME)
 
 #define REF_ARG(__NAME)     \
-                (*((CLASS(__NAME) *)(pArg)))
+                (*((class(__NAME) *)(pArg)))
 
 #define CHECK_ARG(__NAME)   \
                 ((NULL == pArg) ? false : true)
@@ -266,8 +266,8 @@ DECLARE_CLASS(task_t)
 EXTERN_CLASS(task_t)
 #if SAFE_TASK_CALL_STACK == ENABLED
     void                            *RESERVED;             
-    uint8_t                         RESERVED;        
-    uint8_t                         RESERVED;               
+    uint8_t                         : 8;        
+    uint8_t                         : 8;               
 #else
     void                            *RESERVED;         
     void                            *RESERVED;              
@@ -275,15 +275,15 @@ EXTERN_CLASS(task_t)
 
     
 #if SAFE_TASK_THREAD_SYNC == ENABLED
-    uint8_t                         RESERVED    : 1; 
-    uint8_t                         RESERVED    : 1;
-    uint8_t                         RESERVED    : 1; 
+    uint8_t                                 : 1; 
+    uint8_t                                 : 1;
+    uint8_t                                 : 1; 
     void                            *RESERVED;       
 #else
     bool                            RESERVED;      
 #endif
     
-    FLASH uint8_t                   *RESERVED;           
+    const uint8_t                   *RESERVED;           
     void                            *RESERVED;
 END_EXTERN_CLASS(task_t)
 
@@ -362,13 +362,6 @@ END_DEF_INTERFACE(scheduler_t)
 
 /*============================ GLOBAL VARIABLES ==============================*/
 
-//#if !defined(__LIB_REFERENCE__)
-////! \brief ES-scheduler
-//extern const scheduler_t SCHEDULER;
-//#else
-//#define SCHEDULER       (*(const scheduler_t *)GSF_SCHEDULER_BASE_ADDRESS)
-//#endif
-
 extern const scheduler_t SCHEDULER;
 
 /*============================ LOCAL VARIABLES ===============================*/
@@ -425,7 +418,6 @@ extern void *register_task( safe_task_func_t *fnRoutine, void *pArg );
  *  \retval false system is idle
  */
 extern bool scheduler( void );
-
 
 /*! \brief call a sub task (routine)
  *  \param pT a pointer of task control block

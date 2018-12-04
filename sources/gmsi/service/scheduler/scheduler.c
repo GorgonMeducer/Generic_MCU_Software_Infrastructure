@@ -935,7 +935,7 @@ bool call_task( void *pT, safe_task_func_t *fnRoutine ,  void *pArg , bool bSubc
     }
 #if SAFE_TASK_CALL_STACK == ENABLED
     do {
-        volatile CLASS(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
+        volatile class(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
         return call_task_ex(
             pT, fnRoutine, pArg, ptRoutine->fnRoutine, ptRoutine->pArg, bSubcall);
     } while (false);

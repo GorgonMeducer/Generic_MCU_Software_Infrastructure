@@ -78,7 +78,7 @@ const struct {
  *  \retval true platform initialization succeeded.
  *  \retval false platform initialization failed
  */
-bool platform_init( void )
+bool gmsi_platform_init( void )
 {
     bool bResult = false;
 

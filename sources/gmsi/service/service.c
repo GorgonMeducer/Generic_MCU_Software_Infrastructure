@@ -28,7 +28,14 @@
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
-//WEAK void SCHEDULER_INIT(void){}
+WEAK void scheduler_init(void)
+{
+#if TASK_SCHEDULER == ENABLED
+    //! initialize scheduler
+    static NO_INIT task_t s_tTaskPool[SAFE_TASK_POOL_SIZE];
+    CS_HEAP_INIT(s_tTaskPool, sizeof(s_tTaskPool));
+#endif
+}
 
 //extern void SCHEDULER_INIT(void);
 
@@ -39,7 +46,7 @@
  */
 bool service_init(void)
 {
-    //SCHEDULER_INIT();
+    scheduler_init();
 
     return true;
 }
