@@ -34,31 +34,25 @@
 
 typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
 
-//#if !defined(__OOC_DEBUG__)
 //! \name general event handler
 //! @{
-//DEF_CLASS(DELEGATE_HANDLE)
-typedef struct __delegate_handler CLASS(DELEGATE_HANDLE);
-struct __delegate_handler {
+declare_class(DELEGATE_HANDLE)
+def_class(DELEGATE_HANDLE)
     DELEGATE_HANDLE_FUNC    *fnHandler;         //!< event handler
     void                    *pArg;              //!< Argument
-    CLASS(DELEGATE_HANDLE)  *ptNext;            //!< next 
-};
-//END_DEF_CLASS(DELEGATE_HANDLE)
+    class(DELEGATE_HANDLE)  *ptNext;            //!< next 
+end_def_class(DELEGATE_HANDLE)
 //! @}
 
 //! \name event
 //! @{
-//EXTERN_CLASS(DELEGATE)
-typedef struct __delegate CLASS(DELEGATE);
-struct __delegate {
+declare_class(DELEGATE)
+def_class(DELEGATE)
     DELEGATE_HANDLE *ptEvent;
     DELEGATE_HANDLE *ptBlockedList;
-    CLASS(DELEGATE_HANDLE) **pptHandler;
-};
-//END_EXTERN_CLASS(DELEGATE)
+    class(DELEGATE_HANDLE) **pptHandler;
+end_def_class(DELEGATE)
 //! @}
-//#endif
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
