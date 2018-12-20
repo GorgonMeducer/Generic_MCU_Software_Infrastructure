@@ -316,7 +316,7 @@ private bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
                     ref_obj_as(this, fsm(telegraph_engine_task)));
         
         //! initialise telegraph pool
-        pool_init(ref_obj_as(this, pool_t));
+        pool_init(ref_obj_as(this, pool_t), ptThis);
         
         //! add buffer to telegraph heap
         pool_add_heap(  ref_obj_as(this, pool_t), 

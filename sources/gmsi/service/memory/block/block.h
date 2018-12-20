@@ -24,60 +24,12 @@
 #if USE_SERVICE_BLOCK == ENABLED
 #include "..\epool\epool.h"
 
+#include "./__class_block.h"
+
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
-    
 /*============================ TYPES =========================================*/
-
-//! \brief fixed memory block used as stream buffer
-//! @{
-declare_class(block_t)
-extern_class(block_t)
-    implement(__single_list_node_t)
-    uint8_t  *pchBuffer;                            //!< buffer address
-    uint32_t IsReadOnly             : 1;
-    uint32_t BlockSize              : 15;
-    uint32_t Size                   : 16;           //!< memory block
-end_extern_class(block_t)
-//! @}
-
-declare_class(block_pool_t)
-
-extern_class(block_pool_t, which( inherit(pool_t) ))
-    // nothing here...
-end_extern_class(block_pool_t, which( inherit(pool_t) ))
-
-def_interface(i_block_t)
-    
-    struct {
-        bool        (*Init) (block_pool_t *);
-        bool        (*Add)(block_pool_t *,void *, uint_fast16_t, uint_fast16_t);
-        block_t*    (*New)(block_pool_t *);
-        void        (*Free)(block_pool_t *, block_t *);
-        uint32_t    (*Count)(block_pool_t *ptObj);
-    } Heap;
-    block_t *       (*Init)(block_t *ptBlock, 
-                            void *pBuffer, 
-                            uint_fast16_t hwSize, 
-                            bool bIsReadOnly);
-    struct {
-        uint32_t    (*Get)(block_t *);
-        void        (*Set)(block_t *, uint32_t);
-        void        (*Reset)(block_t *);
-        uint32_t    (*Capability)(block_t *);
-    } Size;
-    struct {
-        void *      (*Get)(block_t *);
-        bool        (*Write)    (   block_t *ptObj, 
-                                    const void *pchSrc, 
-                                    uint_fast16_t hwSize, 
-                                    uint_fast16_t hwOffsite);
-    } Buffer;
-    
-end_def_interface(i_block_t)
-
-
-
 /*============================ GLOBAL VARIABLES ==============================*/
 
 extern const i_block_t BLOCK;

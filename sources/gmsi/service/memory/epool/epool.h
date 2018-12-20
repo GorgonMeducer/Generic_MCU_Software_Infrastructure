@@ -91,7 +91,7 @@ END_DEF_CLASS(__NAME##_pool_t)                                                  
                                                                                 \
 bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                \
 {                                                                               \
-    return pool_init((pool_t *)ptPool);                                         \
+    return pool_init((pool_t *)ptPool, NULL);                                   \
 }                                                                               \
                                                                                 \
 bool __NAME##_pool_add_heap(                                                    \
@@ -127,15 +127,18 @@ EXTERN_CLASS(pool_t)
     __single_list_node_t    *ptFreeList;
     uint_fast32_t           tCounter;
     __EPOOL_MUTEX_TYPE      tMutex;
+    void *                  pTarget;
 END_EXTERN_CLASS(pool_t)
 
-typedef void pool_item_init_event_handler_t(void *pItem, uint_fast32_t wItemSize);
+typedef void pool_item_init_event_handler_t(void *pTarget, 
+                                            void *pItem, 
+                                            uint_fast16_t hwItemSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
-extern bool pool_init(pool_t *ptPool);
+extern bool pool_init(pool_t *ptPool, void *);
 extern bool pool_add_heap(pool_t *ptPool, void *ptBuffer,
                    uint_fast32_t tPoolSize, uint_fast32_t hwItemSize);
 extern bool pool_add_heap_ex( pool_t *ptPool, 
@@ -147,7 +150,7 @@ extern void *pool_new(pool_t *ptPool);
 extern void pool_free(pool_t *ptPool, void *ptItem);
 extern uint_fast32_t pool_get_item_count(pool_t *ptPool);
 extern __EPOOL_MUTEX_TYPE *pool_get_mutex(pool_t *ptPool);
-
+extern void *pool_get_target(pool_t *ptPool);
 
 #endif
                     
