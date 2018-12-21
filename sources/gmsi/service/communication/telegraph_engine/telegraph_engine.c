@@ -300,7 +300,7 @@ private bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
         if (NULL == ptThis || NULL == ptCFG) {
             break;
         } else if (     (NULL == ptCFG->tTelegraphPool.pchSrc) 
-                    ||  (ptCFG->tTelegraphPool.wSize < sizeof(telegraph_t))
+                    ||  (ptCFG->tTelegraphPool.nSize < sizeof(telegraph_t))
                     ||  (ptCFG->wTelegraphSize < sizeof(telegraph_t))) {
             break;
         }
@@ -321,7 +321,7 @@ private bool init(telegraph_engine_t *ptObj, telegraph_engine_cfg_t *ptCFG)
         //! add buffer to telegraph heap
         pool_add_heap(  ref_obj_as(this, pool_t), 
                         ptCFG->tTelegraphPool.pObj,
-                        ptCFG->tTelegraphPool.wSize,
+                        ptCFG->tTelegraphPool.nSize,
                         ptCFG->wTelegraphSize);
         
         
