@@ -122,6 +122,14 @@
             
 #define state(__STATE, ...)                 __state(__STATE, __VA_ARGS__)
 
+#define __debug_state(__STATE)                                                  \
+            case __STATE:{                                                      \
+        __state_entry_##__STATE:                                                
+#define debug_state(__STATE)                __debug_state(__STATE)
+
+#define end_debug_state(__STATE)                                                \
+            ;} break;
+
 #define on_start(...)                       {__VA_ARGS__;}
 
 
@@ -139,7 +147,7 @@
         { ptThis->chState = (__STATE); goto __state_entry_##__STATE;}
 
 #define transfer_to(__STATE)                                                    \
-         { update_state_to(__STATE); fsm_on_going() } 
+         { ptThis->chState = (__STATE); fsm_on_going() } 
 
 
 #define __fsm_initialiser(__NAME, ...)                                          \
@@ -190,6 +198,40 @@
     }
 
 #define body(...)               __body(__VA_ARGS__)
+
+#define debug_body()                                                            \
+            switch (ptThis->chState) {                                          \
+            case 0:                                                             \
+                ptThis->chState++;                                              
+
+#define end_debug_body()                                                        \
+            default:                                                            \
+            return fsm_rt_err;                                                  \
+        }                                                                       \
+                                                                                \
+        return fsm_rt_on_going;                                                 \
+    }
+        
+/*! \note Debug Support: You can use debug_body() together with debug_state()
+ *!       to enable debug specified state. Which means you are ale to set break
+ *!       points and single-step into those states. 
+ *! 
+ *! \note debug_state() must be used in debug_body().
+ *!
+ *!       Example:
+
+        debug_body()
+            state(xxxxx,
+                //the range no debug is allowed
+            )
+            
+            debug_state(xxxxx)
+                 //the range you can debug with
+            end_debug_state(xxxx)
+            
+        end_debug_body()
+*/        
+        
         
 #define implement_fsm_ex(__NAME, __TYPE, ...)                                   \
             __implement_fsm_ex(__NAME, __TYPE, __VA_ARGS__)
