@@ -41,7 +41,17 @@ declare_class(block_t)
 def_interface(i_block_methods_t)
 
     void (*Free)(void *, block_t *ptBlock);         //!< User specified free 
-    /* todo: Add special read / write interface */
+    int_fast32_t (*Read)(   void *pTarget, 
+                            void *pBlockBuffer,
+                            void *pBuff,            
+                            int_fast32_t wSize, 
+                            uint_fast32_t wOffset);
+                            
+    int_fast32_t (*Write)(  void *pTarget, 
+                            void *pBlockBuffer,
+                            const void *pBuff, 
+                            int_fast32_t nSize, 
+                            uint_fast32_t wOffset);
 
 end_def_interface(i_block_methods_t)
 //! @}
@@ -104,13 +114,16 @@ typedef struct {
 def_interface(i_block_t)
     
     struct {
-        bool            (*Init) (block_pool_t *, block_pool_cfg_t *ptCFG);
-        bool            (*Add)(block_pool_t *,void *, uint_fast32_t, uint_fast32_t);
-        block_t*        (*New)(block_pool_t *);
-        void            (*Free)(block_pool_t *, block_t *);
-        uint_fast32_t   (*Count)(block_pool_t *ptObj);
+        bool            (*Init)    (block_pool_t *, block_pool_cfg_t *ptCFG);
+        bool            (*Add)     (block_pool_t *,
+                                    void *, 
+                                    uint_fast32_t, 
+                                    uint_fast32_t);
+        block_t*        (*New)     (block_pool_t *);
+        void            (*Free)    (block_pool_t *, block_t *);
+        uint_fast32_t   (*Count)   (block_pool_t *ptObj);
     } Heap;
-    block_t *           (*Init)(block_t *ptBlock, block_cfg_t *ptCFG);
+    block_t *           (*Init)    (block_t *ptBlock, block_cfg_t *ptCFG);
     
     struct {
         void            (*Register)(block_adapter_t *ptAdaptors,
@@ -118,16 +131,20 @@ def_interface(i_block_t)
     } Adapter;
     
     struct {
-        uint_fast32_t   (*Get)(block_t *);
-        void            (*Set)(block_t *, uint_fast32_t);
-        void            (*Reset)(block_t *);
+        uint_fast32_t   (*Get)     (block_t *);
+        void            (*Set)     (block_t *, uint_fast32_t);
+        void            (*Reset)   (block_t *);
         uint_fast32_t   (*Capability)(block_t *);
     } Size;
     struct {
         void *          (*Get)(block_t *);
-        bool            (*Write)(   block_t *ptObj, 
+        bool            (*Write)   (block_t *ptObj, 
                                     const void *pchSrc, 
-                                    uint_fast32_t wSize, 
+                                    int_fast32_t nSize, 
+                                    uint_fast32_t wOffsite);
+        mem_block_t     (*Read)    (block_t *ptObj, 
+                                    void *pchSrc, 
+                                    int_fast32_t nSize, 
                                     uint_fast32_t wOffsite);
     } Buffer;
     

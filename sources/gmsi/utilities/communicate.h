@@ -31,7 +31,7 @@ typedef struct {
         uint8_t *pchSrc;
         void *pObj;
     };
-    uint_fast32_t wSize;            //!< stream size
+    int_fast32_t nSize;             //!< stream size
 } mem_block_t;
 //! @}
 
@@ -56,9 +56,9 @@ def_interface(i_pipe_t)
     
     struct {
         //! read a block
-        uint_fast32_t  (*Read)(uint8_t *pchStream, uint_fast32_t wSize);
+        int_fast32_t  (*Read)(uint8_t *pchStream, int_fast32_t nSize);
         //! write a block
-        uint_fast32_t  (*Write)(uint8_t *pchStream, uint_fast32_t wSize);
+        int_fast32_t  (*Write)(uint8_t *pchStream, int_fast32_t nSize);
     } Stream;
 
 end_def_interface(i_pipe_t)

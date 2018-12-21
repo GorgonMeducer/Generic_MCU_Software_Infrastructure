@@ -48,13 +48,17 @@ private block_t *new_block(block_pool_t *ptObj);
 private void free_block(block_pool_t *ptObj, block_t *ptItem);
 private bool block_pool_add_heap(  block_pool_t *ptObj, 
                             void *pBuffer, 
-                            uint_fast16_t hwSize, 
-                            uint_fast16_t hwItemSize);
+                            uint_fast32_t wSize, 
+                            uint_fast32_t wItemSize);
 private block_t *init(block_t *ptBlock, block_cfg_t *ptCFG);
-private bool write_block_buffer( block_t *ptObj, 
+private bool write_block_buffer(block_t *ptObj, 
                                 const void *pchSrc, 
-                                uint_fast16_t hwSize, 
-                                uint_fast16_t hwOffsite);
+                                int_fast32_t nSize, 
+                                uint_fast32_t wOffsite);
+private mem_block_t  read_block_buffer(block_t *ptObj, 
+                                void *pchSrc, 
+                                int_fast32_t nSize, 
+                                uint_fast32_t wOffsite);
 private uint_fast32_t get_free_block_count(block_pool_t *ptObj);
 private void __free_block(void *pTarget, block_t *ptBlock);
 private void register_adaptors(block_adapter_t *ptAdaptors, uint_fast8_t chSize);
@@ -84,10 +88,37 @@ const i_block_t BLOCK = {
     .Buffer = {
         .Get =          &get_block_buffer,
         .Write =        &write_block_buffer,
+        .Read =         &read_block_buffer,
     },
 };
 
 /*============================ IMPLEMENTATION ================================*/
+
+private const block_adapter_t* __get_adapter_interface(block_t *ptItem)
+{
+    class_internal(ptItem, ptThis, block_t);
+    assert(NULL != ptThis);
+    block_adapter_t *ptAdapter = NULL;
+    
+    do {
+        uint_fast8_t chID = this.chAdapterID;
+        
+        if (0 == chID || 255 == chID) {
+            break;
+        }
+        if (NULL == s_tBlockControl.ptAdapters) {
+            break;
+        }
+        if (chID > s_tBlockControl.chLength) {
+            break;
+        }
+        
+        ptAdapter = &s_tBlockControl.ptAdapters[chID-1];
+        assert(NULL != ptAdapter->ptMethods);
+    } while(0);
+    
+    return ptAdapter;
+}
 
 private void register_adaptors(block_adapter_t *ptAdaptors, uint_fast8_t chSize)
 {
@@ -105,7 +136,10 @@ private block_t *init(block_t *ptBlock, block_cfg_t *ptCFG)
     assert(NULL != ptBlock && NULL != ptCFG);
     
     do {
-        if ((NULL == ptCFG->pBuffer) && (ptCFG->BlockSize < sizeof(this))) {
+        if ((ptCFG->BlockSize < sizeof(this))) {
+            break;
+        }
+        if ((!this.IsNoDirectAccess) && (NULL == ptCFG->pBuffer)) {
             break;
         }
 
@@ -141,13 +175,16 @@ private void *get_block_buffer(block_t *ptObj)
     class_internal(ptObj, ptThis, block_t);
     
     assert(NULL != ptObj);
+    if (this.IsNoDirectAccess) {
+        return NULL;
+    }
     
     return this.pchBuffer;
 }
 
 private bool write_block_buffer( block_t *ptObj, 
                                 const void *pchSrc, 
-                                uint_fast32_t wSize, 
+                                int_fast32_t nSize, 
                                 uint_fast32_t wOffsite)
 {
     class_internal(ptObj, ptThis, block_t);
@@ -156,24 +193,102 @@ private bool write_block_buffer( block_t *ptObj,
     bool bResult = false;
     
     do {
-        if (0 == wSize) {
+        if (0 == nSize) {
             break;
         } else if (this.IsNoWrite) {
             break;
         }
         
         uint_fast32_t wMaxSize = this.BlockSize - wOffsite;
-        if (wSize > wMaxSize) {
-            wSize = wMaxSize;
+        if (nSize > wMaxSize) {
+            break;                          //!< too big to write
         }
         
-        memcpy(((uint8_t *)get_block_buffer(ptObj))+wOffsite, pchSrc, wSize);
+        if (this.IsNoDirectAccess) {
+            const block_adapter_t *ptAdapter = __get_adapter_interface(ptObj);
+            if (NULL == ptAdapter) {
+                break;
+            }
+            if (NULL == ptAdapter->ptMethods->Write) {
+                break;
+            }
+            
+            nSize = (*ptAdapter->ptMethods->Write)(ptAdapter->pTarget, 
+                                                  this.pchBuffer,
+                                                  pchSrc,
+                                                  nSize,
+                                                  wOffsite);
+            if (nSize < 0) {
+                break;
+            }
+
+        } else {
+            memcpy(((uint8_t *)get_block_buffer(ptObj))+wOffsite, pchSrc, nSize);
+        }
         
-        this.Size = wSize+wOffsite;
+        this.Size = nSize+wOffsite;
         bResult = true;
     } while(false);
     
     return bResult;
+}
+
+private mem_block_t read_block_buffer(  block_t *ptObj, 
+                                        void *pchSrc, 
+                                        int_fast32_t nSize, 
+                                        uint_fast32_t wOffsite)
+{
+    class_internal(ptObj, ptThis, block_t);
+    assert(NULL != ptObj && NULL != pchSrc);
+    uint8_t *pchBuffer = NULL;
+    mem_block_t tResult = {0};
+    
+    bool bResult = false;
+    
+    do {
+        if (0 == nSize) {
+            break;
+        } else if (this.IsNoRead) {
+            break;
+        }
+        
+        uint_fast32_t wMaxSize = this.BlockSize - wOffsite;
+
+        if (this.IsNoDirectAccess) {
+            nSize = MIN(nSize, wMaxSize);
+            
+            const block_adapter_t *ptAdapter = __get_adapter_interface(ptObj);
+            if (NULL == ptAdapter) {
+                break;
+            }
+            if (NULL == ptAdapter->ptMethods->Read) {
+                break;
+            }
+            
+            nSize = (*ptAdapter->ptMethods->Read)(ptAdapter->pTarget, 
+                                                  this.pchBuffer,
+                                                  pchSrc,
+                                                  nSize,
+                                                  wOffsite);
+            if (nSize < 0) {
+                break;
+            }
+            pchBuffer = pchSrc;
+
+        } else if (nSize <= wMaxSize) {
+            pchBuffer = get_block_buffer(ptObj) + wOffsite;
+        } else {
+            nSize = wMaxSize;
+            memcpy(pchSrc, pchBuffer+wOffsite, nSize);
+            pchBuffer = pchSrc;
+        }
+        
+        tResult.pchBuffer = pchBuffer;
+        tResult.nSize = nSize;
+        
+    } while(false);
+    
+    return tResult;
 }
 
 private void set_block_size(block_t *ptObj, uint_fast32_t wSize)
@@ -203,15 +318,6 @@ private uint_fast32_t get_block_size(block_t *ptObj)
 
     return this.Size;
 }
-
-
-static void __free_block(void *pTarget, block_t *ptBlock)
-{
-    class_internal(pTarget, ptThis, block_pool_t);
-    pool_free( REF_OBJ_AS(this, pool_t), ptBlock);
-}
-
-
 
 private bool block_pool_init(block_pool_t *ptObj, block_pool_cfg_t *ptCFG)
 {
@@ -254,6 +360,8 @@ private block_t *new_block(block_pool_t *ptObj)
     return ptBlock;
 }
 
+
+
 private void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
@@ -262,22 +370,13 @@ private void free_block(block_pool_t *ptObj, block_t *ptItem)
         uint_fast8_t chID = target.chAdapterID;
         assert(ptThis != NULL);
         
-        if (BLOCK_FREE_TO_ANY == chID) {
-            break;
-        }
         if (BLOCK_NO_FREE == chID) {
             return ;
         }
-        if (NULL == s_tBlockControl.ptAdapters) {
+        const block_adapter_t *ptAdapter = __get_adapter_interface(ptItem);
+        if (NULL == ptAdapter) {
             break;
         }
-        if (chID > s_tBlockControl.chLength) {
-            break;
-        }
-        
-        block_adapter_t *ptAdapter = &s_tBlockControl.ptAdapters[chID-1];
-        assert(NULL != ptAdapter->ptMethods);
-        
         if (NULL != ptAdapter->ptMethods->Free) {
             (*ptAdapter->ptMethods->Free)(ptAdapter->pTarget, ptItem);
         }

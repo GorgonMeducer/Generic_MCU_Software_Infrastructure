@@ -204,7 +204,7 @@ private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame)
                         fsm(es_simple_frame_decoder));
         
         if (NULL == target.ptBlock ) {
-            wSize = target.wSize;
+            wSize = target.nSize;
         } else {
             wSize = BLOCK.Size.Capability(target.ptBlock);
         }
@@ -261,7 +261,7 @@ private bool es_simple_frame_init(
                 break;
             }
             
-        } else if (0 == ptCFG->wSize) {
+        } else if (0 == ptCFG->nSize) {
             //! static buffer mode, empty buffer detected
             break;
         } else {        
@@ -314,7 +314,7 @@ private fsm_initialiser(es_simple_frame_decoder,
             abort_init();
         } else if (    (NULL == ptBlock) 
                     && (    (NULL == tMemory.pchBuffer) 
-                        ||  (0 == tMemory.wSize)) ) {
+                        ||  (0 == tMemory.nSize)) ) {
             abort_init();
         }
         
@@ -364,7 +364,7 @@ private fsm_implementation(es_simple_frame_decoder)
             if (NULL != this.ptBlock) {
                 this.pchBuffer = BLOCK.Buffer.Get(this.ptBlock);
                 BLOCK.Size.Reset(this.ptBlock);
-                this.wSize = BLOCK.Size.Get(this.ptBlock);
+                this.nSize = BLOCK.Size.Get(this.ptBlock);
             }
         
             if (NULL == this.ptPipe) {
@@ -373,7 +373,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 fsm_report(GSF_ERR_IO)
             } else if (NULL == this.pchBuffer) {
                 fsm_report(GSF_ERR_INVALID_PTR);
-            } else if (0 == this.wSize) {
+            } else if (0 == this.nSize) {
                 fsm_report(GSF_ERR_INVALID_PARAMETER);
             }
             this.hwCheckSUM = CRC_INIT;
@@ -420,7 +420,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 if (0 == this.hwLength){
                     /* no data */
                     transfer_to(WAIT_FOR_CHECK_SUM_L);
-                } else if (this.hwLength > this.wSize) {
+                } else if (this.hwLength > this.nSize) {
                     //! data is too big 
                     this.bUnsupportFrame = true;
                 } 
@@ -559,7 +559,7 @@ private fsm_implementation(es_simple_frame_decoder_wrapper)
                 
                 
                 if (    (ptDecoder->hwLength > 0) 
-                    &&  (ptDecoder->hwLength <= ptDecoder->wSize)) {
+                    &&  (ptDecoder->hwLength <= ptDecoder->nSize)) {
                     /* get something to reply */
                     transfer_to(TRY_TO_LOCK)
                 }
