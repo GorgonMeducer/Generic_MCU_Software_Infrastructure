@@ -50,7 +50,7 @@
                                                                                 \
     private bool __NAME##_stream_buffer_init(stream_buffer_cfg_t *ptCFG)        \
     {                                                                           \
-        BLOCK.Heap.Init(&s_t##__NAME##_BlockPool);                              \
+        BLOCK.Heap.Init(&s_t##__NAME##_BlockPool, NULL);                        \
         return STREAM_BUFFER.Init(&s_t##__NAME##StreamBuffer, ptCFG);           \
     }                                                                           \
     private bool __NAME##_stream_add_buffer(void *pBuffer, uint_fast32_t wSize)\

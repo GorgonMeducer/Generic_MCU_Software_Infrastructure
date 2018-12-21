@@ -41,7 +41,7 @@ end_def_class(pool_t)
 
 typedef void pool_item_init_event_handler_t(void *pTarget, 
                                             void *pItem, 
-                                            uint_fast16_t hwItemSize);
+                                            uint_fast32_t hwItemSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
