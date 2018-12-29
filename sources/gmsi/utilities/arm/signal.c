@@ -17,19 +17,69 @@
 
 
 /*============================ INCLUDES ======================================*/
-#ifndef __STORE_ENVIRONMENT_CFG_IN_PROJ__
-#include "..\..\..\environment_cfg.h"
-#endif
-
-#include "..\compiler.h"
+#include "../compiler.h"
+#include "../ooc.h"
+#include "../app_type.h"
+#include "signal.h"
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
-/*============================ GLOBAL VARIABLES ==============================*/
-/*============================ LOCAL VARIABLES ===============================*/
+
+
+
+
 /*============================ PROTOTYPES ====================================*/
+static void __default_code_region_atom_code_on_enter(void *pObj, void *pLocal);
+static void __default_code_region_atom_code_on_leave(void *pObj,void *pLocal);
+static void __default_code_region_none_on_enter(void *pObj, void *pLocal);
+static void __default_code_region_none_on_leave(void *pObj,void *pLocal);
+/*============================ LOCAL VARIABLES ===============================*/
+/*============================ GLOBAL VARIABLES ==============================*/
+
+
+static const i_code_region_t i_DefaultCodeRegionAtomCode = {
+    .chLocalObjSize =   sizeof(istate_t),
+    .OnEnter =          &__default_code_region_atom_code_on_enter,
+    .OnLeave =          &__default_code_region_atom_code_on_leave,
+};
+
+static const i_code_region_t i_DefaultCodeRegionNone = {
+    .OnEnter =          &__default_code_region_none_on_enter,
+    .OnLeave =          &__default_code_region_none_on_leave,
+};
+
+const code_region_t DEFAULT_CODE_REGION_ATOM_CODE = {
+    .ptMethods = (i_code_region_t *)&i_DefaultCodeRegionAtomCode,
+};
+
+const code_region_t DEFAULT_CODE_REGION_NONE = {
+    .ptMethods = (i_code_region_t *)&i_DefaultCodeRegionNone,
+};
+
 /*============================ IMPLEMENTATION ================================*/
+
+static void __default_code_region_atom_code_on_enter(void *pObj, void *pLocal)
+{
+    istate_t *ptState = (istate_t *)pLocal;
+    assert(NULL != pLocal);
+    (*ptState) = DISABLE_GLOBAL_INTERRUPT();
+}
+
+static void __default_code_region_atom_code_on_leave(void *pObj,void *pLocal)
+{
+    istate_t *ptState = (istate_t *)pLocal;
+    assert(NULL != pLocal);
+    SET_GLOBAL_INTERRUPT_STATE(*ptState);
+}
+
+static void __default_code_region_none_on_enter(void *pObj, void *pLocal)
+{
+}
+
+static void __default_code_region_none_on_leave(void *pObj,void *pLocal)
+{
+}
 
 /*! \brief initialize a locker
  *! \param ptLock locker object
@@ -56,12 +106,12 @@ bool enter_lock(locker_t *ptLock)
         return true;
     }
     if (UNLOCKED == (*ptLock)) {
-        SAFE_ATOM_CODE(
+        SAFE_ATOM_CODE(){
             if (UNLOCKED == (*ptLock)) {
                 (*ptLock) = LOCKED;
                 bResult = true;
             }
-        )
+        };
     }
         
     return bResult;

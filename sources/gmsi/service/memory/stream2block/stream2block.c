@@ -247,7 +247,7 @@ private bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptC
             break;
         }
         
-        __SB_ATOM_ACCESS(
+        __SB_ATOM_ACCESS(){
             do {
                 memset(ptObj, 0, sizeof(stream_buffer_t));
             
@@ -275,7 +275,7 @@ private bool stream_buffer_init(stream_buffer_t *ptObj, stream_buffer_cfg_t *ptC
                 
                 bResult = true;
             } while(false);
-        )
+        }
     } while(false);
     
     return bResult;
@@ -332,7 +332,7 @@ private block_t *get_next_block(stream_buffer_t *ptObj)
         if (NULL == ptThis) {
             break;
         }
-        __SB_ATOM_ACCESS(
+        __SB_ATOM_ACCESS(){
             if (this.bIsOutput) {
                 
                     //! find the next block from the list
@@ -350,7 +350,7 @@ private block_t *get_next_block(stream_buffer_t *ptObj)
             }
             
             this.ptUsedByOutside = ptItem;
-        )
+        }
         
     } while(false);
 
@@ -377,13 +377,13 @@ private void return_block(stream_buffer_t *ptObj, block_t *ptItem)
             
         } else {
         
-            __SB_ATOM_ACCESS(
+            __SB_ATOM_ACCESS(){
                 //! stream is used for input
                 //! add block to the list
                 BLOCK_QUEUE.Enqueue( ref_obj_as(this, block_queue_t), ptItem);
                 this.tStatus.IsDataAvailable = true;
                 this.tStatus.IsBlockBufferDrain = false;
-            )
+            }
         }
     } while(false);
 
@@ -399,7 +399,7 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
             break;
         }
         
-        __SB_ATOM_ACCESS(
+        __SB_ATOM_ACCESS(){
             if (this.bIsOutput) {
                 
                 if (NULL != ptOld) {
@@ -438,7 +438,7 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
             }
         
             this.ptUsedByOutside = ptItem;
-        )
+        }
         
     } while(false);
 
@@ -458,7 +458,7 @@ private bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             BLOCK.Heap.Free( this.ptBlockPool, this.ptUsedByQueue);
         }
         
-         __SB_ATOM_ACCESS (
+         __SB_ATOM_ACCESS (){
             //! fetch a block from list, and initialise it as a full queue
             ptBlock = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t) );
             if (NULL == ptBlock) {
@@ -468,7 +468,7 @@ private bool queue_init(stream_buffer_t *ptObj, bool bIsStreamForRead)
             if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
                 this.tStatus.IsBlockBufferDrain = true;
             }
-        )
+        }
         
         if ( NULL == this.ptUsedByOutside) {
             if (NULL != this.fnRequestReceive) {
@@ -693,10 +693,10 @@ private void __append_block_to_output_list(  stream_buffer_t *ptObj,
 {
     class_internal(ptObj, ptThis, stream_buffer_t);
 
-    __SB_ATOM_ACCESS(
+    __SB_ATOM_ACCESS(){
         BLOCK_QUEUE.Enqueue( ref_obj_as(this, block_queue_t), ptBlock);
         this.tStatus.IsBlockBufferDrain = false;
-    )
+    }
     
     if (NULL == this.ptUsedByOutside ) {
         //! this is no transaction, we need to trigger one

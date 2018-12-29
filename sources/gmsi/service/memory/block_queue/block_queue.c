@@ -99,10 +99,10 @@ private bool append_item_to_list(block_queue_t *ptObj, block_t *ptItem)
         return false;
     }
 
-    __BQ_ATOM_ACCESS (
+    __BQ_ATOM_ACCESS (){
         LIST_QUEUE_ENQUEUE(this.ptListHead, this.ptListTail, ptItem);
         this.wCount++;
-    )
+    }
 
     return true;
 }
@@ -112,9 +112,9 @@ private uint32_t get_item_count(block_queue_t *ptObj)
     class_internal(ptObj, ptThis, block_queue_t);
     uint32_t wResult;
     
-    __BQ_ATOM_ACCESS (
+    //__BQ_ATOM_ACCESS (
         wResult = this.wCount;
-    )
+    //)
     
     return wResult;
 }
@@ -128,12 +128,12 @@ private block_t *get_item_from_list(block_queue_t *ptObj)
         return NULL;
     }
 
-    __BQ_ATOM_ACCESS (
+    __BQ_ATOM_ACCESS (){
         if (NULL != this.ptListHead) {
             LIST_QUEUE_DEQUEUE(this.ptListHead, this.ptListTail, ptResult);
             this.wCount--;
         }
-    )
+    }
 
     
     return ptResult;

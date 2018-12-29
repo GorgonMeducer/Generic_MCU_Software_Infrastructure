@@ -22,7 +22,7 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_BLOCK == ENABLED
-#include "..\epool\epool.h"
+#include "../epool/epool.h"
 
 #include "./__class_block.h"
 

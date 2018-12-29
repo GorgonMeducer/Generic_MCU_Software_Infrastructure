@@ -234,11 +234,11 @@ private fsm_implementation(telegraph_engine_task)
         
         state(FETCH_TELEGRAPH,
             
-            __TE_ATOM_ACCESS(
+            __TE_ATOM_ACCESS(){
                 LIST_QUEUE_DEQUEUE( base.Transmitter.ptHead, 
                                     base.Transmitter.ptTail, 
                                     this.ptCurrent);
-            )
+            }
             
             if (NULL == this.ptCurrent) {
                 fsm_cpl();
@@ -374,10 +374,10 @@ private void telegraph_timeout_event_handler(
         return ;
     }  
     
-    __TE_ATOM_ACCESS (
+    __TE_ATOM_ACCESS (){
         //! remove it from the listener queue
         LIST_QUEUE_REMOVE(this.Listener.ptHead, this.Listener.ptTail, ptTarget);
-    )
+    }
     
     if (MULTIPLE_DELAY_TIMEOUT == tStatus) {
     
@@ -545,11 +545,11 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
                 target.ptDelayItem = NULL;
             }
             
-            __TE_ATOM_ACCESS (
+            __TE_ATOM_ACCESS (){
                 //! add it to the listener queue
                 LIST_QUEUE_ENQUEUE(
                     this.Listener.ptHead, this.Listener.ptTail, ptTelegraph);
-            )
+            }
             
             bResult = true;
             break;
@@ -561,12 +561,12 @@ private bool try_to_send_telegraph( telegraph_t *ptTelegraph,
         }
         
         //! add telegraph to transmitter queue
-        __TE_ATOM_ACCESS (
+        __TE_ATOM_ACCESS (){
             //! add it to the listener queue
             LIST_QUEUE_ENQUEUE(
                 this.Transmitter.ptHead, this.Transmitter.ptTail, ptTelegraph
             );
-        )
+        }
         
         bResult = true;
     } while(false);
@@ -612,9 +612,9 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
             break;
         }
        
-        __TE_ATOM_ACCESS (
+        //__TE_ATOM_ACCESS (
             ptItem = this.Listener.ptHead;
-        )
+        //)
         do {
             class_internal(ptItem, ptTarget, telegraph_t);
             block_t *ptTempBlock = ptBlock;
@@ -644,11 +644,11 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                                 }
                             
                             }
-                            __TE_ATOM_ACCESS (
+                            __TE_ATOM_ACCESS (){
                                 __LIST_QUEUE_REMOVE(this.Listener.ptHead, 
                                                     this.Listener.ptTail, 
                                                     ptItem);
-                            )
+                            }
                             //! free telegraph
                             pool_free(ref_obj_as(this, pool_t), ptItem);
                             
@@ -673,9 +673,9 @@ private block_t * frontend(block_t *ptBlock, telegraph_engine_t *ptObj)
                 break;
             }
 
-            __TE_ATOM_ACCESS (
+            __TE_ATOM_ACCESS (){
                 ptItem = (telegraph_t *)target.ptNext;
-            )
+            }
             
         } while(NULL != ptItem);
         

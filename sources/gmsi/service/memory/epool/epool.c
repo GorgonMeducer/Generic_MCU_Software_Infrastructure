@@ -82,10 +82,10 @@ bool pool_add_heap_ex( pool_t *ptPool,
 
 
     do {
-        __EPOOL_ATOM_ACCESS(
+        __EPOOL_ATOM_ACCESS(){
             LIST_STACK_PUSH(this.ptFreeList, ptBuffer);
             this.tCounter++;
-        )
+        }
         
         if (NULL != fnHandler) {
             (*fnHandler)(this.pTarget, ptBuffer, wItemSize);
@@ -117,7 +117,7 @@ void *pool_new(pool_t *ptPool)
         return NULL;
     }
 
-    __EPOOL_ATOM_ACCESS(
+    __EPOOL_ATOM_ACCESS(){
         do {
             if (NULL == ((CLASS(pool_t) *)ptPool)->ptFreeList) {
                 break;
@@ -127,7 +127,7 @@ void *pool_new(pool_t *ptPool)
             
             this.tCounter--;
         } while (false);
-    )
+    }
 
     return (void *)ptItem;
 }
@@ -140,10 +140,10 @@ void pool_free(pool_t *ptPool, void *ptItem)
         return;
     }
 
-    __EPOOL_ATOM_ACCESS(
+    __EPOOL_ATOM_ACCESS(){
         LIST_STACK_PUSH(this.ptFreeList, ptItem);
         this.tCounter++;
-    )
+    }
 }
 
 uint_fast32_t pool_get_item_count(pool_t *ptPool)

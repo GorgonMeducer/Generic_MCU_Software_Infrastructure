@@ -173,12 +173,12 @@ safe_task_t *new_task( safe_task_func_t *fnRoutine, void *pArg )
         }
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         if (NULL != s_pFreeList) {
             pTask = s_pFreeList;
             s_pFreeList = s_pFreeList->pNext;
         }
-    )
+    }
 #endif
     if (NULL != pTask) {
         /* find a task control block */
@@ -260,13 +260,13 @@ void free_task( safe_task_t *pTask )
         s_pFreeList = pTask;
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         pTask->pchKey = NULL;                   //!< clear task key
 
         //! add task item to freelist
         pTask->pNext = s_pFreeList;      
         s_pFreeList = pTask;
-    )
+    }
 #endif
 }
 
@@ -297,13 +297,13 @@ bool task_pool_init(void *pHeap, uint16_t hwSize)
             s_pFreeList = pTask;
         )
 #else
-        SAFE_ATOM_CODE(
+        SAFE_ATOM_CODE(){
             pTask->pchKey = NULL;                   //!< clear task key
 
             //! add task item to freelist
             pTask->pNext = s_pFreeList;      
             s_pFreeList = pTask;
-        )
+        }
 #endif
         pTask++;
     } while(--n);
