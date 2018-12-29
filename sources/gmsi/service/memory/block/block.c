@@ -421,7 +421,7 @@ typedef struct {
         false,                  //!< allow write
         false,                  //!< allow read
         false,                  //!< allow direct access
-        chID,     //!< free to current heap
+        chID,                   //!< free to current heap
     };
 
     init((block_t *)ptItem, &tCFG);

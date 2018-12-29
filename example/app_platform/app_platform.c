@@ -123,9 +123,9 @@ volatile static int32_t s_nCycleCounts = 0;
  */
 void start_counter(void)
 {
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         s_nCycleCounts =  (int32_t)SysTick->VAL - (int32_t)SysTick->LOAD;
-    )
+    }
 }
 
 static ALWAYS_INLINE void counter_overflow(void)
@@ -138,9 +138,9 @@ static ALWAYS_INLINE void counter_overflow(void)
  */
 int32_t stop_counter(void)
 {
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         s_nCycleCounts += (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
-    )
+    }
     return s_nCycleCounts;
 }
 

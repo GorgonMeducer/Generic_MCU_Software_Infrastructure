@@ -460,9 +460,9 @@ bool scheduler( void )
             return false;
         }       
     )*/
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         pTask = get_task_from_queue(s_TaskQueuePool);
-    )
+    }
     if (NULL == pTask) {
         return false;
     }
@@ -519,7 +519,7 @@ bool scheduler( void )
                     }
                 )
                 */
-                SAFE_ATOM_CODE(
+                SAFE_ATOM_CODE(){
                     if (pTask->ptFlag->bSignal) {
                         //! signal already set
                         pTask->bThreadBlocked = false;
@@ -531,7 +531,7 @@ bool scheduler( void )
                         //! event is not raised
                         pTask->bThreadBlocked = true;
                     }
-                )
+                }
                 break;
             #endif
             } else /*if (fsm_rt_on_going == tState)*/ {
@@ -614,7 +614,7 @@ void set_event(event_t *pEvent)
 
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         //! wake up blocked tasks
         safe_task_t *pTask = ptEvent->ptHead;
         while(NULL != pTask) {
@@ -638,7 +638,7 @@ void set_event(event_t *pEvent)
 //        } else {
 //            ptEvent->bSignal = false;           //!< set flag
 //        }
-    )
+    }
 #endif
 
     
@@ -683,7 +683,7 @@ void leave_critical_section(critical_section_t *ptCritical)
         }
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         if (!ptEvent->bSignal) {
             //! wake up blocked tasks
             safe_task_t *ptTask = ptEvent->ptHead;
@@ -708,7 +708,7 @@ void leave_critical_section(critical_section_t *ptCritical)
                 ptTask->bSignalRaised = true;            //!< set task flag
             }
         }
-    )
+    }
 #endif
 }
 
@@ -729,9 +729,9 @@ void reset_event(event_t *pEvent)
         ptEvent->bSignal = false;
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         ptEvent->bSignal = false;
-    )
+    }
 #endif
 }
 
@@ -779,7 +779,7 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
         }
     )
 #else
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         bResult = ptEvent->bSignal;
         if (!ptEvent->bManualReset) {
             ptEvent->bSignal = false;
@@ -805,7 +805,7 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
                 bResult = false;
             }
         }
-    )
+    }
 #endif
 
     return bResult;
@@ -854,11 +854,11 @@ static bool _register_task( safe_task_t *pTask )
             bResult = false;   
         } 
     )*/
-    SAFE_ATOM_CODE(
+    SAFE_ATOM_CODE(){
         if (!add_task_to_queue(&s_TaskQueuePool[0],pTask)) {
             bResult = false;   
         }
-    )
+    }
 #endif
     return bResult;
 }

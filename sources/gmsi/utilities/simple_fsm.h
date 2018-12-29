@@ -50,6 +50,11 @@
 
 #define simple_fsm(__NAME, ...)                                     \
         __simple_fsm(fsm(__NAME), __VA_ARGS__)
+        
+#define def_simple_fsm(__NAME, ...)                                 \
+        __simple_fsm(fsm(__NAME), __VA_ARGS__)
+        
+#define end_def_simple_fsm(...)
 
 #define __extern_simple_fsm(__FSM_TYPE, ...)                        \
         declare_class(__FSM_TYPE)                                   \
@@ -115,20 +120,12 @@
         __NAME((__FSM) __VA_ARGS__)
 
 #define __state(__STATE, ...)                                                   \
-            case __STATE:{                                                      \
-        __state_entry_##__STATE:                                                \
+            case __STATE:                                                 \
+        __state_entry_##__STATE:{                                               \
                 __VA_ARGS__;                                                    \
-            }break;
+            }
             
-#define state(__STATE, ...)                 __state(__STATE, __VA_ARGS__)
-
-#define __debug_state(__STATE)                                                  \
-            case __STATE:{                                                      \
-        __state_entry_##__STATE:                                                
-#define debug_state(__STATE)                __debug_state(__STATE)
-
-#define end_debug_state(__STATE)                                                \
-            ;} break;
+#define state(__STATE, ...)                 break;__state(__STATE, __VA_ARGS__)
 
 #define on_start(...)                       {__VA_ARGS__;}
 
@@ -225,9 +222,9 @@
                 //the range no debug is allowed
             )
             
-            debug_state(xxxxx)
-                 //the range you can debug with
-            end_debug_state(xxxx)
+            state(xxxxx){
+                //the range you can debug with
+            }
             
         end_debug_body()
 */        
@@ -251,9 +248,9 @@
         
 
 #define __privilege_state(__STATE, ...)                                         \
-            do {                                                                \
+            break;do {                                                          \
                 do {                                                            \
-                    state(__STATE, __VA_ARGS__)                                 \
+                    __state(__STATE, __VA_ARGS__)                               \
                 } while(0); /* add extra while(0) to catch the fsm_continue()*/ \
                 if (this.chState != (__STATE)) {                                \
                     break;                                                      \

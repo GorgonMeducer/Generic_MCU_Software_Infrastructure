@@ -186,7 +186,33 @@ static void app_init(void)
             block_t tBlock;
             uint8_t chBuffer[FRAME_BUFFER_SIZE + sizeof(block_t)];
         } s_tBuffer;
-        BLOCK.Init(&s_tBuffer.tBlock, NULL, sizeof(s_tBuffer), false);
+        /*
+typedef struct {
+    void *          pBuffer;
+    union {
+        struct {
+            uint32_t    BlockSize           : 24;
+            uint32_t    IsNoWrite           : 1;
+            uint32_t    IsNoRead            : 1;
+            uint32_t    IsNoDirectAccess    : 1;
+            uint32_t                        : 5;
+        };
+        uint32_t        wCapability;
+    };
+    uint_fast8_t    chAdapterID;
+} block_cfg_t;
+*/
+        do {
+            const block_cfg_t tCFG = {
+                .pBuffer = NULL,
+                .BlockSize = sizeof(s_tBuffer),
+                //.IsNoWrite = false,
+                //.IsNoRead = false,
+                //.IsNoDirectAccess = false,
+                //.chAdapterID = BLOCK_FREE_TO_ANY
+            };
+            BLOCK.Init(&s_tBuffer.tBlock, (block_cfg_t *)&tCFG);
+        } while(0);
     #endif
         //! initialise simple frame service
         ES_SIMPLE_FRAME_CFG(    &s_tFrame, 
