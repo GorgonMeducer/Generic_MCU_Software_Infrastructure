@@ -233,7 +233,7 @@ END_DEF_INPUT_STREAM_BUFFER(STREAM_IN)
 //! \note add an adapter for serial port
 STREAM_IN_SERIAL_PORT_ADAPTER(STREAM_IN, INPUT_STREAM_BLOCK_COUNT)
 //! @}
-
+    
 
 /*------------------------------------------------------------------------------*
  * Implement Serial Port input interfaces required by STREAM_OUT adapter        *
@@ -326,7 +326,7 @@ bool stdout_init (void)
 */
 int stdout_putchar (int ch) 
 {
-    while(!STREAM_OUT.Stream.WriteByte(ch));
+    while(!STREAM_OUT.Stream.WriteByte(ch)) ;
     
     return ch;
 }

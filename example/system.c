@@ -274,7 +274,7 @@ int main (void)
     #else
         uint8_t chByte;
         if (STREAM_IN.Stream.ReadByte(&chByte)) {
-            STREAM_OUT.Stream.WriteByte(chByte);
+            STREAM_OUT.Stream.WriteByte(chByte );
         } else {
             STREAM_OUT.Stream.Flush();
         }

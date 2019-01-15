@@ -136,13 +136,12 @@ private block_t *init(block_t *ptBlock, block_cfg_t *ptCFG)
     assert(NULL != ptBlock && NULL != ptCFG);
     
     do {
-        if ((ptCFG->BlockSize < sizeof(this))) {
+        
+        if (    (ptCFG->BlockSize < sizeof(this)) 
+            &&  (NULL == ptCFG->pBuffer)) {
             break;
         }
-        if ((!this.IsNoDirectAccess) && (NULL == ptCFG->pBuffer)) {
-            break;
-        }
-
+        
         this.wCapability = ptCFG->wCapability;
 
         if (NULL != ptCFG->pBuffer) {

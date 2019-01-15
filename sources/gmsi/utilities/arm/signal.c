@@ -45,15 +45,18 @@ static const i_code_region_t i_DefaultCodeRegionAtomCode = {
 };
 
 static const i_code_region_t i_DefaultCodeRegionNone = {
+    .chLocalObjSize = 1,
     .OnEnter =          &__default_code_region_none_on_enter,
     .OnLeave =          &__default_code_region_none_on_leave,
 };
 
 const code_region_t DEFAULT_CODE_REGION_ATOM_CODE = {
+    .pTarget = NULL,
     .ptMethods = (i_code_region_t *)&i_DefaultCodeRegionAtomCode,
 };
 
 const code_region_t DEFAULT_CODE_REGION_NONE = {
+    .pTarget = NULL,
     .ptMethods = (i_code_region_t *)&i_DefaultCodeRegionNone,
 };
 
