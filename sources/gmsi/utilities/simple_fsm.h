@@ -120,12 +120,12 @@
         __NAME((__FSM) __VA_ARGS__)
 
 #define __state(__STATE, ...)                                                   \
-            case __STATE:                                                 \
+            case __STATE:                                                       \
         __state_entry_##__STATE:{                                               \
                 __VA_ARGS__;                                                    \
-            }
+            };
             
-#define state(__STATE, ...)                 break;__state(__STATE, __VA_ARGS__)
+#define state(__STATE, ...)                 break; __state(__STATE, __VA_ARGS__) 
 
 #define on_start(...)                       {__VA_ARGS__;}
 
@@ -187,6 +187,7 @@
             case 0:                                                             \
                 ptThis->chState++;                                              \
             __VA_ARGS__                                                         \
+            break;                                                              \
             default:                                                            \
             return fsm_rt_err;                                                  \
         }                                                                       \

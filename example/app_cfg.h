@@ -92,7 +92,7 @@
  *----------------------------------------------------------------------------*/
 //! \name configure safe task service:1.2K for current configuration
 //! @{
-#define TASK_SCHEDULER                      ENABLED
+#define TASK_SCHEDULER                      DISABLED
 #define SAFE_TASK_THREAD_SYNC               ENABLED     //!< disable semaphore support
 #define SAFE_TASK_CRITICAL_SECTION          ENABLED     //!< enable critical support
 #define SAFE_TASK_CALL_STACK                ENABLED

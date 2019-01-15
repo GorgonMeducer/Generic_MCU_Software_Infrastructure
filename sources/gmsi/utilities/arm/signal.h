@@ -86,10 +86,7 @@ Output:
 /*============================ MACROFIED FUNCTIONS ===========================*/
 //! \brief The safe ATOM code section macro
 #define SAFE_ATOM_CODE()                                                        \
-    for(istate_t tState = DISABLE_GLOBAL_INTERRUPT(),                           \
-            TPASTE2(__safe_atom_,__LINE__) = 1;                                 \
-        TPASTE2(__safe_atom_,__LINE__)--;                                       \
-        SET_GLOBAL_INTERRUPT_STATE(tState))
+    code_region(&DEFAULT_CODE_REGION_ATOM_CODE)
 
 //! \brief Exit from the safe atom operations
 #define EXIT_SAFE_ATOM_CODE()           SET_GLOBAL_INTERRUPT_STATE(tState)   

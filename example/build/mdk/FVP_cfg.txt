@@ -2,7 +2,7 @@
 # instance.parameter=value       #(type, mode) default = 'def value' : description : [min..max]
 #----------------------------------------------------------------------------------------------
 
-fvp_mps2.telnetterminal0.mode="telnet"                # (string, init-time) default = 'telnet' : Terminal initialisation mode
+fvp_mps2.telnetterminal0.mode="raw"                # (string, init-time) default = 'telnet' : Terminal initialisation mode
 fvp_mps2.telnetterminal0.start_telnet=1               # (bool  , init-time) default = '1'      : Start telnet if nothing connected
 fvp_mps2.telnetterminal0.start_port=0x1388            # (int   , init-time) default = '0x1388' : Telnet TCP Port Number : [0x0..0xFFFFFFFF]
 fvp_mps2.telnetterminal0.quiet=0                      # (bool  , init-time) default = '0'      : Avoid output on stdout/stderr

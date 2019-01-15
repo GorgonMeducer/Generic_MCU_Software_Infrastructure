@@ -98,6 +98,7 @@ private const block_adapter_t* __get_adapter_interface(block_t *ptItem)
 {
     class_internal(ptItem, ptThis, block_t);
     assert(NULL != ptThis);
+
     block_adapter_t *ptAdapter = NULL;
     
     do {
@@ -136,10 +137,9 @@ private block_t *init(block_t *ptBlock, block_cfg_t *ptCFG)
     assert(NULL != ptBlock && NULL != ptCFG);
     
     do {
-        if ((ptCFG->BlockSize < sizeof(this))) {
-            break;
-        }
-        if ((!this.IsNoDirectAccess) && (NULL == ptCFG->pBuffer)) {
+
+        if (    (ptCFG->BlockSize < sizeof(this)) 
+            &&  (NULL == ptCFG->pBuffer)) {
             break;
         }
 
@@ -366,6 +366,11 @@ private void free_block(block_pool_t *ptObj, block_t *ptItem)
 {
     class_internal(ptObj, ptThis, block_pool_t);
     class_internal(ptItem, ptTarget, block_t);
+    
+    if (NULL == ptItem) {
+        return ;
+    }
+    
     do {
         uint_fast8_t chID = target.chAdapterID;
         assert(ptThis != NULL);
