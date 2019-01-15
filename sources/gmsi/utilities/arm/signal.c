@@ -45,7 +45,7 @@ static const i_code_region_t i_DefaultCodeRegionAtomCode = {
 };
 
 static const i_code_region_t i_DefaultCodeRegionNone = {
-    .chLocalObjSize = 1,
+    .chLocalObjSize = 4,
     .OnEnter =          &__default_code_region_none_on_enter,
     .OnLeave =          &__default_code_region_none_on_leave,
 };
