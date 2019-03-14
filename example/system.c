@@ -275,6 +275,7 @@ int main (void)
         uint8_t chByte;
         if (STREAM_IN.Stream.ReadByte(&chByte)) {
             STREAM_OUT.Stream.WriteByte(chByte );
+            //printf("0x%02x ", chByte);
         } else {
             STREAM_OUT.Stream.Flush();
         }
