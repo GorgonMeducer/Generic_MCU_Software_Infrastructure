@@ -26,9 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-
 #include <cmsis_compiler.h>
-
 
 //! \name The macros to identify the compiler
 //! @{
@@ -41,6 +39,9 @@
 #   define __IS_COMPILER_IAR__                 1
 #endif
 
+
+
+
 //! \note for arm compiler 5
 #ifdef __IS_COMPILER_ARM_COMPILER_5__
 #   undef __IS_COMPILER_ARM_COMPILER_5__
@@ -48,7 +49,7 @@
 #if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
 #   define __IS_COMPILER_ARM_COMPILER_5__      1
 #endif
-
+//! @}
 
 //! \note for arm compiler 6
 #ifdef __IS_COMPILER_ARM_COMPILER_6__
@@ -56,22 +57,28 @@
 #endif
 #if ((__ARMCC_VERSION >= 6000000) && (__ARMCC_VERSION < 7000000))
 #   define __IS_COMPILER_ARM_COMPILER_6__      1
+#endif
+
+#ifdef __IS_COMPILER_LLVM__
+#   undef  __IS_COMPILER_LLVM__
+#endif
+#if defined(__clang__)
+#   define __IS_COMPILER_LLVM__                1
 #else
 //! \note for gcc
-#   ifdef __IS_COMPILER_GCC__
-#       undef __IS_COMPILER_GCC__
-#   endif
-#   if defined(__GNUC__)
-#       define __IS_COMPILER_GCC__                 1
-#   endif
-
+#ifdef __IS_COMPILER_GCC__
+#   undef __IS_COMPILER_GCC__
+#endif
+#if defined(__GNUC__)
+#   define __IS_COMPILER_GCC__                 1
+#endif
+//! @}
 #endif
 //! @}
 
 #if __IS_COMPILER_IAR__
 #   include <intrinsics.h>
 #endif
-
 
 
 /* -----------------  Start of section using anonymous unions  -------------- */
@@ -162,7 +169,6 @@
     #define NOP()                       __asm__ __volatile__ ("nop");
 #endif
 
-
 //! \brief none standard memory types
 #if __IS_COMPILER_IAR__
 #   define ROM_FLASH            _Pragma(__STR(location=".rom.flash")) const
@@ -171,27 +177,27 @@
 #   define ROOT                 __root
 #   define INLINE               inline
 #   define NO_INLINE            noinline
-#   define ALWAYS_INLINE        __attribute__((always_inline))
+#   define ALWAYS_INLINE        inline __attribute__((always_inline))
 #   define WEAK                 __weak
 #   define RAMFUNC              __ramfunc
 #   define __asm__              __asm
-#   define __ALIGN(__N)         _Pragma(__STR(data_alignment=__N))
+#   define __ALIGN(__N)         __attribute__((aligned (__N)))
 #   define __AT_ADDR(__ADDR)    @ __ADDR
-#   define __SECTION(__SEC)     _Pragma(__STR(location=__SEC))
+#   define __SECTION(__SEC)     __attribute__((section (__SEC)))
 #   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
                                 _Pragma(__STR(weak __ORIGIN=__ALIAS))
-#   define PACKED               __packed
-#   define UNALIGNED            __packed
+#   define PACKED               __attribute__((packed))
+#   define UNALIGNED            __attribute__((packed))
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
 
 #elif __IS_COMPILER_ARM_COMPILER_5__
 #   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
 #   define ROM_EEPROM           __attribute__(( section( ".rom.eeprom"))) const
-#   define NO_INIT              __attribute__(( section( ".bss.noinit"),zero_init))
+#   define NO_INIT              __attribute__( ( section( ".bss.noinit"),zero_init) )
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               __inline
 #   define NO_INLINE            __attribute__((noinline))
-#   define ALWAYS_INLINE        __attribute__((always_inline))
+#   define ALWAYS_INLINE        __inline __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
@@ -201,18 +207,18 @@
 #   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
                                 __attribute__((weakref(__STR(__ALIAS))))
                                 
-#   define PACKED               __packed
-#   define UNALIGNED            __packed
+#   define PACKED               __attribute__((packed))
+#   define UNALIGNED            __attribute__((packed))
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
 
 #elif __IS_COMPILER_ARM_COMPILER_6__
 #   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
 #   define ROM_EEPROM           __attribute__(( section( ".rom.eeprom"))) const
-#   define NO_INIT              __attribute__(( section( ".bss.noinit")))
+#   define NO_INIT              __attribute__( ( section( ".bss.noinit")) )
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               __inline
 #   define NO_INLINE            __attribute__((noinline))
-#   define ALWAYS_INLINE        __attribute__((always_inline))
+#   define ALWAYS_INLINE        __inline __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
@@ -225,6 +231,27 @@
 #   define PACKED               __attribute__((packed))
 #   define UNALIGNED            __unaligned
 #   define TRANSPARENT_UNION    __attribute__((transparent_union))
+#elif __IS_COMPILER_LLVM__
+
+#   define ROM_FLASH            __attribute__(( __section__( ".rom.flash"))) const
+#   define ROM_EEPROM           __attribute__(( __section__( ".rom.eeprom"))) const
+#   define NO_INIT              __attribute__(( __section__( ".bss.noinit")))
+#   define ROOT                 __used    
+#   define INLINE               inline
+#   define NO_INLINE            __noinline
+#   define ALWAYS_INLINE        __always_inline
+#   define WEAK                 __weak_symbol
+#   define RAMFUNC              __attribute__((__section__ (".textrw")))
+#   define __asm__              __asm
+#   define __ALIGN(__N)         __aligned(__N)
+#   define __AT_ADDR(__ADDR)    __section(".ARM.__at_" #__ADDR) 
+#   define __SECTION(__SEC)     __section(__SEC)
+#   define __WEAK_ALIAS(__ORIGIN, __ALIAS)                                      \
+                                __weak_reference(__ORIGIN,__ALIAS)
+
+#   define PACKED               __packed
+#   define UNALIGNED            __packed
+#   define TRANSPARENT_UNION    __attribute__((__transparent_union__))
 
 #else  /*__IS_COMPILER_GCC__: Using GCC as default for those GCC compliant compilers*/
 #   define ROM_FLASH            __attribute__(( section( ".rom.flash"))) const
@@ -233,12 +260,12 @@
 #   define ROOT                 __attribute__((used))    
 #   define INLINE               inline
 #   define NO_INLINE            __attribute__((noinline))
-#   define ALWAYS_INLINE        __attribute__((always_inline))
+#   define ALWAYS_INLINE        inline __attribute__((always_inline))
 #   define WEAK                 __attribute__((weak))
 #   define RAMFUNC              __attribute__((section (".textrw")))
 #   define __asm__              __asm
 #   define __ALIGN(__N)         __attribute__((aligned (__N)))
-#   define __AT_ADDR(__ADDR)    __attribute__((at(__ADDR))) 
+#   define __AT_ADDR(__ADDR)    __section(".ARM.__at_" #__ADDR) 
 #   define __SECTION(__SEC)     __attribute__((section (__SEC)))
 #   define __WEAK_ALIAS(__ORIGIN, __ALIAS) \
                                 __attribute__((weakref(__STR(__ALIAS))))
@@ -249,7 +276,7 @@
 
 #endif
 
-#define WEAK_ALIAS(__ORIGIN, __ALIAS)   \
+#define WEAK_ALIAS(__ORIGIN, __ALIAS)                                           \
                             __WEAK_ALIAS(__ORIGIN, __ALIAS)
 #define AT_ADDR(__ADDR)     __AT_ADDR(__ADDR)
 #define ALIGN(__N)          __ALIGN(__N)
@@ -342,35 +369,6 @@ __attribute__((always_inline)) static inline void ____set_PRIMASK(uint32_t priMa
 
 /*============================ TYPES =========================================*/
 /*============================ INCLUDES ======================================*/
-
-/*----------------------------------------------------------------------------*
- * Device Dependent Compiler Files                                            *
- *----------------------------------------------------------------------------*/
-#if     defined(__CORTEX_M0__)
-#include "cortex_m0_compiler.h"
-#elif   defined(__CORTEX_M0P__)
-#include "cortex_m0p_compiler.h"
-#elif   defined(__CORTEX_M1__)
-#include "cortex_m1_compiler.h"
-#elif   defined(__CORTEX_M3__)
-#include "cortex_m3_compiler.h"
-#elif   defined(__CORTEX_M4__)
-#include "cortex_m4_compiler.h"
-#elif   defined(__CORTEX_M7__)
-#include "cortex_m7_compiler.h"
-#elif   defined(__CORTEX_M23__)
-#include "cortex_m23_compiler.h"
-#elif   defined(__CORTEX_M33__)
-#include "cortex_m33_compiler.h"
-#else
-
-//! \brief The mcu memory endian mode
-# define __BIG_ENDIAN__                 false
-
-/*ARM Cortex M4 implementation for interrupt priority shift*/
-# define ARM_INTERRUPT_LEVEL_BITS       4
-
-#endif
 
 //! \brief for interrupt 
 #include ".\signal.h"

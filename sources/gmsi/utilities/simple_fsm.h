@@ -41,32 +41,38 @@
 
 #define fsm(__NAME) fsm_##__NAME##_t
 
-#define __simple_fsm(__FSM_TYPE, ...)                               \
-        declare_class(__FSM_TYPE)                                   \
-        def_class(__FSM_TYPE)                                       \
-            uint_fast8_t chState;                                   \
-            __VA_ARGS__                                             \
+#define __simple_fsm(__FSM_TYPE, ...)                                           \
+        def_class(__FSM_TYPE)                                                   \
+            uint_fast8_t chState;                                               \
+            __VA_ARGS__                                                         \
         end_def_class(__FSM_TYPE)
 
-#define simple_fsm(__NAME, ...)                                     \
+#define simple_fsm(__NAME, ...)                                                 \
+        declare_simple_fsm(__NAME);                                             \
         __simple_fsm(fsm(__NAME), __VA_ARGS__)
         
-#define def_simple_fsm(__NAME, ...)                                 \
+#define def_simple_fsm(__NAME, ...)                                             \
         __simple_fsm(fsm(__NAME), __VA_ARGS__)
         
 #define end_def_simple_fsm(...)
 
-#define __extern_simple_fsm(__FSM_TYPE, ...)                        \
-        declare_class(__FSM_TYPE)                                   \
-        extern_class(__FSM_TYPE)                                    \
-            uint_fast8_t chState;                                   \
-            __VA_ARGS__                                             \
+#define def_fsm(__NAME, ...)                                                    \
+        __simple_fsm(fsm(__NAME), __VA_ARGS__)
+
+#define end_def_fsm(...)
+
+#define __extern_simple_fsm(__FSM_TYPE, ...)                                    \
+        declare_class(__FSM_TYPE)                                               \
+        extern_class(__FSM_TYPE)                                                \
+            uint_fast8_t chState;                                               \
+            __VA_ARGS__                                                         \
         end_extern_class(__FSM_TYPE)                                
 
-#define __declare_simple_fsm(__FSM_TYPE)                            \
+#define __declare_simple_fsm(__FSM_TYPE)                                        \
         declare_class(__FSM_TYPE)
 #define declare_simple_fsm(__NAME)  __declare_simple_fsm(fsm(__NAME))
 
+#define declare_fsm(__NAME)  __declare_simple_fsm(fsm(__NAME))
 
 #define extern_simple_fsm(__NAME, ...)                                          \
         __extern_simple_fsm(fsm(__NAME), __VA_ARGS__)  
@@ -117,6 +123,9 @@
 //! @}
 
 #define call_fsm(__NAME, __FSM, ...)                                            \
+        __NAME((__FSM) __VA_ARGS__)
+
+#define call_simple_fsm(__NAME, __FSM, ...)                                     \
         __NAME((__FSM) __VA_ARGS__)
 
 #define __state(__STATE, ...)                                                   \
@@ -172,6 +181,8 @@
         __NAME##_init((__FSM) __VA_ARGS__)
 
 
+#define init_simple_fsm(__NAME, __FSM, ...)                                     \
+        init_fsm((__FSM) __VA_ARGS__)
         
 
 #define __implement_fsm_ex(__NAME, __TYPE, ...)                                 \
@@ -197,18 +208,18 @@
 
 #define body(...)               __body(__VA_ARGS__)
 
-#define debug_body()                                                            \
+#define body_begin()                                                            \
             switch (ptThis->chState) {                                          \
-            case 0:                                                             \
-                ptThis->chState++;                                              
+                case 0:                                                         \
+                    ptThis->chState++;                                              
 
-#define end_debug_body()                                                        \
-            default:                                                            \
-            return fsm_rt_err;                                                  \
+#define body_end()                                                              \
+                break;                                                          \
+                default:                                                        \
+                return fsm_rt_err;                                              \
+            }                                                                   \
         }                                                                       \
-                                                                                \
-        return fsm_rt_on_going;                                                 \
-    }
+        return fsm_rt_on_going;  
         
 /*! \note Debug Support: You can use debug_body() together with debug_state()
  *!       to enable debug specified state. Which means you are ale to set break
