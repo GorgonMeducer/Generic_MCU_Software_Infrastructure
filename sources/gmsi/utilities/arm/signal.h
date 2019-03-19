@@ -83,6 +83,10 @@ Output:
 
 
 /*============================ MACROS ========================================*/
+#ifndef IAR_PATCH_CODE_REGION_LOCAL_SIZE
+#   define IAR_PATCH_CODE_REGION_LOCAL_SIZE     4
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 //! \brief The safe ATOM code section macro
 #define SAFE_ATOM_CODE()                                                        \
@@ -146,8 +150,21 @@ Output:
                 (*pLocker) = UNLOCKED;                                          \
             )
 
-
-#define __CODE_REGION(__REGION_ADDR)                                            \
+#if __IS_COMPILER_IAR__
+#   define __CODE_REGION(__REGION_ADDR)                                         \
+    for(code_region_t *ptCodeRegion = (code_region_t *)(__REGION_ADDR);         \
+        NULL != ptCodeRegion;                                                   \
+        ptCodeRegion = NULL)                                                    \
+        for(uint8_t chLocal[IAR_PATCH_CODE_REGION_LOCAL_SIZE],                  \
+                TPASTE2(__code_region_, __LINE__) = 1;                          \
+            TPASTE2(__code_region_, __LINE__)-- ?                               \
+                (ptCodeRegion->ptMethods->OnEnter(  ptCodeRegion->pTarget,      \
+                                                    chLocal)                    \
+                    ,1)                                                         \
+                : 0;                                                            \
+            ptCodeRegion->ptMethods->OnLeave(ptCodeRegion->pTarget, chLocal))
+#else
+#   define __CODE_REGION(__REGION_ADDR)                                         \
     for(code_region_t *ptCodeRegion = (code_region_t *)(__REGION_ADDR);         \
         NULL != ptCodeRegion;                                                   \
         ptCodeRegion = NULL)                                                    \
@@ -159,7 +176,8 @@ Output:
                     ,1)                                                         \
                 : 0;                                                            \
             ptCodeRegion->ptMethods->OnLeave(ptCodeRegion->pTarget, chLocal))
-        
+#endif
+
 #define EXIT_CODE_REGION()                                                      \
             ptCodeRegion->ptMethods->OnLeave(tCodeRegion.pTarget, chLocal)
 #define exit_code_region()  EXIT_CODE_REGION()
