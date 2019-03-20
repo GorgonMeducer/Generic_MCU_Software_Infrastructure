@@ -27,6 +27,8 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
+typedef struct gdc_t gdc_t;
+
 //! \name grid
 //! @{
 typedef struct {
@@ -64,18 +66,18 @@ typedef struct {
 
 //*! \name grid drawing context
 //! @{
-DEF_INTERFACE(i_gdc_t, 
-        DEF_INTERFACE(grid_property_t)
-            fsm_rt_t        (*Set)(grid_t tGrid);
-            fsm_rt_t        (*Get)(grid_t *ptGrid);
-            fsm_rt_t        (*SaveCurrent)(void);
-            fsm_rt_t        (*Resume)(void);
-        END_DEF_INTERFACE(grid_property_t)
+def_interface(i_gdc_t, 
+        def_interface(grid_property_t)
+            fsm_rt_t        (*Set)(gdc_t *ptThis, grid_t tGrid);
+            fsm_rt_t        (*Get)(gdc_t *ptThis, grid_t *ptGrid);
+            fsm_rt_t        (*SaveCurrent)(gdc_t *ptThis);
+            fsm_rt_t        (*Resume)(gdc_t *ptThis);
+        end_def_interface(grid_property_t)
         
-        DEF_INTERFACE(grid_brush_property_t)
-            fsm_rt_t        (*Set)(grid_brush_t tBrush);
-            grid_brush_t    (*Get)(void);
-        END_DEF_INTERFACE(grid_brush_property_t)
+        def_interface(grid_brush_property_t)
+            fsm_rt_t        (*Set)(gdc_t *ptThis, grid_brush_t tBrush);
+            grid_brush_t    (*Get)(gdc_t *ptThis);
+        end_def_interface(grid_brush_property_t)
     )
     const struct {
         int_fast8_t         chWidth;
@@ -83,9 +85,9 @@ DEF_INTERFACE(i_gdc_t,
     }                       Info;
     grid_property_t         Position;
     grid_brush_property_t   Color;
-    fsm_rt_t                (*Clear)(void);
-    fsm_rt_t                (*Print)(uint8_t *pchString, uint_fast16_t hwSize);
-END_DEF_INTERFACE(i_gdc_t)
+    fsm_rt_t                (*Clear)(gdc_t *ptThis);
+    fsm_rt_t                (*Print)(gdc_t *ptThis, uint8_t *pchString, uint_fast16_t hwSize);
+end_def_interface(i_gdc_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
