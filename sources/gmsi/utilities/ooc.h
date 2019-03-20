@@ -167,28 +167,6 @@
             __EXTERN_CLASS_OBJ( __TYPE, __OBJ )
 
 
-
-
-/*! \note Support for protected members
- */
-//! @{
-#define __DECLARE_PROTECTED(__BELONGS_TO)           DECLARE_CLASS           (__p_##__BELONGS_TO)
-#define __DEF_PROTECTED(__BELONGS_TO, ...)          DEF_CLASS               (__p_##__BELONGS_TO, __VA_ARGS__ )
-#define __END_DEF_PROTECTED(__BELONGS_TO, ...)      END_DEF_CLASS           (__p_##__BELONGS_TO, __VA_ARGS__ )
-#define __EXTERN_PROTECTED(__BELONGS_TO, ...)       EXTERN_CLASS            (__p_##__BELONGS_TO, __VA_ARGS__ )
-#define __END_EXTERN_PROTECTED(__BELONGS_TO, ...)   END_EXTERN_CLASS        (__p_##__BELONGS_TO, __VA_ARGS__ )
-#define __PROTECTED(__BELONGS_TO)                   __p_##__BELONGS_TO
-#define __PROTECTED_CONTENT(__BELONGS_TO)           CLASS                   (__p_##__BELONGS_TO)
-
-#define DECLARE_PROTECTED(__BELONGS_TO)             __DECLARE_PROTECTED     (__BELONGS_TO) 
-#define DEF_PROTECTED(__BELONGS_TO, ...)            __DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
-#define END_DEF_PROTECTED(__BELONGS_TO, ...)        __END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
-#define EXTERN_PROTECTED(__BELONGS_TO, ...)         __EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
-#define END_EXTERN_PROTECTED(__BELONGS_TO, ...)     __END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
-#define PROTECTED(__BELONGS_TO)                     __PROTECTED             (__BELONGS_TO)
-#define PROTECTED_CONTENT(__BELONGS_TO)             __PROTECTED_CONTENT     (__BELONGS_TO)
-//! @}
-
 //! \name interface definition
 //! @{
 #define DEF_INTERFACE(__NAME,...)                                               \
@@ -272,15 +250,6 @@
 #define def_structure(__NAME, ...)          DEF_STRUCTURE(__NAME, __VA_ARGS__)
 #define end_def_structure(__NAME)           END_DEF_STRUCTURE(__NAME)
 
-#define def_protected(__BELONGS_TO, ...)            DEF_PROTECTED         (__BELONGS_TO, __VA_ARGS__ )
-#define end_def_protected(__BELONGS_TO, ...)        END_DEF_PROTECTED     (__BELONGS_TO, __VA_ARGS__ )
-#define extern_protected(__BELONGS_TO, ...)         EXTERN_PROTECTED      (__BELONGS_TO, __VA_ARGS__ )
-#define end_extern_protected(__BELONGS_TO, ...)     END_EXTERN_PROTECTED  (__BELONGS_TO, __VA_ARGS__ )
-#define protected(__BELONGS_TO)                     PROTECTED             (__BELONGS_TO)
-#define protected_content(__BELONGS_TO)             PROTECTED_CONTENT     (__BELONGS_TO)
-#define declare_protected(__BELONGS_TO)             DECLARE_PROTECTED     (__BELONGS_TO)
-
-#define this_protected(__TYPE)          type_convert(ref_obj_as(this, protected(__TYPE)), protected_content(__TYPE))
 #define this_interface(__INTERFACE)     convert_obj_as(this, __INTERFACE)
 #define base_obj(__TYPE)                convert_obj_as(this, __TYPE)
 
