@@ -62,16 +62,17 @@
 #ifdef __IS_COMPILER_LLVM__
 #   undef  __IS_COMPILER_LLVM__
 #endif
-#if defined(__clang__)
+#if defined(__clang__) && !__IS_COMPILER_ARM_COMPILER_6__
 #   define __IS_COMPILER_LLVM__                1
 #else
 //! \note for gcc
 #ifdef __IS_COMPILER_GCC__
 #   undef __IS_COMPILER_GCC__
 #endif
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !(__IS_COMPILER_ARM_COMPILER_6__ || __IS_COMPILER_LLVM__)
 #   define __IS_COMPILER_GCC__                 1
 #endif
+//! @}
 //! @}
 #endif
 //! @}
