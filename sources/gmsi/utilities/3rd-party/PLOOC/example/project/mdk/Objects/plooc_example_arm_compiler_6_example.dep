@@ -1,0 +1,138 @@
+Dependencies for Project 'plooc_example', Target 'arm_compiler_6_example': (DO NOT MODIFY !)
+F (.\platform.c)(0x5CB71F52)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/platform.o -MD)
+I (..\mdk\platform.h)(0x5CB71E3D)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\Device.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5C4154AA)
+F (..\main.c)(0x5CB7617C)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/main.o -MD)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5C4154AA)
+I (..\mdk\platform.h)(0x5CB71E3D)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\Device.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)
+I (..\..\..\example\byte_queue\byte_queue.h)(0x5CB75413)
+I (..\..\..\..\PLOOC\plooc.h)(0x5CB72C4C)
+I (..\..\..\..\PLOOC\plooc_class.h)(0x5CBB7B47)
+I (..\..\..\..\PLOOC\.\plooc_class_strict.h)(0x5CBB7BAD)
+I (..\..\..\example\enhanced_byte_queue\enhanced_byte_queue.h)(0x5CB75C36)
+I (..\..\..\example\enhanced_byte_queue\..\byte_queue\byte_queue.h)(0x5CB75413)
+F (.\platform.h)(0x5CB71E3D)()
+F (..\..\..\plooc.h)(0x5CB72C4C)()
+F (..\..\..\plooc_class.h)(0x5CBB7B47)()
+F (..\..\..\plooc_class_simple.h)(0x5CBB7B68)()
+F (..\..\..\plooc_class_strict.h)(0x5CBB7BAD)()
+F (..\..\byte_queue\byte_queue.h)(0x5CB75413)()
+F (..\..\byte_queue\byte_queue.c)(0x5CB7517E)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/byte_queue.o -MD)
+I (..\..\byte_queue\.\byte_queue.h)(0x5CB75413)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+I (..\..\..\..\PLOOC\plooc.h)(0x5CB72C4C)
+I (..\..\..\..\PLOOC\plooc_class.h)(0x5CBB7B47)
+I (..\..\..\..\PLOOC\.\plooc_class_strict.h)(0x5CBB7BAD)
+I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x5C4154AA)
+F (..\..\enhanced_byte_queue\enhanced_byte_queue.c)(0x5CB76066)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/enhanced_byte_queue.o -MD)
+I (..\..\enhanced_byte_queue\.\enhanced_byte_queue.h)(0x5CB75C36)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+I (..\..\..\..\PLOOC\plooc.h)(0x5CB72C4C)
+I (..\..\enhanced_byte_queue\..\byte_queue\byte_queue.h)(0x5CB75413)
+I (..\..\..\..\PLOOC\plooc_class.h)(0x5CBB7B47)
+I (..\..\..\..\PLOOC\.\plooc_class_strict.h)(0x5CBB7BAD)
+I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x5C4154AA)
+F (..\..\enhanced_byte_queue\enhanced_byte_queue.h)(0x5CB75C36)()
+F (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\GLCD_Fonts.c)(0x59846484)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/glcd_fonts.o -MD)
+I (C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.8.0\Board\Board_GLCD.h)(0x5877704C)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+F (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\GLCD_V2M-MPS2.c)(0x59846484)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/glcd_v2m-mps2.o -MD)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stddef.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\SMM_MPS2.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\Device.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\GLCD_Config.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.8.0\Board\Board_GLCD.h)(0x5877704C)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+F (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\LED_V2M-MPS2.c)(0x59846484)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/led_v2m-mps2.o -MD)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\SMM_MPS2.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\Device.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)
+I (C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.8.0\Board\Board_LED.h)(0x5877704C)
+F (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\CMSIS\Driver\USART_V2M-MPS2.c)(0x59F1D4B8)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/usart_v2m-mps2.o -MD)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\CMSIS\Driver\USART_V2M-MPS2.h)(0x59846484)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Driver\Include\Driver_USART.h)(0x5C8A94FC)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Driver\Include\Driver_Common.h)(0x5C8A94FC)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stddef.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common\Device.h)(0x59846484)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)
+I (RTE\Device\CMSDK_CM3\RTE_Device.h)(0x5CB71B37)
+I (RTE\_arm_compiler_6_example\RTE_Components.h)(0x5CB71BF2)
+F (C:\Keil_v5\ARM\PACK\Keil\ARM_Compiler\1.6.1\Source\retarget_io.c)(0x584E9A3E)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/retarget_io.o -MD)
+I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\assert.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\ARMCLANG\include\rt_sys.h)(0x5C4154AA)
+I (RTE\_arm_compiler_6_example\RTE_Components.h)(0x5CB71BF2)
+F (RTE\Device\CMSDK_CM3\RTE_Device.h)(0x5CB71B37)()
+F (RTE\Device\CMSDK_CM3\startup_CMSDK_CM3.s)(0x58241A06)(--cpu Cortex-M3 -g-I.\RTE\Device\CMSDK_CM3-I.\RTE\_arm_compiler_6_example-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Driver\Include-IC:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.8.0\Board-IC:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Boards\ARM\V2M-MPS2\Common-IC:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include--pd "__UVISION_VERSION SETA 527"--pd "_RTE_ SETA 1"--pd "CMSDK_CM3 SETA 1"--list .\listings\startup_cmsdk_cm3.lst--xref -o .\objects\startup_cmsdk_cm3.o--depend .\objects\startup_cmsdk_cm3.d)
+F (RTE\Device\CMSDK_CM3\system_CMSDK_CM3.c)(0x563788E2)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Ofast -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../mdk -I ../../../example -I ../../../../PLOOC -fms-extensions -Wno-microsoft-anon-tag -Wno-empty-body-I./RTE/Device/CMSDK_CM3-I./RTE/_arm_compiler_6_example-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Core/Include-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.5.1/CMSIS/Driver/Include-IC:/Keil_v5/ARM/PACK/Keil/MDK-Middleware/7.8.0/Board-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Boards/ARM/V2M-MPS2/Common-IC:/Keil_v5/ARM/PACK/Keil/V2M-MPS2_CMx_BSP/1.7.0/Device/CMSDK_CM3/Include-D__UVISION_VERSION="527" -D_RTE_ -DCMSDK_CM3 -D_MSC_VER-o ./objects/system_cmsdk_cm3.o -MD)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\CMSDK_CM3.h)(0x57064988)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5C4154AA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h)(0x5B9784C4)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armclang.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F25F8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x5C492DAA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8FBE54)
+I (C:\Keil_v5\ARM\PACK\Keil\V2M-MPS2_CMx_BSP\1.7.0\Device\CMSDK_CM3\Include\system_CMSDK_CM3.h)(0x56FE347A)

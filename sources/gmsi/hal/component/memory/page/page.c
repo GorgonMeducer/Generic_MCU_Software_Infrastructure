@@ -52,10 +52,10 @@ typedef struct {
 }page_cfg_t;
 //! @}
 
-DECLARE_CLASS(page_t)
+declare_class(page_t)
 //! \name class page_t
 //! @{
-DEF_CLASS(page_t)
+def_class(page_t)
     const i_page_t  tIO;
     void            *pObj;
     uint8_t         *pchBuffer;
@@ -68,7 +68,7 @@ DEF_CLASS(page_t)
     uint16_t        hwCount;
     uint32_t        wAddress;
     uint32_t        wPageAddress;
-END_DEF_CLASS(page_t)
+end_def_class(page_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -83,7 +83,8 @@ END_DEF_CLASS(page_t)
  */
 static bool is_page_interface_valid(page_t *ptPage)
 {
-    CLASS(page_t) *ptThis = (CLASS(page_t) *)ptPage;
+    class_internal(ptPage, ptThis, page_t);
+
     if ( (0 == this.hwPageSize) 
             ||  (NULL == this.pchBuffer)
             ||  (NULL == this.tIO.fnPageErase)
@@ -104,7 +105,7 @@ static bool is_page_interface_valid(page_t *ptPage)
  */
 bool page_init(page_t *ptPage, page_cfg_t *ptCFG)
 {
-    CLASS(page_t) *ptThis = (CLASS(page_t) *)ptPage;
+    class_internal(ptPage, ptThis, page_t);
 
     if (NULL == ptPage || NULL == ptCFG) {
         return false;
@@ -128,7 +129,7 @@ bool page_init(page_t *ptPage, page_cfg_t *ptCFG)
     return true;
 }
 
-static void modify_leading_page(CLASS(page_t) *ptThis)
+static void modify_leading_page(class(page_t) *ptThis)
 {
     if (this.bModified) {
         return ;
@@ -168,7 +169,7 @@ static void modify_leading_page(CLASS(page_t) *ptThis)
     } while(false);
 }
 
-static void modify_final_page(CLASS(page_t) *ptThis)
+static void modify_final_page(class(page_t) *ptThis)
 {
     if (this.bModified) {
         return ;
@@ -218,7 +219,7 @@ static void modify_final_page(CLASS(page_t) *ptThis)
 fsm_rt_t write_memory_disregard_page( page_t *ptPage, uint32_t wAddress,
      uint8_t *pchStream, uint_fast16_t hwSize )
 {
-    CLASS(page_t) *ptThis = (CLASS(page_t) *)ptPage;
+    class_internal(ptPage, ptThis, page_t);
     fsm_rt_t tfsm = fsm_rt_on_going;
     fsm_rt_t tSubFSM;
     
@@ -440,7 +441,7 @@ fsm_rt_t write_memory_disregard_page( page_t *ptPage, uint32_t wAddress,
 fsm_rt_t read_memory_disregard_page( page_t *ptPage, uint32_t wAddress, 
     uint8_t *pchStream, uint_fast16_t hwSize )
 {
-    CLASS(page_t) *ptThis = (CLASS(page_t) *)ptPage;
+    class_internal(ptPage, ptThis, page_t);
     fsm_rt_t tfsm = fsm_rt_on_going;
     fsm_rt_t tSubFSM;
 

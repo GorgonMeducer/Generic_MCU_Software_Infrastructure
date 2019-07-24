@@ -356,7 +356,7 @@ bool scheduler( void )
 
     do {
     #if SAFE_TASK_CALL_STACK == ENABLED
-        volatile CLASS(safe_call_stack_item_t) *ptRoutine;
+        volatile class(safe_call_stack_item_t) *ptRoutine;
     #endif
         SAFE_TASK_QUEUE *ptQueue = get_free_task_queue();
         if (NULL == ptQueue) {
@@ -470,7 +470,7 @@ bool scheduler( void )
 
     do {
     #if SAFE_TASK_CALL_STACK == ENABLED
-        volatile CLASS(safe_call_stack_item_t) *ptRoutine;
+        volatile class(safe_call_stack_item_t) *ptRoutine;
     #endif
         pTask->bStateChanged = false;
     #if SAFE_TASK_CALL_STACK == ENABLED
@@ -558,7 +558,7 @@ bool scheduler( void )
  */
 event_t *create_event(event_t *pEvent, bool bManualReset, bool bInitialState)
 {
-    CLASS(fsm_flag_t) *ptEvent = (CLASS(fsm_flag_t) *)pEvent; 
+    class(fsm_flag_t) *ptEvent = (class(fsm_flag_t) *)pEvent; 
     do {
         if (NULL == ptEvent) {
             break;
@@ -582,7 +582,7 @@ event_t *create_event(event_t *pEvent, bool bManualReset, bool bInitialState)
  */
 void set_event(event_t *pEvent) 
 {
-    CLASS(fsm_flag_t) *ptEvent = (CLASS(fsm_flag_t) *)pEvent; 
+    class(fsm_flag_t) *ptEvent = (class(fsm_flag_t) *)pEvent; 
     if (NULL == ptEvent) {
         return ;
     }
@@ -651,7 +651,7 @@ void set_event(event_t *pEvent)
  */
 void leave_critical_section(critical_section_t *ptCritical)
 {
-    CLASS(fsm_flag_t) *ptEvent = (CLASS(fsm_flag_t) *)ptCritical; 
+    class(fsm_flag_t) *ptEvent = (class(fsm_flag_t) *)ptCritical; 
     if (NULL == ptEvent) {
         return ;
     }
@@ -720,7 +720,7 @@ void leave_critical_section(critical_section_t *ptCritical)
  */
 void reset_event(event_t *pEvent)
 {
-    CLASS(fsm_flag_t) *ptEvent = (CLASS(fsm_flag_t) *)pEvent; 
+    class(fsm_flag_t) *ptEvent = (class(fsm_flag_t) *)pEvent; 
     if (NULL == ptEvent) {
         return ;
     }
@@ -745,7 +745,7 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
 {
     bool bResult = true;
     safe_task_t *pTask = (safe_task_t *)ptTask;
-    CLASS(fsm_flag_t) *ptEvent = (CLASS(fsm_flag_t) *)ptFlag; 
+    class(fsm_flag_t) *ptEvent = (class(fsm_flag_t) *)ptFlag; 
     if (NULL == ptEvent) {
         return bResult;                         //!< wait nothing
     }
@@ -900,7 +900,7 @@ bool call_task_ex( void *pT,
     }
 
     do {
-        volatile CLASS(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
+        volatile class(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
         ptRoutine->fnRoutine = fnRoutine;
         ptRoutine->pArg = pArg;
     } while (false);

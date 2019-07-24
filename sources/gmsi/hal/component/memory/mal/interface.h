@@ -63,11 +63,11 @@ typedef struct {
 
 /*============================ DEPENDENT TYPES ===============================*/
 
-DECLARE_CLASS(mem_t)
+declare_class(mem_t)
 
 //! \name memory control block
 //! @{
-DEF_INTERFACE(i_mcb_t)
+def_interface(i_mcb_t)
 
     mem_info_t      (*Info)     (mem_t *ptMal);
                                                                                   
@@ -80,12 +80,12 @@ DEF_INTERFACE(i_mcb_t)
     fsm_rt_t        (*Config)   (mem_t *ptMal, void *ptCFG);
     em_mem_status_t (*GetStatus)(mem_t *ptMal);
 
-END_DEF_INTERFACE(i_mcb_t)   
+end_def_interface(i_mcb_t)   
 //! @}
 
 //! \name memory page access interface
 //! @{
-DEF_INTERFACE(i_mem_page_t)
+def_interface(i_mem_page_t)
 
     fsm_rt_t (*PageWrite)   (   mem_t *ptMal, 
                                 uint32_t wPageAddress, void *ptBuffer);
@@ -102,26 +102,30 @@ DEF_INTERFACE(i_mem_page_t)
                                 uint_fast16_t hwSize);
     fsm_rt_t (*Erase)       (   mem_t *ptMal);
 
-END_DEF_INTERFACE(i_mem_page_t)
+end_def_interface(i_mem_page_t)
 //! @}
     
 
 //! \name Memory Abstraction Layers
 //! @{
-DEF_INTERFACE(i_mem_t)  
-    IMPLEMENT(i_mcb_t) 
-    IMPLEMENT(i_mem_page_t)
+def_interface(i_mem_t)  
+    implement(i_mcb_t) 
+    implement(i_mem_page_t)
     
-END_DEF_INTERFACE(i_mem_t)
+end_def_interface(i_mem_t)
 //! @}
 
 //! \brief define abstract class mem_t
-DEF_CLASS(mem_t, REF_INTERFACE(i_mem_t))
+def_class(mem_t, ref_interface(i_mem_t))
     page_t *ptPage;
 
-END_DEF_CLASS(mem_t, REF_INTERFACE(i_mem_t))
+end_def_class(mem_t)
 
+//! \brief define abstract class mem_t
+extern_class(mem_t, ref_interface(i_mem_t))
+    page_t *ptPage;
 
+end_extern_class(mem_t)
 
 /*============================ INCLUDES ======================================*/
 /*============================ MACROS ========================================*/

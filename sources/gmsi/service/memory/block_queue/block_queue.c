@@ -25,6 +25,7 @@
 #endif
 
 #include "..\block\block.h"
+#include "./block_queue.h"
 #include <string.h>
 /*============================ MACROS ========================================*/
 
@@ -42,12 +43,6 @@ def_class(block_queue_t)                            //!< inherit from pool Strea
     uint32_t                 wCount;
 end_def_class(block_queue_t)
 
-def_interface(i_block_queue_t)
-    bool        (*Init)     (block_queue_t *ptObj);
-    bool        (*Enqueue)  (block_queue_t *ptObj, block_t *ptItem);
-    block_t *   (*Dequeue)  (block_queue_t *ptObj);
-    uint32_t    (*Count)    (block_queue_t *ptObj);
-end_def_interface(i_block_queue_t)
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/ 

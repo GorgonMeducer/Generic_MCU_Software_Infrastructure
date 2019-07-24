@@ -17,13 +17,7 @@
 
 
 /*============================ INCLUDES ======================================*/
-#ifndef __STORE_ENVIRONMENT_CFG_IN_PROJ__
-#include "..\..\environment_cfg.h"
-#endif
-
-#include ".\ooc.h"
-#include ".\app_type.h"
-#include ".\error.h"
+#include ".\delegate.h"
 /*============================ MACROS ========================================*/
 #ifndef this
 #   define this             (*ptThis)
@@ -32,26 +26,22 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
-
 //! \name general event handler
 //! @{
-declare_class(DELEGATE_HANDLE)
-def_class(DELEGATE_HANDLE)
-    DELEGATE_HANDLE_FUNC    *fnHandler;         //!< event handler
+def_class(delegate_handler_t)
+    delegate_handler_func_t    *fnHandler;         //!< event handler
     void                    *pArg;              //!< Argument
-    class(DELEGATE_HANDLE)  *ptNext;            //!< next 
-end_def_class(DELEGATE_HANDLE)
+    class(delegate_handler_t)  *ptNext;            //!< next 
+end_def_class(delegate_handler_t)
 //! @}
 
 //! \name event
 //! @{
-declare_class(DELEGATE)
-def_class(DELEGATE)
-    DELEGATE_HANDLE *ptEvent;
-    DELEGATE_HANDLE *ptBlockedList;
-    class(DELEGATE_HANDLE) **pptHandler;
-end_def_class(DELEGATE)
+def_class(delegate_t)
+    delegate_handler_t *ptEvent;
+    delegate_handler_t *ptBlockedList;
+    class(delegate_handler_t) **pptHandler;
+end_def_class(delegate_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -63,9 +53,9 @@ end_def_class(DELEGATE)
  *! \param ptEvent target event
  *! \return the address of event item
  */
-DELEGATE *delegate_init(DELEGATE *ptEvent)
+delegate_t *delegate_init(delegate_t *ptEvent)
 {
-    class_internal(ptEvent, ptThis, DELEGATE);
+    class_internal(ptEvent, ptThis, delegate_t);
 
     do {
         if (NULL == ptThis) {
@@ -74,7 +64,7 @@ DELEGATE *delegate_init(DELEGATE *ptEvent)
 
         this.ptEvent = NULL;
         this.ptBlockedList = NULL;
-        this.pptHandler = (CLASS(DELEGATE_HANDLE) **)&(this.ptEvent);
+        this.pptHandler = (class(delegate_handler_t) **)&(this.ptEvent);
         
     } while (0);
 
@@ -87,11 +77,11 @@ DELEGATE *delegate_init(DELEGATE *ptEvent)
  *! \param pArg handler extra arguments
  *! \return the address of event handler item
  */
-DELEGATE_HANDLE *delegate_handler_init(
-    DELEGATE_HANDLE *ptHandler, DELEGATE_HANDLE_FUNC *fnRoutine, void *pArg)
+delegate_handler_t *delegate_handler_init(
+    delegate_handler_t *ptHandler, delegate_handler_func_t *fnRoutine, void *pArg)
 {
     
-    class_internal(ptHandler, ptThis, DELEGATE_HANDLE);
+    class_internal(ptHandler, ptThis, delegate_handler_t);
     
     if (NULL == ptHandler || NULL == fnRoutine) {
         return NULL;
@@ -104,8 +94,8 @@ DELEGATE_HANDLE *delegate_handler_init(
 }
 
 
-static CLASS(DELEGATE_HANDLE) **search_list(
-    CLASS(DELEGATE_HANDLE) **pptHandler, CLASS(DELEGATE_HANDLE) *ptHND)
+static class(delegate_handler_t) **search_list(
+    class(delegate_handler_t) **pptHandler, class(delegate_handler_t) *ptHND)
 {
     //! search event handler chain
     while (NULL != (*pptHandler)) {
@@ -122,17 +112,17 @@ static CLASS(DELEGATE_HANDLE) **search_list(
  *! \param ptHandler target event handler
  *! \return access result
  */
-gsf_err_t register_delegate_handler(DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler)
+gsf_err_t register_delegate_handler(delegate_t *ptEvent, delegate_handler_t *ptHandler)
 {
-    class_internal(ptEvent, ptThis, DELEGATE);
-    class_internal(ptHandler, ptHND, DELEGATE_HANDLE);
+    class_internal(ptEvent, ptThis, delegate_t);
+    class_internal(ptHandler, ptHND, delegate_handler_t);
 
     if ((NULL == ptEvent) || (NULL == ptHandler) || (NULL == ptHND->fnHandler)) {
         return GSF_ERR_INVALID_PTR;
     } else if (NULL != ptHND->ptNext) {     
         //! search ready list
-        class(DELEGATE_HANDLE) **pptHandler = search_list(   
-            (class(DELEGATE_HANDLE) **)&(this.ptBlockedList), ptHND );
+        class(delegate_handler_t) **pptHandler = search_list(   
+            (class(delegate_handler_t) **)&(this.ptBlockedList), ptHND );
 
         if (NULL != pptHandler) {
             //! safe to remove
@@ -144,7 +134,7 @@ gsf_err_t register_delegate_handler(DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandle
     }
 
     //! add handler to the ready list
-    ptHND->ptNext = (class(DELEGATE_HANDLE) *)(this.ptEvent);
+    ptHND->ptNext = (class(delegate_handler_t) *)(this.ptEvent);
     this.ptEvent = ptHandler;
 
     return GSF_ERR_NONE;
@@ -157,19 +147,19 @@ gsf_err_t register_delegate_handler(DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandle
  *! \param ptHandler target event handler
  *! \return access result
  */
-gsf_err_t unregister_delegate_handler( DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler)
+gsf_err_t unregister_delegate_handler( delegate_t *ptEvent, delegate_handler_t *ptHandler)
 {
-    class_internal(ptEvent, ptThis, DELEGATE);
-    class_internal(ptHandler, ptHND, DELEGATE_HANDLE);
+    class_internal(ptEvent, ptThis, delegate_t);
+    class_internal(ptHandler, ptHND, delegate_handler_t);
     
-    class(DELEGATE_HANDLE) **pptHandler;
+    class(delegate_handler_t) **pptHandler;
     if ((NULL == ptEvent) || (NULL == ptHandler)) {
         return GSF_ERR_INVALID_PTR;
     } 
 
     do {
         //! search ready list
-        pptHandler = search_list(   (CLASS(DELEGATE_HANDLE) **)&(this.ptEvent), 
+        pptHandler = search_list(   (class(delegate_handler_t) **)&(this.ptEvent), 
                                     ptHND );
         if (NULL != pptHandler) {
             //! safe to remove
@@ -181,7 +171,7 @@ gsf_err_t unregister_delegate_handler( DELEGATE *ptEvent, DELEGATE_HANDLE *ptHan
             break;
         }
         //! search ready list
-        pptHandler = search_list(   (class(DELEGATE_HANDLE) **)&(this.ptBlockedList), 
+        pptHandler = search_list(   (class(delegate_handler_t) **)&(this.ptBlockedList), 
                                     ptHND );
         if (NULL != pptHandler) {
             //! safe to remove
@@ -197,14 +187,14 @@ gsf_err_t unregister_delegate_handler( DELEGATE *ptEvent, DELEGATE_HANDLE *ptHan
     return GSF_ERR_NONE;
 }
 
-static fsm_rt_t __move_to_block_list(class(DELEGATE) *ptThis, class(DELEGATE_HANDLE) *ptHandler)
+static fsm_rt_t __move_to_block_list(class(delegate_t) *ptThis, class(delegate_handler_t) *ptHandler)
 {
-    class(DELEGATE_HANDLE) *ptHND = ptHandler;
+    class(delegate_handler_t) *ptHND = ptHandler;
     //! remove handler from ready list
     (*this.pptHandler) = ptHND->ptNext;
     //! add handler to block list
-    ptHND->ptNext = (class(DELEGATE_HANDLE) *)this.ptBlockedList;
-    this.ptBlockedList = (DELEGATE_HANDLE *)ptHND;
+    ptHND->ptNext = (class(delegate_handler_t) *)this.ptBlockedList;
+    this.ptBlockedList = (delegate_handler_t *)ptHND;
 
     if (NULL == this.ptEvent) {
         return fsm_rt_cpl;
@@ -223,9 +213,9 @@ static fsm_rt_t __move_to_block_list(class(DELEGATE) *ptThis, class(DELEGATE_HAN
  *! \param pParam event parameter
  *! \return access result
  */
-fsm_rt_t invoke_delegate( DELEGATE *ptEvent, void *pParam)
+fsm_rt_t invoke_delegate( delegate_t *ptEvent, void *pParam)
 {
-    class_internal(ptEvent, ptThis, DELEGATE);
+    class_internal(ptEvent, ptThis, delegate_t);
     if (NULL == ptThis) {
         return (fsm_rt_t)GSF_ERR_INVALID_PTR;
     }
@@ -239,18 +229,18 @@ fsm_rt_t invoke_delegate( DELEGATE *ptEvent, void *pParam)
         //! initialize state
         this.ptEvent = this.ptBlockedList;
         this.ptBlockedList = NULL;
-        this.pptHandler = (class(DELEGATE_HANDLE) **)&(this.ptEvent);
+        this.pptHandler = (class(delegate_handler_t) **)&(this.ptEvent);
     } 
 
     if (NULL == (*this.pptHandler)) {
         //! finish visiting the ready list
-        this.pptHandler = (class(DELEGATE_HANDLE) **)&(this.ptEvent);
+        this.pptHandler = (class(delegate_handler_t) **)&(this.ptEvent);
         if (NULL == (*this.pptHandler)) {
             //! complete
             return fsm_rt_cpl;
         }
     } else {
-        class(DELEGATE_HANDLE) *ptHandler = (*this.pptHandler);
+        class(delegate_handler_t) *ptHandler = (*this.pptHandler);
         
         if (NULL != ptHandler->fnHandler) {
             //! run the event handler
@@ -260,7 +250,7 @@ fsm_rt_t invoke_delegate( DELEGATE *ptEvent, void *pParam)
                 this.pptHandler = &(ptHandler->ptNext);    //!< get next item
             } else if (EVENT_RT_UNREGISTER == tFSM) {
                 //! return EVENT_RT_UNREGISTER means event handler could be removed
-                class(DELEGATE_HANDLE) *ptHND = ptHandler;
+                class(delegate_handler_t) *ptHND = ptHandler;
                 (*this.pptHandler) = ptHND->ptNext;
                 ptHND->ptNext = NULL;
             } else {

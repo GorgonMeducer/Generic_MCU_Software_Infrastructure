@@ -76,7 +76,7 @@ bool task_push_ex(
         return false;
     }
     do {
-        volatile CLASS(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
+        volatile class(safe_call_stack_item_t) *ptRoutine = pTask->pStack;
         ptRoutine->fnRoutine = fnRoutine;
         ptRoutine->pArg = pArg;
     } while (false);
@@ -185,7 +185,7 @@ safe_task_t *new_task( safe_task_func_t *fnRoutine, void *pArg )
         pTask->pchKey = s_chTaskKey;     //!< set task key 
 
         //!< set stack buffer
-        pTask->pStack = (CLASS(safe_call_stack_item_t) *)pStack;          
+        pTask->pStack = (class(safe_call_stack_item_t) *)pStack;          
         //!< set task routine    
         pTask->pStack->fnRoutine = fnRoutine; 
         //!< set argument

@@ -34,23 +34,23 @@
  */
 typedef fsm_rt_t safe_task_func_t( void *pArg, void * pTask);
 
-DECLARE_CLASS(safe_call_stack_item_t)
+declare_class(safe_call_stack_item_t)
 //! \name call stack item
 //! @{
-DEF_CLASS(safe_call_stack_item_t)
+def_class(safe_call_stack_item_t)
     safe_task_func_t *fnRoutine;          //!< routine
     void  *pArg;                        //!< argument
-END_DEF_CLASS(safe_call_stack_item_t);
+end_def_class(safe_call_stack_item_t);
 //! @}
 
 typedef volatile struct _task       safe_task_t;
 
 #if SAFE_TASK_THREAD_SYNC == ENABLED
-DECLARE_CLASS(fsm_flag_t)
+declare_class(fsm_flag_t)
 
 //! \name task event item
 //! @{
-DEF_CLASS(fsm_flag_t)
+def_class(fsm_flag_t)
     bool            bSignal;            //!< signal
     safe_task_t       *ptHead;            //!< task item 
     safe_task_t       *ptTail;
@@ -58,7 +58,7 @@ DEF_CLASS(fsm_flag_t)
 #if 0
     locker_t        tLocker;            //!< thread locker
 #endif
-END_DEF_CLASS(fsm_flag_t)
+end_def_class(fsm_flag_t)
 //! @}
 
 //! \name event
@@ -77,7 +77,7 @@ struct _task
 {
 #if SAFE_TASK_CALL_STACK == ENABLED
     //! task call stack
-    CLASS(safe_call_stack_item_t)     *pStack;             //!< return stack
+    class(safe_call_stack_item_t)     *pStack;             //!< return stack
     uint8_t                         chStackSize;        //!< stack size
     uint8_t                         chSP;               //!< stack pointer
 #else
@@ -90,7 +90,7 @@ struct _task
     uint8_t                         bStateChanged : 1;  //!< state changed flag
     uint8_t                         bSignalRaised : 1;  //!< signal 
     uint8_t                         bThreadBlocked: 1;  //!< task blocked flag
-    CLASS(fsm_flag_t)               *ptFlag;            //!< target semaphore
+    class(fsm_flag_t)               *ptFlag;            //!< target semaphore
 #else
     bool                            bStateChanged;      //!< state changed flag
 #endif

@@ -24,7 +24,7 @@
 
 #if USE_SERVICE_ES_SIMPLE_FRAME == ENABLED 
 #include "..\..\..\memory\block\block.h"
-
+#include "./es_simple_frame.h"
 /*============================ MACROS ========================================*/
 
 //! \brief es-simple-frame-head
@@ -35,19 +35,20 @@
 #   define ES_SIMPLE_FRAME_ERROR   0xF0
 #endif
 
+#ifndef this
+#   define this         (*ptThis)
+#endif
+#ifndef base
+#   define base         (*ptBase)
+#endif
+#ifndef target
+#   define target       (*ptTarget)
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
-
-
 /*============================ TYPES Part One ================================*/
 
-def_structure(__es_simple_frame_fsm_internal)
-    implement(mem_block_t)
-    uint16_t hwLength;
-    uint16_t hwCounter;
-    uint16_t hwCheckSUM;
-end_def_structure(__es_simple_frame_fsm_internal)
-
-simple_fsm(es_simple_frame_decoder,
+def_simple_fsm(es_simple_frame_decoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
         union {
@@ -60,20 +61,18 @@ simple_fsm(es_simple_frame_decoder,
         implement(__es_simple_frame_fsm_internal)
     ))
     
-simple_fsm(es_simple_frame_encoder,
+def_simple_fsm(es_simple_frame_encoder,
     def_params(
         i_byte_pipe_t *ptPipe;          //!< pipe
         implement(__es_simple_frame_fsm_internal)
     ))
 
-declare_class(es_simple_frame_t)
-
-simple_fsm(es_simple_frame_decoder_wrapper,
+def_simple_fsm(es_simple_frame_decoder_wrapper,
     def_params(
         es_simple_frame_t *ptFrame;
     ))
 
-simple_fsm(es_simple_frame_encoder_wrapper,
+def_simple_fsm(es_simple_frame_encoder_wrapper,
     def_params(
         es_simple_frame_t *ptFrame;
     ))
@@ -89,22 +88,6 @@ def_class(es_simple_frame_t)
     inherit(fsm(es_simple_frame_encoder_wrapper))
     bool    bDynamicBufferMode;
 end_def_class(es_simple_frame_t)
-//! @}
-
-//! \name es-simple frame configuration structure
-//! @{
-typedef struct {
-    i_byte_pipe_t   *ptPipe; 
-    void  *fnParser;
-    union {
-        implement(mem_block_t)
-        struct {
-            bool        bStaticBufferMode;
-            block_t *   ptBlock;
-        };
-    };
-    void *pTag;
-}es_simple_frame_cfg_t;
 //! @}
 
 
@@ -156,22 +139,8 @@ private fsm_rt_t encoder(es_simple_frame_t *ptFrame, uint8_t *pchBuffer, uint_fa
 private fsm_rt_t task(es_simple_frame_t *ptFrame);
 private fsm_rt_t decoder(es_simple_frame_t *ptFrame);
 private uint_fast16_t get_buffer_size ( es_simple_frame_t *ptFrame);
-/*============================ TYPES Part Two ================================*/
-//! \name frame interface
-//! @{
-def_interface(i_es_simple_frame_t)
-    bool                (*Init)     (   es_simple_frame_t *ptFrame, es_simple_frame_cfg_t *ptCFG);
-    fsm_rt_t            (*Task)     (   es_simple_frame_t *ptFrame);
-    fsm_rt_t            (*Decoder)  (   es_simple_frame_t *ptFrame);
-    fsm_rt_t            (*Encoder)  (   es_simple_frame_t *ptFrame, 
-                                        uint8_t *pchData,
-                                        uint_fast16_t hwSize);
-    struct {
-        uint_fast16_t   (*GetSize)  (   es_simple_frame_t *ptFrame);
-    }Buffer;
-end_def_interface(i_es_simple_frame_t)
-//! @}
 
+/*============================ TYPES Part Two ================================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 #if defined(LIB_GENERATION)

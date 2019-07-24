@@ -90,13 +90,13 @@
 #define END_EXTERN_STATIC_FSM
 #define END_EXTERN_FSM
 
-#define DEF_ARG                 DEF_CLASS
-#define END_DEF_ARG(__NAME)     END_DEF_CLASS(__NAME)
+#define DEF_ARG                 def_class
+#define END_DEF_ARG(__NAME)     end_def_class(__NAME)
 
-#define EXTERN_ARG              EXTERN_CLASS
-#define END_EXTERN_ARG(__NAME)  END_EXTERN_CLASS(__NAME)
+#define EXTERN_ARG              extern_class
+#define END_EXTERN_ARG(__NAME)  end_extern_class(__NAME)
 
-#define ARG(__NAME)        CLASS(__NAME)
+#define ARG(__NAME)        class(__NAME)
 
 #define REF_ARG(__NAME)     \
                 (*((class(__NAME) *)(pArg)))
@@ -261,9 +261,9 @@
 #define ___RSV(__N)             __RSV(__N)
 #define RESERVED                ___RSV(__LINE__)
 
-DECLARE_CLASS(task_t)
+declare_class(task_t)
     
-EXTERN_CLASS(task_t)
+extern_class(task_t)
 #if SAFE_TASK_CALL_STACK == ENABLED
     void                            *RESERVED;             
     uint8_t                         : 8;        
@@ -285,7 +285,7 @@ EXTERN_CLASS(task_t)
     
     const uint8_t                   *RESERVED;           
     void                            *RESERVED;
-END_EXTERN_CLASS(task_t)
+end_extern_class(task_t)
 
 #undef RESERVED
 
@@ -297,29 +297,29 @@ END_EXTERN_CLASS(task_t)
  */
 typedef fsm_rt_t safe_task_func_t(void *pArg, void *);
 
-DECLARE_CLASS(safe_call_stack_item_t)
+declare_class(safe_call_stack_item_t)
 //! \name call stack item
 //! @{
-EXTERN_CLASS(safe_call_stack_item_t)
+extern_class(safe_call_stack_item_t)
     safe_task_func_t  *fnRoutine;          //!< routine
     void            *pArg;               //!< argument
-END_EXTERN_CLASS(safe_call_stack_item_t);
+end_extern_class(safe_call_stack_item_t);
 //! @}
 
 
 #if SAFE_TASK_THREAD_SYNC == ENABLED
 
-DECLARE_CLASS(fsm_flag_t)
+declare_class(fsm_flag_t)
 
 //! \name task event item
 //! @{
-EXTERN_CLASS(fsm_flag_t)
+extern_class(fsm_flag_t)
     bool            bSignal;            //!< signal
     volatile void  *ptHead;             //!< task item  
     volatile void  *ptTail;
     bool            bManualReset;       //!< manual reset flag
     locker_t        tLocker;            //!< thread locker
-END_EXTERN_CLASS(fsm_flag_t)
+end_extern_class(fsm_flag_t)
 //! @}
 
 //! \name event

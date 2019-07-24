@@ -57,20 +57,20 @@
             __NAME##_get_pool_item_count_allocated((__POOL))
 
 #define EXTERN_POOL(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE)                   \
-DECLARE_CLASS(__NAME##_pool_item_t)                                             \
-EXTERN_CLASS(__NAME##_pool_item_t)                                              \
+declare_class(__NAME##_pool_item_t)                                             \
+extern_class(__NAME##_pool_item_t)                                              \
     union {                                                                     \
         INHERIT(__single_list_node_t)                                           \
         __TYPE                  tObject;                                        \
     };                                                                          \
 EXTERN_DEF_CLASS(__NAME##_pool_item_t)                                          \
                                                                                 \
-DECLARE_CLASS(__NAME##_pool_t)                                                  \
-EXTERN_CLASS(__NAME##_pool_t)                                                   \
+declare_class(__NAME##_pool_t)                                                  \
+extern_class(__NAME##_pool_t)                                                   \
     __single_list_node_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
     __PTR_TYPE              tCounter;                                           \
-END_EXTERN_CLASS(__NAME##_pool_t)                                               \
+end_extern_class(__NAME##_pool_t)                                               \
                                                                                 \
 extern __MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);              \
 extern bool __NAME##_pool_init(__NAME##_pool_t *ptPool);                        \
@@ -83,20 +83,20 @@ extern bool __NAME##_pool_add_heap(                                             
     __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptBuffer, __PTR_TYPE tSize); 
 
 #define DEF_POOL_EX(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE, __ATOM_ACCESS)    \
-DECLARE_CLASS(__NAME##_pool_item_t)                                             \
-DEF_CLASS(__NAME##_pool_item_t)                                                 \
+declare_class(__NAME##_pool_item_t)                                             \
+def_class(__NAME##_pool_item_t)                                                 \
     union {                                                                     \
         INHERIT(__single_list_node_t)                                           \
         __TYPE                  tObject;                                        \
     };                                                                          \
-END_DEF_CLASS(__NAME##_pool_item_t)                                             \
+end_def_class(__NAME##_pool_item_t)                                             \
                                                                                 \
-DECLARE_CLASS(__NAME##_pool_t)                                                  \
-DEF_CLASS(__NAME##_pool_t)                                                      \
+declare_class(__NAME##_pool_t)                                                  \
+def_class(__NAME##_pool_t)                                                      \
     __single_list_node_t    *ptFreeList;                                        \
     __MUTEX_TYPE            tMutex;                                             \
     __PTR_TYPE              tCounter;                                           \
-END_DEF_CLASS(__NAME##_pool_t)                                                  \
+end_def_class(__NAME##_pool_t)                                                  \
                                                                                 \
 __MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                      \
 {                                                                               \
@@ -104,7 +104,7 @@ __MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                      
         return NULL;                                                            \
     }                                                                           \
                                                                                 \
-    return &(((CLASS(__NAME##_pool_t) *)ptPool)->tMutex);                       \
+    return &(((class(__NAME##_pool_t) *)ptPool)->tMutex);                       \
 }                                                                               \
                                                                                 \
 bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                \
@@ -113,8 +113,8 @@ bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                
         return false;                                                           \
     }                                                                           \
                                                                                 \
-    ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList = NULL;                      \
-    ((CLASS(__NAME##_pool_t) *)ptPool)->tCounter   = 0;                         \
+    ((class(__NAME##_pool_t) *)ptPool)->ptFreeList = NULL;                      \
+    ((class(__NAME##_pool_t) *)ptPool)->tCounter   = 0;                         \
                                                                                 \
     return true;                                                                \
 }                                                                               \
@@ -123,7 +123,7 @@ static void __##__NAME##_pool_free_item(                                        
     __NAME##_pool_t *ptPool, __NAME##_pool_item_t *ptItem)                      \
 {                                                                               \
     LIST_STACK_PUSH(                                                            \
-        ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList,                         \
+        ((class(__NAME##_pool_t) *)ptPool)->ptFreeList,                         \
         ptItem                                                                  \
     );                                                                          \
 }                                                                               \
@@ -132,14 +132,14 @@ void __NAME##_pool_free(                                                        
     __NAME##_pool_t *ptPool, __TYPE *ptItem)                                    \
 {                                                                               \
     if ((NULL == ptPool) || (NULL == ptItem)                                    \
-        ||(NULL != ((CLASS(__NAME##_pool_item_t) *)ptItem)->ptNext)) {          \
+        ||(NULL != ((class(__NAME##_pool_item_t) *)ptItem)->ptNext)) {          \
         return ;                                                                \
     }                                                                           \
                                                                                 \
     __ATOM_ACCESS(                                                              \
         __##__NAME##_pool_free_item(ptPool, (__NAME##_pool_item_t *)ptItem);    \
-        if (((CLASS(__NAME##_pool_t) *)ptPool)->tCounter) {                     \
-            ((CLASS(__NAME##_pool_t) *)ptPool)->tCounter--;                     \
+        if (((class(__NAME##_pool_t) *)ptPool)->tCounter) {                     \
+            ((class(__NAME##_pool_t) *)ptPool)->tCounter--;                     \
         }                                                                       \
     )                                                                           \
 }                                                                               \
@@ -154,18 +154,18 @@ __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool)                              
                                                                                 \
     __ATOM_ACCESS(                                                              \
         do {                                                                    \
-            if ((NULL == ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList)) {     \
+            if ((NULL == ((class(__NAME##_pool_t) *)ptPool)->ptFreeList)) {     \
                 break;                                                          \
             }                                                                   \
                                                                                 \
             LIST_STACK_POP(                                                     \
-                ((CLASS(__NAME##_pool_t) *)ptPool)->ptFreeList,                 \
+                ((class(__NAME##_pool_t) *)ptPool)->ptFreeList,                 \
                 ptItem                                                          \
             );                                                                  \
         } while(false);                                                         \
     )                                                                           \
                                                                                 \
-    return &(((CLASS(__NAME##_pool_item_t) *)ptItem)->tObject);                 \
+    return &(((class(__NAME##_pool_item_t) *)ptItem)->tObject);                 \
 }                                                                               \
                                                                                 \
 bool __NAME##_pool_add_heap(                                                    \
@@ -191,7 +191,7 @@ __PTR_TYPE __NAME##_get_pool_item_count_allocated(__NAME##_pool_t *ptPool)      
     }                                                                           \
                                                                                 \
     __ATOM_ACCESS(                                                              \
-        tResult = ((CLASS(__NAME##_pool_t) *)ptPool)->tCounter;                 \
+        tResult = ((class(__NAME##_pool_t) *)ptPool)->tCounter;                 \
     )                                                                           \
                                                                                 \
     return tResult;                                                             \
