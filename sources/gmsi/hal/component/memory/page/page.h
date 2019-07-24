@@ -60,10 +60,10 @@ typedef struct {
 }page_cfg_t;
 //! @}
 
-DECLARE_CLASS(page_t)
+declare_class(page_t)
 //! \name class page_t
 //! @{
-EXTERN_CLASS(page_t)
+extern_class(page_t)
     const i_page_t  tIO;
     void            *pObj;
     uint8_t         *pchBuffer;
@@ -76,7 +76,7 @@ EXTERN_CLASS(page_t)
     uint16_t        hwCount;
     uint32_t        wAddress;
     uint32_t        wPageAddress;
-END_EXTERN_CLASS(page_t)
+end_extern_class(page_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/

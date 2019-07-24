@@ -20,13 +20,12 @@
 #define __USE_ARM_COMPILER_H__
 
 /*============================ INCLUDES ======================================*/
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <cmsis_compiler.h>
+#include "cmsis_compiler.h"
 
 //! \name The macros to identify the compiler
 //! @{
@@ -62,14 +61,14 @@
 #ifdef __IS_COMPILER_LLVM__
 #   undef  __IS_COMPILER_LLVM__
 #endif
-#if defined(__clang__)
+#if defined(__clang__) && !__IS_COMPILER_ARM_COMPILER_6__
 #   define __IS_COMPILER_LLVM__                1
 #else
 //! \note for gcc
 #ifdef __IS_COMPILER_GCC__
 #   undef __IS_COMPILER_GCC__
 #endif
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !(__IS_COMPILER_ARM_COMPILER_6__ || __IS_COMPILER_LLVM__)
 #   define __IS_COMPILER_GCC__                 1
 #endif
 //! @}
@@ -97,7 +96,6 @@
 #else
   #warning Not supported compiler type
 #endif
-
 
 /*============================ MACROS ========================================*/
 
@@ -169,6 +167,7 @@
     #define NOP()                       __asm__ __volatile__ ("nop");
 #endif
 
+
 //! \brief none standard memory types
 #if __IS_COMPILER_IAR__
 #   define ROM_FLASH            _Pragma(__STR(location=".rom.flash")) const
@@ -176,7 +175,7 @@
 #   define NO_INIT              __no_init
 #   define ROOT                 __root
 #   define INLINE               inline
-#   define NO_INLINE            noinline
+#   define NO_INLINE            __attribute__((noinline))
 #   define ALWAYS_INLINE        inline __attribute__((always_inline))
 #   define WEAK                 __weak
 #   define RAMFUNC              __ramfunc
@@ -306,7 +305,7 @@ static ALWAYS_INLINE uint32_t ____disable_irq(void)
 
 #elif __IS_COMPILER_ARM_COMPILER_5__
 #   define DISABLE_GLOBAL_INTERRUPT()           __disable_irq()
-#elif __IS_COMPILER_ARM_COMPILER_6__
+#elif __IS_COMPILER_ARM_COMPILER_6__ && !defined(__CMSIS_ARMCC_V6_H)
 #   define DISABLE_GLOBAL_INTERRUPT()           __disable_irq()
 #elif __IS_COMPILER_GCC_
 #   define DISABLE_GLOBAL_INTERRUPT()           __disable_irq()
@@ -367,10 +366,45 @@ __attribute__((always_inline)) static inline void ____set_PRIMASK(uint32_t priMa
 }
 #endif
 
+/*----------------------------------------------------------------------------*
+ * Startup Source Code                                                        *
+ *----------------------------------------------------------------------------*/
+#if     __IS_COMPILER_IAR__
+#ifndef __VECTOR_TABLE
+#   define __VECTOR_TABLE               __vector_table
+#endif
+#ifndef __VECTOR_TABLE_ATTRIBUTE
+#   define __VECTOR_TABLE_ATTRIBUTE     @".intvec"
+#endif
+#ifndef __PROGRAM_START
+#   define __PROGRAM_START              __iar_program_start
+#endif
+#ifndef __INITIAL_SP
+#   define __INITIAL_SP                 CSTACK$$Limit
+#endif
+#elif   __IS_COMPILER_ARM_COMPILER_6__ || __IS_COMPILER_ARM_COMPILER_5__
+#ifndef __VECTOR_TABLE
+#   define __VECTOR_TABLE               __Vectors
+#endif
+#ifndef __VECTOR_TABLE_ATTRIBUTE
+#   define __VECTOR_TABLE_ATTRIBUTE     ROOT SECTION("RESET")
+#endif
+#ifndef __PROGRAM_START
+#   define __PROGRAM_START              __main
+#endif
+#ifndef __INITIAL_SP
+#   define __INITIAL_SP                 Image$$ARM_LIB_STACK$$ZI$$Limit
+#endif
+#elif   //__IS_COMPILER_GCC__ || __IS_COMPILER_LLVM__
+#   error Unsupported compiler detected. Please contact vsf team for support.
+#endif
+
 /*============================ TYPES =========================================*/
 /*============================ INCLUDES ======================================*/
 
 //! \brief for interrupt 
-#include ".\signal.h"
+#include "./signal.h"
+
+/*============================ PROTOTYPES ====================================*/
 
 #endif

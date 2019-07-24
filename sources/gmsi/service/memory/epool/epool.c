@@ -111,7 +111,7 @@ bool pool_add_heap( pool_t *ptPool,
 void *pool_new(pool_t *ptPool)
 {
     __single_list_node_t *ptItem = NULL;
-    CLASS(pool_t) *ptThis = (CLASS(pool_t) *)ptPool;
+    class_internal(ptPool, ptThis, pool_t);
     
     if (NULL == ptPool) {
         return NULL;
@@ -119,7 +119,7 @@ void *pool_new(pool_t *ptPool)
 
     __EPOOL_ATOM_ACCESS(){
         do {
-            if (NULL == ((CLASS(pool_t) *)ptPool)->ptFreeList) {
+            if (NULL == ((class(pool_t) *)ptPool)->ptFreeList) {
                 break;
             }
             

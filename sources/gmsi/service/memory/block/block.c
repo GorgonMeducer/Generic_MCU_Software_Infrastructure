@@ -22,13 +22,51 @@
 #include "..\epool\epool.h"
 #include <string.h>
 
-#define __VSF_CLASS_IMPLEMENT 
-#include "./__class_block.h"
-#undef __VSF_CLASS_IMPLEMENT 
+#include "./block.h"
 
 /*============================ MACROS ========================================*/
+#ifndef this
+#   define this         (*ptThis)
+#endif
+#ifndef base
+#   define base         (*ptBase)
+#endif
+#ifndef target
+#   define target       (*ptTarget)
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
+
+//! \brief fixed memory block used as stream buffer
+//! @{
+
+def_class(block_t)
+    implement(__single_list_node_t)
+    uint8_t  *pchBuffer;                            //!< buffer address
+
+    union {
+        struct {
+            uint32_t    BlockSize           : 24;
+            uint32_t    IsNoWrite           : 1;
+            uint32_t    IsNoRead            : 1;
+            uint32_t    IsNoDirectAccess    : 1;
+            uint32_t                        : 5;
+        };
+        uint32_t        wCapability;
+    };
+
+    uint32_t    Size                        : 24;
+    uint32_t    chAdapterID                 : 8;
+end_def_class(block_t);
+//! @}
+
+def_class(block_pool_t, 
+    which( inherit(pool_t) ))   
+    block_adapter_t *ptAdapter;
+end_def_class(block_pool_t)
+
+
 /*============================ LOCAL VARIABLES ===============================*/
 
 static struct {
@@ -60,7 +98,7 @@ private mem_block_t  read_block_buffer(block_t *ptObj,
                                 int_fast32_t nSize, 
                                 uint_fast32_t wOffsite);
 private uint_fast32_t get_free_block_count(block_pool_t *ptObj);
-private void __free_block(void *pTarget, block_t *ptBlock);
+//private void __free_block(void *pTarget, block_t *ptBlock);
 private void register_adaptors(block_adapter_t *ptAdaptors, uint_fast8_t chSize);
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -276,7 +314,7 @@ private mem_block_t read_block_buffer(  block_t *ptObj,
             pchBuffer = pchSrc;
 
         } else if (nSize <= wMaxSize) {
-            pchBuffer = get_block_buffer(ptObj) + wOffsite;
+            pchBuffer = (uint8_t *)get_block_buffer(ptObj) + wOffsite;
         } else {
             nSize = wMaxSize;
             memcpy(pchSrc, pchBuffer+wOffsite, nSize);

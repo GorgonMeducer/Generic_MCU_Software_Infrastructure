@@ -24,16 +24,16 @@
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
-DECLARE_CLASS(key_queue_t)
+declare_class(key_queue_t)
 //! \name key queue interface
 //! @{
-DEF_CLASS(key_queue_t)
+def_class(key_queue_t)
 	key_t *ptBuffer;
 	uint16_t hwSize;
 	uint16_t hwHead;
 	uint16_t hwTail;
 	uint16_t hwLength;
-END_DEF_CLASS(key_queue_t)
+end_def_class(key_queue_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -49,7 +49,7 @@ END_DEF_CLASS(key_queue_t)
  */
 bool key_queue_init(key_queue_t * ptQueue, key_t *ptKeyBuffer, uint16_t hwsize)
 {
-	CLASS(key_queue_t) *ptQ = (CLASS(key_queue_t) *)ptQueue;
+	class(key_queue_t) *ptQ = (class(key_queue_t) *)ptQueue;
     bool bReturn = false;
 
     SAFE_ATOM_CODE(
@@ -74,7 +74,7 @@ bool key_queue_init(key_queue_t * ptQueue, key_t *ptKeyBuffer, uint16_t hwsize)
  */
 bool key_enqueue(key_queue_t* ptQueue, key_t* ptKey)
 {
-	CLASS(key_queue_t) *ptQ = (CLASS(key_queue_t) *)ptQueue;
+	class(key_queue_t) *ptQ = (class(key_queue_t) *)ptQueue;
     bool bReturn = false;
 	
 	if ((NULL == ptQueue) && (NULL == ptKey)) {
@@ -104,7 +104,7 @@ bool key_enqueue(key_queue_t* ptQueue, key_t* ptKey)
  */
 bool key_dequeue(key_queue_t* ptQueue, key_t* ptKey)
 {
-	CLASS(key_queue_t) *ptQ = (CLASS(key_queue_t) *)ptQueue;
+	class(key_queue_t) *ptQ = (class(key_queue_t) *)ptQueue;
     bool bReturn = false;
 	
 	if ((NULL == ptQueue) && (NULL == ptKey)) {

@@ -24,30 +24,32 @@
 #include ".\error.h"
 
 /*============================ MACROS ========================================*/
+#define EVENT_RT_UNREGISTER         4
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-typedef fsm_rt_t DELEGATE_HANDLE_FUNC(void *pArg, void *pParam);
+typedef fsm_rt_t delegate_handler_func_t(void *pArg, void *pParam);
 
 
-declare_class( DELEGATE_HANDLE )
+declare_class( delegate_handler_t )
 //! \name general event handler
 //! @{
-extern_class( DELEGATE_HANDLE )
-    DELEGATE_HANDLE_FUNC   *fnHandler;                                          //!< event handler
-    void                   *pArg;                                               //!< Argument
-    DELEGATE_HANDLE        *ptNext;                                             //!< next 
-end_extern_class(DELEGATE_HANDLE)
+extern_class( delegate_handler_t )
+    delegate_handler_func_t     *fnHandler;                                     //!< event handler
+    void                        *pArg;                                          //!< Argument
+    delegate_handler_t          *ptNext;                                        //!< next 
+end_extern_class(delegate_handler_t)
 //! @}
 
-declare_class( DELEGATE )
+declare_class( delegate_t )
 //! \name event
 //! @{
-extern_class(DELEGATE)
-    DELEGATE_HANDLE     *ptEvent;
-    DELEGATE_HANDLE     *ptBlockedList;
-    DELEGATE_HANDLE     **pptHandler;
-end_extern_class(DELEGATE)
+extern_class(delegate_t)
+    delegate_handler_t     *ptEvent;
+    delegate_handler_t     *ptBlockedList;
+    delegate_handler_t     **pptHandler;
+end_extern_class(delegate_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -59,7 +61,7 @@ end_extern_class(DELEGATE)
  *! \param ptEvent target event
  *! \return the address of event item
  */
-extern DELEGATE *delegate_init(DELEGATE *ptEvent);
+extern delegate_t *delegate_init(delegate_t *ptEvent);
 
 /*! \brief initialize event handler item
  *! \param ptHandler the target event handler item
@@ -67,29 +69,29 @@ extern DELEGATE *delegate_init(DELEGATE *ptEvent);
  *! \param pArg handler extra arguments
  *! \return the address of event handler item
  */
-extern DELEGATE_HANDLE *delegate_handler_init(
-    DELEGATE_HANDLE *ptHandler, DELEGATE_HANDLE_FUNC *fnRoutine, void *pArg);
+extern delegate_handler_t *delegate_handler_init(
+    delegate_handler_t *ptHandler, delegate_handler_func_t *fnRoutine, void *pArg);
 
 /*! \brief register event handler to specified event
  *! \param ptEvent target event
  *! \param ptHandler target event handler
  *! \return access result
  */
-extern gsf_err_t register_delegate_handler(DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler);
+extern gsf_err_t register_delegate_handler(delegate_t *ptEvent, delegate_handler_t *ptHandler);
 
 /*! \brief unregister a specified event handler
  *! \param ptEvent target event
  *! \param ptHandler target event handler
  *! \return access result
  */
-extern gsf_err_t unregister_delegate_handler( DELEGATE *ptEvent, DELEGATE_HANDLE *ptHandler);
+extern gsf_err_t unregister_delegate_handler( delegate_t *ptEvent, delegate_handler_t *ptHandler);
 
 /*! \brief raise target event
  *! \param ptEvent the target event
  *! \param pArg event argument
  *! \return access result
  */
-extern fsm_rt_t invoke_delegate( DELEGATE *ptEvent, void *pParam);
+extern fsm_rt_t invoke_delegate( delegate_t *ptEvent, void *pParam);
 
 #endif
 /* EOF */

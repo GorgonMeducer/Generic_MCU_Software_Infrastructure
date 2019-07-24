@@ -21,8 +21,20 @@
 
 #include <string.h>
 #include "..\..\memory\epool\epool.h"
+#include "./multiple_delay.h"
 
 /*============================ MACROS ========================================*/
+
+#ifndef this
+#   define this         (*ptThis)
+#endif
+#ifndef base
+#   define base         (*ptBase)
+#endif
+#ifndef target
+#   define target       (*ptTarget)
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
 #ifndef __MD_ATOM_ACCESS
@@ -31,26 +43,8 @@
 
 /*============================ TYPES =========================================*/
 
-//! \name delay status
-//! @{
-typedef enum {
-    MULTIPLE_DELAY_TIMEOUT = 0,                                                 //!< timout
-    MULTIPLE_DELAY_CANCELLED,                                                   //!< delay request is cancelled by user
-} multiple_delay_report_status_t;
-//! @}
-
-typedef enum {
-    MULTIPLE_DELAY_LOW_PRIORITY,
-    MULTIPLE_DELAY_NORMAL_PRIORITY,
-    MULTIPLE_DELAY_HIGH_PRIORITY,
-} multiple_delay_request_priority_t;
-
-//! \brief delay request timeout event handler prototype (delegate)
-typedef void timeout_event_handler_t(multiple_delay_report_status_t tStatus, void *pObj);
-
 //! \name delay task item
 //! @{
-declare_class(multiple_delay_item_t)
 def_class(multiple_delay_item_t)
     implement(__single_list_node_t)                                               //!< list pointer
     uint32_t wTargetTime;                                                       //!< timeout target time
@@ -60,9 +54,7 @@ def_class(multiple_delay_item_t)
 end_def_class(multiple_delay_item_t)
 //! @}
 
-declare_class(multiple_delay_t)
-
-simple_fsm( multiple_delay_task,
+def_simple_fsm( multiple_delay_task,
     def_params(
         multiple_delay_t *ptObj;
     ))
@@ -100,34 +92,6 @@ end_def_class(multiple_delay_t,
     which ( inherit(    fsm(multiple_delay_task))
             inherit(    EPOOL(multiple_delay_item_heap_t) )))
 //! @}
-
-typedef struct {
-    union {
-        mem_block_t;
-        mem_block_t tHeapBuffer;
-    };
-}multiple_delay_cfg_t;
-
-def_interface(i_multiple_delay_t)
-    bool        (*Init)            (multiple_delay_t *, multiple_delay_cfg_t *);
-    fsm_rt_t    (*Task)            (multiple_delay_t *);
-    
-    multiple_delay_item_t * 
-                (*RequestDelay)    (multiple_delay_t *                         , 
-                                    uint32_t wDelay                            ,
-                                    multiple_delay_request_priority_t tPriority,//!< request priority
-                                    void *pTag                                 ,//!< object passed to timeout event handler
-                                    timeout_event_handler_t *fnHandler);
-    void        (*Cancel)          (multiple_delay_t *ptObj, 
-                                    multiple_delay_item_t *ptItem);
-    struct {
-        void    (*TimerTickService)(multiple_delay_t *);
-    } Dependent;
-    
-end_def_interface(i_multiple_delay_t)
-
-
-
     
     
 /*============================ LOCAL VARIABLES ===============================*/

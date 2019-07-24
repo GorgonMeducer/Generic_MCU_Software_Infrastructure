@@ -28,15 +28,15 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-DECLARE_CLASS(mem_helper_t)
+declare_class(mem_helper_t)
 
 //! \name class mem_helper_t
 //! @{
-DEF_CLASS(mem_helper_t)
+def_class(mem_helper_t)
     i_mem_t *ptMEM;                         //!< target mal interface
     void    *ptTarget;                      //!< target object
     void    *pPageBuffer;                   
-END_DEF_CLASS(mem_helper_t)
+end_def_class(mem_helper_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -128,7 +128,8 @@ static fsm_rt_t mal_page_erase(void *pObj, uint32_t wAddress)
 fsm_rt_t mal_mem_read( mem_t *ptMEM, 
      uint_fast16_t hwAddress, uint8_t *pchStream, uint_fast16_t hwSize )
 {
-    CLASS(mem_t) *ptThis = (CLASS(mem_t) *)ptMEM;
+    class_internal(ptMEM, ptThis, mem_t);
+
     return read_memory_disregard_page( this.ptPage, hwAddress, pchStream, hwSize );
 }
 
@@ -142,7 +143,7 @@ fsm_rt_t mal_mem_read( mem_t *ptMEM,
 fsm_rt_t mal_mem_write( mem_t *ptMEM, 
      uint_fast16_t hwAddress, uint8_t *pchStream, uint_fast16_t hwSize )
 {
-    CLASS(mem_t) *ptThis = (CLASS(mem_t) *)ptMEM;
+    class_internal(ptMEM, ptThis, mem_t);
     return write_memory_disregard_page( this.ptPage, hwAddress, pchStream, hwSize );
 }
 
@@ -155,7 +156,7 @@ fsm_rt_t mal_mem_write( mem_t *ptMEM,
  */
 bool mal_mem_init(mem_t *ptMEM, page_t *ptPage, uint8_t *pchBuffer, page_size_t tSize)
 {
-    CLASS(mem_t) *ptThis = (CLASS(mem_t) *)ptMEM;
+    class_internal(ptMEM, ptThis, mem_t);
     page_cfg_t tCFG = {
         .tIO = {
             .fnPageWrite = &mal_page_write,

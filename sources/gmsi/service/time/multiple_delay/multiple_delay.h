@@ -69,6 +69,8 @@ end_extern_class(multiple_delay_item_t)
 
 declare_class(multiple_delay_t)
 
+declare_simple_fsm(multiple_delay_task)
+
 extern_simple_fsm( multiple_delay_task,
     def_params(
         multiple_delay_t *ptObj;
@@ -103,9 +105,7 @@ extern_class(multiple_delay_t,
     uint32_t                    wCounter;                                       //!< Tick Counter
     uint32_t                    wSavedCounter;
     
-end_extern_class(multiple_delay_t,
-    which ( inherit(    fsm(multiple_delay_task))
-            inherit(    EPOOL(multiple_delay_item_heap_t) )))
+end_extern_class(multiple_delay_t)
 //! @}
 
 typedef struct {

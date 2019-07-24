@@ -24,10 +24,20 @@
 #include "..\..\memory\block\block.h"
 
 #include "..\..\time\multiple_delay\multiple_delay.h"
-
+#include "./telegraph_engine.h"
 /*============================ MACROS ========================================*/
 #ifndef TELEGRAPH_ENGINE_FRAME_ERROR   
 #   define TELEGRAPH_ENGINE_FRAME_ERROR   0xF0
+#endif
+
+#ifndef this
+#   define this         (*ptThis)
+#endif
+#ifndef base
+#   define base         (*ptBase)
+#endif
+#ifndef target
+#   define target       (*ptTarget)
 #endif
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -37,26 +47,6 @@
 #endif
 
 /*============================ TYPES =========================================*/
-
-declare_class(telegraph_t)
-declare_class(telegraph_engine_t)
-
-//! \name telegraph report status
-//! @{
-typedef enum {
-    TELEGRAPH_ERROR     = -1,                                                   //!< error detected during checking
-    TELEGRAPH_RECEIVED  = 0,                                                    //!< expected telegraph is received
-    TELEGRAPH_TIMEOUT,                                                          //!< timeout
-    TELEGRAPH_CANCELLED,                                                        //!< telegraph is cancelled by user
-} telegraph_report_t;
-//! @}
-
-//! \name telegraph report event handler prototype (delegate)
-//! \param tStatus the reason to report
-//! \param ptTelegraph target telegraph
-//! \retval true it's safe to free this telegraph
-//! \retval false do not free the telegraph
-typedef bool telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTelegraph);
 
 //! \name abstruct class telegraph, user telegraph should inherit from this class
 //! @{
@@ -70,19 +60,6 @@ def_class(telegraph_t)
     block_t                 *ptINData;
 end_def_class(telegraph_t)
 //! @}
-
-typedef enum {
-    FRAME_UNKNOWN       = -1,
-    FRAME_UNMATCH       = 0,
-    FRAME_RECEIVED      = 1,
-} frame_parsing_report_t;
-
-typedef frame_parsing_report_t telegraph_parser_t(
-                                                    block_t **pptBlock,         //! memory buffer
-                                                    telegraph_t *ptItem);       //! target telegraph 
-
-typedef fsm_rt_t telegraph_engine_low_level_write_io_t(telegraph_t *ptItem, void *pObj);
-
 
 simple_fsm(telegraph_engine_task,
     def_params(
@@ -112,55 +89,8 @@ def_class(telegraph_engine_t,
     multiple_delay_t                            *ptDelayService;
     telegraph_engine_low_level_write_io_t       *fnWriteIO;
     void                                        *pIOTag;
-end_def_class(telegraph_engine_t, 
-    which(  inherit(fsm(telegraph_engine_task))
-            inherit(pool_t)))
+end_def_class(telegraph_engine_t)
 //! @}
-
-typedef struct {
-    mem_block_t                             tTelegraphPool;
-    uint32_t                                wTelegraphSize;
-    
-    telegraph_parser_t                      *fnDecoder;
-    multiple_delay_t                        *ptDelayService;
-    telegraph_engine_low_level_write_io_t   *fnWriteIO;
-    void                                    *pIOTag;
-} telegraph_engine_cfg_t;
-
-
-def_interface(i_telegraph_engine_t)
-    bool            (*Init)     (   telegraph_engine_t *ptObj, 
-                                    telegraph_engine_cfg_t *ptCFG);
-    fsm_rt_t        (*Task)     (   telegraph_engine_t *ptObj);
-    struct {
-        block_t *   (*Parse)    (   block_t *ptBlock, telegraph_engine_t *ptObj);
-    } Dependent;
-    
-    struct {
-        telegraph_t *(*New)     (   telegraph_engine_t *ptObj,
-                                    telegraph_handler_t *fnHandler, 
-                                    uint32_t wTimeout, 
-                                    block_t *ptData);
-        bool        (*TryToSend)(   telegraph_t *ptTelegraph,
-                                    bool bPureListener);
-        bool        (*Listen)   (   telegraph_t *ptTelegraph);
-        
-        struct {
-            struct {
-                block_t *(*Get)(telegraph_t *ptTelegraph);
-                void (*Reset)(telegraph_t *ptTelegraph);
-            }Input;
-            struct {
-                block_t *(*Get)(telegraph_t *ptTelegraph);
-                void (*Reset)(telegraph_t *ptTelegraph);
-            }Output;
-        } Data;
-        
-        bool        (*IsWriteOnly) (telegraph_t *ptTelegraph);
-        bool        (*IsReadOnly)  (telegraph_t *ptTelegraph);
-        
-    } Telegraph;
-end_def_interface(i_telegraph_engine_t)
 
 
 /*============================ LOCAL VARIABLES ===============================*/

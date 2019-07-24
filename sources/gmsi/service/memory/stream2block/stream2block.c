@@ -20,6 +20,7 @@
 
 #if USE_SERVICE_STREAM_TO_BLOCK == ENABLED
 #include "..\block_queue\block_queue.h"
+#include "./stream2block.h"
 
 #include <string.h>
 /*============================ MACROS ========================================*/
@@ -49,19 +50,6 @@ END_DEF_QUEUE_U8(StreamBufferQueue)
 //! @{
 declare_class(stream_buffer_t)
 
-typedef void stream_buffer_req_event_t(stream_buffer_t *ptThis);
-
-
-typedef union {
-    struct {
-        uint8_t        IsAvailable         :1;
-        uint8_t        IsOutput            :1;
-        uint8_t        IsDataAvailable     :1;
-        uint8_t        IsBlockBufferDrain  :1;
-        uint8_t                            :4;
-    };
-    uint8_t tValue;
-} stream_buffer_status_t;
 
 def_class(stream_buffer_t, 
     which(   
@@ -83,52 +71,8 @@ def_class(stream_buffer_t,
     uint8_t                                 chBlockLimit;
     uint8_t                                 chBlockCount;
     
-end_def_class(stream_buffer_t,
-    which(   
-        inherit(block_queue_t)                                                  //!< inherit from block_queue_t
-        inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
-    ))
-//! @}
-
-typedef struct {
-    block_pool_t                           *ptPool;
-    enum {
-        INPUT_STREAM = 0,
-        OUTPUT_STREAM
-    } tDirection;
-    
-    stream_buffer_req_event_t              *fnRequestHandler;
-    uint_fast8_t                            chBlockReservedSize; 
-    uint_fast8_t                            chReservedBlock;
-    uint8_t                                 chBlockLimit;
-}stream_buffer_cfg_t;
-
-
-
-
-def_interface(i_stream_buffer_t)
-
-    bool                (*Init)         (stream_buffer_t *, stream_buffer_cfg_t *);
-    stream_buffer_status_t
-                        (*Status)       (stream_buffer_t *);  
-    bool                (*Dispose)      (stream_buffer_t *);
-    struct {
-        bool            (*ReadByte)     (stream_buffer_t *, uint8_t *);
-        bool            (*WriteByte)    (stream_buffer_t *, uint_fast8_t);
-        int_fast32_t    (*Read)         (stream_buffer_t *, uint8_t *, uint_fast32_t );
-        int_fast32_t    (*Write)        (stream_buffer_t *, uint8_t *, uint_fast32_t );
-        bool            (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
-        bool            (*Flush)        (stream_buffer_t *ptObj);
-    } Stream;
-    
-    struct {
-        block_t *       (*Exchange)    (stream_buffer_t *, block_t *);
-        block_t *       (*GetNext)     (stream_buffer_t *);
-        void            (*Return)       (stream_buffer_t *, block_t *);
-    } Block;
-
-end_def_interface(i_stream_buffer_t)
-    
+end_def_class(stream_buffer_t)
+//! @}    
 
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/

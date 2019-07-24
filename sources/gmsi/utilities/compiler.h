@@ -20,6 +20,10 @@
 
 /*============================ INCLUDES ======================================*/
 
+#ifndef __STORE_ENVIRONMENT_CFG_IN_PROJ__
+#include "..\..\environment_cfg.h"
+#endif
+
 #define __STR(__N)      #__N  
 #define STR(__N)        __STR(__N)    
 
@@ -30,7 +34,7 @@
 
 #if     defined(__CPU_AVR__)                    //!< Atmel AVR series
 #   include ".\avr\avr_compiler.h"
-#elif   defined(__CPU_ARM__)                //!< ARM series
+#elif   defined(__CPU_ARM__)                    //!< ARM series
 #   include ".\arm\arm_compiler.h"
 #else
 //#warning No specified MCU type! use arm as default
@@ -64,6 +68,7 @@
 //! \brief This macro convert variable types between different datatypes.
 #define __TYPE_CONVERT(__ADDR,__TYPE)       (*((__TYPE *)(__ADDR)))
 #define TYPE_CONVERT(__ADDR, __TYPE)        __TYPE_CONVERT((__ADDR), __TYPE)
+#define type_convert(__ADDR, __TYPE)        TYPE_CONVERT(__ADDR, __TYPE)
 
 //! \brief initialize large object
 # define OBJECT_INIT_ZERO(__OBJECT)                                             \

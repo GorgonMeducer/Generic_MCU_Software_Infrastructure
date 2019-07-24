@@ -89,11 +89,26 @@ Output:
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 //! \brief The safe ATOM code section macro
-#define SAFE_ATOM_CODE()                                                        \
-    code_region(&DEFAULT_CODE_REGION_ATOM_CODE)
+#define SAFE_ATOM_CODE()        code_region(&DEFAULT_CODE_REGION_ATOM_CODE)
+
+         
+#define __SAFE_ATOM_CODE(...)                                                   \
+        {                                                                       \
+            istate_t tState = DISABLE_GLOBAL_INTERRUPT();                       \
+            __VA_ARGS__;                                                        \
+            SET_GLOBAL_INTERRUPT_STATE(tState);                                 \
+        }
+    
+
 
 //! \brief Exit from the safe atom operations
-#define EXIT_SAFE_ATOM_CODE()           SET_GLOBAL_INTERRUPT_STATE(tState)   
+#define EXIT_SAFE_ATOM_CODE()           SET_GLOBAL_INTERRUPT_STATE(tState)  
+
+ 
+#define exit_safe_atom_code()           EXIT_SAFE_ATOM_CODE()
+#define safe_atom_code()                SAFE_ATOM_CODE()
+#define __safe_atom_code(...)           __SAFE_ATOM_CODE(__VA_ARGS__)
+
 
 //! \name ES_LOCKER value
 //! @{
@@ -177,13 +192,17 @@ Output:
                 : 0;                                                            \
             ptCodeRegion->ptMethods->OnLeave(ptCodeRegion->pTarget, chLocal))
 #endif
-
+        
 #define EXIT_CODE_REGION()                                                      \
             ptCodeRegion->ptMethods->OnLeave(tCodeRegion.pTarget, chLocal)
 #define exit_code_region()  EXIT_CODE_REGION()
 
-#define CODE_REGION(__REGION_ADDR)     __CODE_REGION((__REGION_ADDR))
-#define code_region(__REGION_ADDR)     __CODE_REGION((__REGION_ADDR))
+#define CODE_REGION(__REGION_ADDR)          __CODE_REGION((__REGION_ADDR))
+#define code_region(__REGION_ADDR)          __CODE_REGION((__REGION_ADDR))
+#define CODE_REGION_SIMPLE(__REGION_ADDR, ...)                                  \
+            __CODE_REGION_SIMPLE((__REGION_ADDR), __VA_ARGS__)
+#define code_region_simple(__REGION_ADDR, ...)                                  \
+            __CODE_REGION_SIMPLE((__REGION_ADDR), __VA_ARGS__)
 
 
 /*============================ TYPES =========================================*/

@@ -113,9 +113,7 @@ extern_class(telegraph_engine_t,
     multiple_delay_t                            *ptDelayService;
     telegraph_engine_low_level_write_io_t       *fnWriteIO;
     void                                        *pIOTag;
-end_extern_class(telegraph_engine_t, 
-    which(  inherit(fsm(telegraph_engine_task))
-            inherit(pool_t)))
+end_extern_class(telegraph_engine_t)
 //! @}
 
 typedef struct {
