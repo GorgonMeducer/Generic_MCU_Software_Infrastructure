@@ -22,7 +22,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#undef __PLOOC_CLASS_USE_STRICT_TEMPLATE__
+#undef __PLOOC_CLASS_USE_SIMPLE_TEMPLATE__
+#undef __PLOOC_CLASS_USE_BLACK_BOX_TEMPLATE__
+
+#if     !defined(__PLOOC_CLASS_USE_STRICT_TEMPLATE__)                           \
+    &&  !defined(__PLOOC_CLASS_USE_SIMPLE_TEMPLATE__)
 #define __PLOOC_CLASS_USE_BLACK_BOX_TEMPLATE__
+#endif
 #include "./3rd-party/PLOOC/plooc_class.h"
 
 /*============================ MACROS ========================================*/
