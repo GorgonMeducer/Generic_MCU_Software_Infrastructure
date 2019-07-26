@@ -42,9 +42,10 @@
 #define fsm(__NAME) fsm_##__NAME##_t
 
 #define __simple_fsm(__FSM_TYPE, ...)                                           \
-        def_class(__FSM_TYPE)                                                   \
+        def_class(__FSM_TYPE,,                                                  \
             uint_fast8_t chState;                                               \
             __VA_ARGS__                                                         \
+        )                                                                       \
         end_def_class(__FSM_TYPE)
 
 #define simple_fsm(__NAME, ...)                                                 \
@@ -63,9 +64,10 @@
 
 #define __extern_simple_fsm(__FSM_TYPE, ...)                                    \
         declare_class(__FSM_TYPE)                                               \
-        extern_class(__FSM_TYPE)                                                \
+        extern_class(__FSM_TYPE,,                                               \
             uint_fast8_t chState;                                               \
             __VA_ARGS__                                                         \
+        )                                                                       \
         end_extern_class(__FSM_TYPE)                                
 
 #define __declare_simple_fsm(__FSM_TYPE)                                        \

@@ -42,12 +42,12 @@
  *----------------------------------------------------------------------------*/
 #define __STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                            \
     declare_class( __NAME##_stream_buffer_block_t )                             \
-    def_class(__NAME##_stream_buffer_block_t, inherit(block_t))                 \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    end_def_class(__NAME##_stream_buffer_block_t,inherit(block_t))              \
-    extern_class(__NAME##_stream_buffer_block_t, inherit(block_t))              \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    end_extern_class(__NAME##_stream_buffer_block_t,inherit(block_t))           \
+    def_class(__NAME##_stream_buffer_block_t, which(inherit(block_t)),          \
+        uint8_t chBuffer[__BLOCK_SIZE];)                                        \
+    end_def_class(__NAME##_stream_buffer_block_t)                               \
+    extern_class(__NAME##_stream_buffer_block_t, which(inherit(block_t)),       \
+        uint8_t chBuffer[__BLOCK_SIZE];)                                        \
+    end_extern_class(__NAME##_stream_buffer_block_t)                            \
     NO_INIT private stream_buffer_t s_t##__NAME##StreamBuffer;                  \
     NO_INIT private block_pool_t s_t##__NAME##_BlockPool;                       \
                                                                                 \
@@ -81,10 +81,9 @@
     
 #define __EXTERN_STREAM_BUFFER_COMMON(__NAME, __BLOCK_SIZE)                     \
     declare_class( __NAME##_stream_buffer_block_t )                             \
-    extern_class(__NAME##_stream_buffer_block_t, INHERIT(block_t))              \
-        uint8_t chBuffer[__BLOCK_SIZE];                                         \
-    end_extern_class(__NAME##_stream_buffer_block_t,                            \
-                        INHERIT(block_t))                                       
+    extern_class(__NAME##_stream_buffer_block_t, which(inherit(block_t)),       \
+        uint8_t chBuffer[__BLOCK_SIZE];)                                        \
+    end_extern_class(__NAME##_stream_buffer_block_t)                                       
 
 
 /*----------------------------------------------------------------------------*
@@ -477,7 +476,7 @@ extern_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
         inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
-    )) 
+    ), 
 
     bool                                    bIsOutput;                          //!< direction
     bool                                    bIsQueueInitialised;                //!< Indicate whether the queue has been inialised or not
@@ -491,6 +490,7 @@ extern_class(stream_buffer_t,
     uint8_t                                 chReservedBlock;
     uint8_t                                 chBlockLimit;
     uint8_t                                 chBlockCount;
+)
 end_extern_class(stream_buffer_t)
 //! @}
 

@@ -50,14 +50,15 @@
 
 //! \name abstruct class telegraph, user telegraph should inherit from this class
 //! @{
-def_class(telegraph_t)
-    implement(__single_list_node_t)    
+def_class(telegraph_t,
+    which(implement(__single_list_node_t)),    
     telegraph_engine_t      *ptEngine;
     telegraph_handler_t     *fnHandler;
     multiple_delay_item_t   *ptDelayItem;
     uint32_t                wTimeout;
     block_t                 *ptOUTData;
     block_t                 *ptINData;
+)
 end_def_class(telegraph_t)
 //! @}
 
@@ -73,7 +74,7 @@ simple_fsm(telegraph_engine_task,
 //! @{
 def_class(telegraph_engine_t,   
     which(  inherit(fsm(telegraph_engine_task))
-            inherit(pool_t)))
+            inherit(pool_t)),
 
     struct {
         telegraph_t                             *ptHead;
@@ -89,6 +90,7 @@ def_class(telegraph_engine_t,
     multiple_delay_t                            *ptDelayService;
     telegraph_engine_low_level_write_io_t       *fnWriteIO;
     void                                        *pIOTag;
+)
 end_def_class(telegraph_engine_t)
 //! @}
 

@@ -45,12 +45,13 @@
 
 //! \name delay task item
 //! @{
-def_class(multiple_delay_item_t)
-    implement(__single_list_node_t)                                               //!< list pointer
+def_class(multiple_delay_item_t,
+    which(implement(__single_list_node_t)),                                     //!< list pointer
     uint32_t wTargetTime;                                                       //!< timeout target time
     multiple_delay_request_priority_t tPriority;                                //!< request priority
     void *pTag;                                                                 //!< object passed to timeout event handler
     timeout_event_handler_t *fnHandler;                                         //!< time out event handler
+)
 end_def_class(multiple_delay_item_t)
 //! @}
 
@@ -70,7 +71,7 @@ END_DEF_EPOOL(multiple_delay_item_heap_t)
 
 def_class(multiple_delay_t, 
     which ( inherit(    fsm(multiple_delay_task))
-            inherit(    EPOOL(multiple_delay_item_heap_t) )))                   //!< fsm for multiple delay task))
+            inherit(    EPOOL(multiple_delay_item_heap_t) )),                   //!< fsm for multiple delay task))
 
     multiple_delay_item_t       *ptHighPriorityDelayList;                       //!< hight priority list
     multiple_delay_item_t       *ptDelayList;                                   //!< normal priority list
@@ -87,10 +88,8 @@ def_class(multiple_delay_t,
     uint32_t                    wOldCounter;                                    //!< Old tick counter number 
     uint32_t                    wCounter;                                       //!< Tick Counter
     uint32_t                    wSavedCounter;
-    
-end_def_class(multiple_delay_t,
-    which ( inherit(    fsm(multiple_delay_task))
-            inherit(    EPOOL(multiple_delay_item_heap_t) )))
+)
+end_def_class(multiple_delay_t)
 //! @}
     
     

@@ -17,8 +17,15 @@
 
 
 /*============================ INCLUDES ======================================*/
+
+#include ".\compiler.h"
 #include ".\delegate.h"
+
 /*============================ MACROS ========================================*/
+
+/*============================ MACROS ========================================*/
+#define EVENT_RT_UNREGISTER         4
+
 #ifndef this
 #   define this             (*ptThis)
 #endif
@@ -26,23 +33,32 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
+typedef fsm_rt_t delegate_handler_func_t(void *pArg, void *pParam);
+
+/*============================ MACROFIED FUNCTIONS ===========================*/
+/*============================ TYPES =========================================*/
+
 //! \name general event handler
 //! @{
-def_class(delegate_handler_t)
+def_class(delegate_handler_t,,
     delegate_handler_func_t    *fnHandler;         //!< event handler
     void                    *pArg;              //!< Argument
     class(delegate_handler_t)  *ptNext;            //!< next 
+)
 end_def_class(delegate_handler_t)
 //! @}
 
 //! \name event
 //! @{
-def_class(delegate_t)
+def_class(delegate_t,,
     delegate_handler_t *ptEvent;
     delegate_handler_t *ptBlockedList;
     class(delegate_handler_t) **pptHandler;
+)
 end_def_class(delegate_t)
 //! @}
+
+uint32_t s_wSize = sizeof(delegate_t);
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/

@@ -68,8 +68,9 @@ typedef struct {
 //! \brief fixed memory block used as stream buffer
 //! @{
 
-extern_class(block_t)
-    implement(__single_list_node_t)
+extern_class(block_t,
+    which(implement(__single_list_node_t)),
+    
     uint8_t  *pchBuffer;                            //!< buffer address
 
     union {
@@ -85,14 +86,16 @@ extern_class(block_t)
 
     uint32_t    Size                        : 24;
     uint32_t    chAdapterID                 : 8;
-end_extern_class(block_t);
+)
+end_extern_class(block_t)
 //! @}
 
 declare_class(block_pool_t)
 
 extern_class(block_pool_t, 
-    which( inherit(pool_t) ))   
+    which( inherit(pool_t) ),   
     block_adapter_t *ptAdapter;
+)
 end_extern_class(block_pool_t)
 
 

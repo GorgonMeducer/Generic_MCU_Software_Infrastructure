@@ -55,7 +55,7 @@ def_class(stream_buffer_t,
     which(   
         inherit(block_queue_t)                                                  //!< inherit from block_queue_t
         inherit(QUEUE(StreamBufferQueue))                                       //!< inherit from queue StreamBufferQueue
-    )) 
+    ), 
 
     bool                                    bIsOutput;                          //!< direction
     bool                                    bIsQueueInitialised;                //!< Indicate whether the queue has been inialised or not
@@ -70,7 +70,7 @@ def_class(stream_buffer_t,
     uint8_t                                 chReservedBlock;
     uint8_t                                 chBlockLimit;
     uint8_t                                 chBlockCount;
-    
+)
 end_def_class(stream_buffer_t)
 //! @}    
 

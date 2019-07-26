@@ -34,10 +34,11 @@
 declare_class(stream_buffer_t)
 
 declare_class(block_queue_t)
-extern_class(block_queue_t)                   //!< inherit from pool StreamBufferBlock
+extern_class(block_queue_t,,                                                    //!< inherit from pool StreamBufferBlock
     block_t                  *ptListHead;                                       //!< Queue Head
     block_t                  *ptListTail;                                       //!< Queue Tail
     uint32_t                 wCount;
+)
 end_extern_class(block_queue_t)
 
 def_interface(i_block_queue_t)

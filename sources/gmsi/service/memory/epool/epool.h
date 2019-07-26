@@ -55,16 +55,17 @@
 
 #define EXTERN_EPOOL(__NAME, __TYPE)                                            \
 declare_class(__NAME##_pool_item_t)                                             \
-extern_class(__NAME##_pool_item_t)                                              \
+extern_class(__NAME##_pool_item_t,,                                             \
     union {                                                                     \
-        INHERIT(__single_list_node_t)                                           \
+        inherit(__single_list_node_t)                                           \
         __TYPE                  tMem;                                           \
     };                                                                          \
+)                                                                               \
 end_extern_class(__NAME##_pool_item_t)                                          \
                                                                                 \
-declare_class(__NAME##_pool_t)                                                  \
-extern_class(__NAME##_pool_t)                                                   \
-    INHERIT(pool_t)                                                             \
+declare_class(__NAME##_pool_t);                                                 \
+extern_class(__NAME##_pool_t,,                                                  \
+    inherit(pool_t))                                                            \
 end_extern_class(__NAME##_pool_t)                                               \
                                                                                 \
 extern bool __NAME##_pool_init(__NAME##_pool_t *ptPool);                        \
@@ -72,21 +73,22 @@ extern bool __NAME##_pool_add_heap(                                             
     __NAME##_pool_t *ptPool, void *ptBuffer, uint_fast32_t tSize);              \
 extern __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool);                      \
 extern void __NAME##_pool_free(__NAME##_pool_t *ptPool, __TYPE *ptItem);        \
-extern uint_fast32_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool);          \
+extern uint_fast32_t __NAME##_get_pool_item_count(__NAME##_pool_t *ptPool);     \
 extern __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool);        
 
 #define DEF_EPOOL(__NAME, __TYPE)                                               \
 declare_class(__NAME##_pool_item_t)                                             \
-def_class(__NAME##_pool_item_t)                                                 \
+def_class(__NAME##_pool_item_t,,                                                \
     union {                                                                     \
-        INHERIT(__single_list_node_t)                                           \
+        inherit(__single_list_node_t)                                           \
         __TYPE                  tMem;                                           \
     };                                                                          \
+)                                                                               \
 end_def_class(__NAME##_pool_item_t)                                             \
                                                                                 \
 declare_class(__NAME##_pool_t)                                                  \
-def_class(__NAME##_pool_t)                                                      \
-    INHERIT(pool_t)                                                             \
+def_class(__NAME##_pool_t,,                                                     \
+    inherit(pool_t))                                                            \
 end_def_class(__NAME##_pool_t)                                                  \
                                                                                 \
 bool __NAME##_pool_init(__NAME##_pool_t *ptPool)                                \
@@ -123,11 +125,12 @@ __EPOOL_MUTEX_TYPE *__NAME##_pool_mutex(__NAME##_pool_t *ptPool)                
 
 /*============================ TYPES =========================================*/
 declare_class(pool_t)
-extern_class(pool_t)
+extern_class(pool_t,,
     __single_list_node_t    *ptFreeList;
     uint_fast32_t           tCounter;
     __EPOOL_MUTEX_TYPE      tMutex;
     void *                  pTarget;
+)
 end_extern_class(pool_t)
 
 typedef void pool_item_init_event_handler_t(void *pTarget, 

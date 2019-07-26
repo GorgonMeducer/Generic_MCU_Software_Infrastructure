@@ -83,13 +83,14 @@ extern_simple_fsm(es_simple_frame_encoder_wrapper,
 
 //! \name class: e-snail simple frame
 //! @{
-extern_class(es_simple_frame_t)
+extern_class(es_simple_frame_t,,
     locker_t tMutex;
     inherit(fsm(es_simple_frame_decoder))
     inherit(fsm(es_simple_frame_decoder_wrapper))
     inherit(fsm(es_simple_frame_encoder))
     inherit(fsm(es_simple_frame_encoder_wrapper))
     bool    bDynamicBufferMode;
+)
 end_extern_class(es_simple_frame_t)
 //! @}
 

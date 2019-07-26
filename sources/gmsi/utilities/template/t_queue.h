@@ -95,7 +95,7 @@
 
 #define EXTERN_QUEUE(__NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE)              \
 declare_class(__NAME##_queue_t)                                             \
-extern_class(__NAME##_queue_t)                                              \
+extern_class(__NAME##_queue_t,,                                             \
     __TYPE          *ptBuffer;                                              \
     __PTR_TYPE      tSize;                                                  \
     __PTR_TYPE      tHead;                                                  \
@@ -104,18 +104,19 @@ extern_class(__NAME##_queue_t)                                              \
     __PTR_TYPE      tPeek;                                                  \
     __PTR_TYPE      tPeekCounter;                                           \
     __MUTEX_TYPE    tMutex;                                                 \
+)                                                                           \
 end_extern_class(__NAME##_queue_t)                                          \
                                                                             \
 extern __MUTEX_TYPE *__NAME##_queue_mutex(__NAME##_queue_t *ptQueue);       \
-extern bool __NAME##_queue_init(                                                \
+extern bool __NAME##_queue_init(                                            \
     __NAME##_queue_t *ptQueue, __TYPE *ptBuffer, __PTR_TYPE tSize, bool bFull); \
 extern bool __NAME##_enqueue(__NAME##_queue_t *ptQueue, __TYPE tObj);       \
-extern int_fast32_t __NAME##_enqueue_block( __NAME##_queue_t *ptQueue,           \
+extern int_fast32_t __NAME##_enqueue_block( __NAME##_queue_t *ptQueue,      \
                                 __TYPE *ptSrc,                              \
                                 __PTR_TYPE hwSize);                         \
 extern bool __NAME##_queue_peek(__NAME##_queue_t *ptQueue, __TYPE *ptObj);  \
 extern bool __NAME##_dequeue(__NAME##_queue_t *ptQueue, __TYPE *ptObj);     \
-extern int_fast32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,           \
+extern int_fast32_t __NAME##_dequeue_block( __NAME##_queue_t *ptQueue,       \
                                 __TYPE *ptSrc,                              \
                                 __PTR_TYPE hwSize);                         \
 extern __TYPE * __NAME##_dequeue_ref(__NAME##_queue_t *ptQueue);            \
@@ -129,7 +130,7 @@ extern __TYPE * __NAME##_get_queue_buffer(__NAME##_queue_t *ptQueue);
 #define DEF_QUEUE_EX(                                                       \
     __NAME, __TYPE, __PTR_TYPE, __MUTEX_TYPE, __ATOM_ACCESS)                \
 declare_class(__NAME##_queue_t)                                             \
-def_class(__NAME##_queue_t)                                                 \
+def_class(__NAME##_queue_t,,                                                \
     __TYPE          *ptBuffer;                                              \
     __PTR_TYPE      tSize;                                                  \
     __PTR_TYPE      tHead;                                                  \
@@ -138,6 +139,7 @@ def_class(__NAME##_queue_t)                                                 \
     __PTR_TYPE      tPeek;                                                  \
     __PTR_TYPE      tPeekCounter;                                           \
     __MUTEX_TYPE    tMutex;                                                 \
+)                                                                           \
 end_def_class(__NAME##_queue_t)                                             \
                                                                             \
 __MUTEX_TYPE *__NAME##_queue_mutex(__NAME##_queue_t *ptQueue)               \

@@ -41,8 +41,8 @@
 //! \brief fixed memory block used as stream buffer
 //! @{
 
-def_class(block_t)
-    implement(__single_list_node_t)
+def_class(block_t,
+    which(implement(__single_list_node_t)),
     uint8_t  *pchBuffer;                            //!< buffer address
 
     union {
@@ -58,12 +58,14 @@ def_class(block_t)
 
     uint32_t    Size                        : 24;
     uint32_t    chAdapterID                 : 8;
+)
 end_def_class(block_t);
 //! @}
 
 def_class(block_pool_t, 
-    which( inherit(pool_t) ))   
+    which( inherit(pool_t) ),   
     block_adapter_t *ptAdapter;
+)
 end_def_class(block_pool_t)
 
 

@@ -37,10 +37,11 @@
 /*============================ TYPES =========================================*/
 
 declare_class(block_queue_t)
-def_class(block_queue_t)                            //!< inherit from pool StreamBufferBlock
-    block_t                  *ptListHead;                 //!< Queue Head
-    block_t                  *ptListTail;                 //!< Queue Tail
+def_class(block_queue_t,,                                   //!< inherit from pool StreamBufferBlock
+    block_t                  *ptListHead;                   //!< Queue Head
+    block_t                  *ptListTail;                   //!< Queue Tail
     uint32_t                 wCount;
+)
 end_def_class(block_queue_t)
 
 

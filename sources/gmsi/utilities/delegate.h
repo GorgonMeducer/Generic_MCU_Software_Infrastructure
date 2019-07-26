@@ -35,20 +35,22 @@ typedef fsm_rt_t delegate_handler_func_t(void *pArg, void *pParam);
 declare_class( delegate_handler_t )
 //! \name general event handler
 //! @{
-extern_class( delegate_handler_t )
+extern_class( delegate_handler_t ,,
     delegate_handler_func_t     *fnHandler;                                     //!< event handler
     void                        *pArg;                                          //!< Argument
     delegate_handler_t          *ptNext;                                        //!< next 
+)
 end_extern_class(delegate_handler_t)
 //! @}
 
 declare_class( delegate_t )
 //! \name event
 //! @{
-extern_class(delegate_t)
+extern_class(delegate_t,,
     delegate_handler_t     *ptEvent;
     delegate_handler_t     *ptBlockedList;
     delegate_handler_t     **pptHandler;
+)
 end_extern_class(delegate_t)
 //! @}
 

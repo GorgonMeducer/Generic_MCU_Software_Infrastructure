@@ -32,10 +32,11 @@ declare_class(mem_helper_t)
 
 //! \name class mem_helper_t
 //! @{
-def_class(mem_helper_t)
+def_class(mem_helper_t,,
     i_mem_t *ptMEM;                         //!< target mal interface
     void    *ptTarget;                      //!< target object
     void    *pPageBuffer;                   
+)
 end_def_class(mem_helper_t)
 //! @}
 

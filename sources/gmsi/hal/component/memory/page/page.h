@@ -63,7 +63,7 @@ typedef struct {
 declare_class(page_t)
 //! \name class page_t
 //! @{
-extern_class(page_t)
+extern_class(page_t,,
     const i_page_t  tIO;
     void            *pObj;
     uint8_t         *pchBuffer;
@@ -76,6 +76,7 @@ extern_class(page_t)
     uint16_t        hwCount;
     uint32_t        wAddress;
     uint32_t        wPageAddress;
+)
 end_extern_class(page_t)
 //! @}
 

@@ -61,14 +61,15 @@ typedef bool telegraph_handler_t (telegraph_report_t tStatus, telegraph_t *ptTel
 
 //! \name abstruct class telegraph, user telegraph should inherit from this class
 //! @{
-extern_class(telegraph_t)
-    implement(__single_list_node_t)    
+extern_class(telegraph_t,
+    which(implement(__single_list_node_t)),     
     telegraph_engine_t      *ptEngine;
     telegraph_handler_t     *fnHandler;
     multiple_delay_item_t   *ptDelayItem;
     uint32_t                wTimeout;
     block_t                 *ptOUTData;
     block_t                 *ptINData;
+)
 end_extern_class(telegraph_t)
 //! @}
 
@@ -97,7 +98,7 @@ extern_simple_fsm(telegraph_engine_task,
 //! @{
 extern_class(telegraph_engine_t,   
     which(  inherit(fsm(telegraph_engine_task))
-            inherit(pool_t)))
+            inherit(pool_t)),
 
     struct {
         telegraph_t                             *ptHead;
@@ -113,6 +114,7 @@ extern_class(telegraph_engine_t,
     multiple_delay_t                            *ptDelayService;
     telegraph_engine_low_level_write_io_t       *fnWriteIO;
     void                                        *pIOTag;
+)
 end_extern_class(telegraph_engine_t)
 //! @}
 

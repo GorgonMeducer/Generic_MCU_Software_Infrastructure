@@ -32,11 +32,12 @@
 /*============================ TYPES =========================================*/
 
 declare_class(pool_t)
-def_class(pool_t)
+def_class(pool_t,,
     __single_list_node_t    *ptFreeList;
     uint_fast16_t           tCounter;
     __EPOOL_MUTEX_TYPE      tMutex;
     void *                  pTarget;
+)
 end_def_class(pool_t)
 
 typedef void pool_item_init_event_handler_t(void *pTarget, 

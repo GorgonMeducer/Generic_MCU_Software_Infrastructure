@@ -116,15 +116,15 @@ end_def_interface(i_mem_t)
 //! @}
 
 //! \brief define abstract class mem_t
-def_class(mem_t, ref_interface(i_mem_t))
+def_class(mem_t, ref_interface(i_mem_t),
     page_t *ptPage;
-
+)
 end_def_class(mem_t)
 
 //! \brief define abstract class mem_t
-extern_class(mem_t, ref_interface(i_mem_t))
+extern_class(mem_t, ref_interface(i_mem_t),
     page_t *ptPage;
-
+)
 end_extern_class(mem_t)
 
 /*============================ INCLUDES ======================================*/
