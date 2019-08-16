@@ -16,7 +16,14 @@
  *  limitations under the License.                                           *
  *                                                                           *
  ****************************************************************************/
- 
+
+
+#if defined(__OOC_RELEASE__)
+#   undef __OOC_DEBUG__
+#   define __OOC_DEBUG__        1
+#endif
+
+
 #ifndef __PLOOC_CLASS_H__           /* deliberately comment this out! */
 #define __PLOOC_CLASS_H__           /* deliberately comment this out! */
 
@@ -36,7 +43,8 @@
           a. if the target processor is 8 bits, define it as uint8_t
           b. if the target processor is 16 bits, define it as uint16_t 
           c. if the target processor is 32 bits, define it as uint32_t
-          d. if the target processor is 64 bits, define it as either uint32_t or uint64_t
+          d. if the target processor is 64 bits, define it as either uint32_t or
+             uint64_t
  */
 
 /*============================ MACROS ========================================*/
@@ -96,6 +104,10 @@
 #   define PLOOC_CONNECT4( a, b, c, d)  __PLOOC_CONNECT4( a, b, c, d)
 #endif
 //! @}
+                             
+#ifndef PLOOC_UNUSED_PARAM
+#   define PLOOC_UNUSED_PARAM(__N)      do {(__N) = (__N);}while(0)
+#endif
 
 #define PLOOC_ALIGNOF_STRUCT(...)       PLOOC_ALIGNOF(struct {__VA_ARGS__})
 #define PLOOC_SIZEOF_STRUCT(...)        sizeof(struct {__VA_ARGS__})
@@ -120,12 +132,75 @@
                 PLOOC_ALIGN(PLOOC_ALIGNOF_STRUCT(__VA_ARGS__));
 #   endif   /* __PLOOC_CLASS_USE_NO_STRUCT_MASK__ */
 
+#define __PLOOC_PRO_struct                          struct
+#define __PLOOC_PRI_struct                          struct 
+#define __PLOOC_EXT_struct                          struct
+#define __PLOOC_PRO_union                           union
+#define __PLOOC_PRI_union                           union 
+#define __PLOOC_EXT_union                           union
+#define __PLOOC_EXT_uint8_t                         uint8_t
+#define __PLOOC_PRI_uint8_t                         uint8_t
+#define __PLOOC_PRO_uint8_t                         uint8_t
+#define __PLOOC_EXT_
+#define __PLOOC_PRI_
+#define __PLOOC_PRO_
+
+
+
+#ifdef __OOC_DEBUG__
+
+//! \brief wrapper for shell type
+#   define __PLOOC_EXT__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__private_member(...)         PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__protected_member(...)       PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
+
+//! \brief wrapper for internal private type
+#   define __PLOOC_PRI__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__private_member(...)         PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__protected_member(...)       PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
+
+//! \brief wrapper for internal protected type
+#   define __PLOOC_PRO__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__private_member(...)         PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__protected_member(...)       PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
+#else
+
+//! \brief wrapper for shell type
+#   define __PLOOC_EXT__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__private_member(...)         PLOOC_INVISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__protected_member(...)       PLOOC_INVISIBLE(__VA_ARGS__)
+#   define __PLOOC_EXT__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
+
+//! \brief wrapper for internal private type
+#   define __PLOOC_PRI__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__private_member(...)         PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__protected_member(...)       PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRI__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
+
+//! \brief wrapper for internal protected type
+#   define __PLOOC_PRO__public_member(...)          PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__private_member(...)         PLOOC_INVISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__protected_member(...)       PLOOC_VISIBLE(__VA_ARGS__)
+#   define __PLOOC_PRO__which(...)                  PLOOC_VISIBLE(__VA_ARGS__)
 #endif
 
-#if defined(__OOC_RELEASE__)
-#   undef __OOC_DEBUG__
-#   define __OOC_DEBUG__        1
 #endif
+
+#undef which
+#define which                                   ,_which
+
+#undef private_member
+#define private_member                          ,_private_member
+
+#undef protected_member
+#define protected_member                        ,_protected_member
+
+#undef public_member
+#define public_member                           ,_public_member
+
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

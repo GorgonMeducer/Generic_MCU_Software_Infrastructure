@@ -63,7 +63,7 @@
     
 #   endif
           
-#   define __end_def_class(__NAME, ...)                                                                           
+#   define __end_def_class(__NAME, ...)
 
 #   undef private_member
 #   define private_member(...)              PLOOC_VISIBLE(__VA_ARGS__)
@@ -90,7 +90,7 @@
     struct __##__NAME {                                                         \
         __PUBLIC                                                                \
         PLOOC_VISIBLE(__VA_ARGS__)                                              \
-    };                                                                                                                                                  
+    };                                                                          
   
 #define __extern_class(__NAME,__PUBLIC, ...)                                    \
     typedef struct __NAME __NAME;                                               \
@@ -116,7 +116,7 @@
     struct __##__NAME {                                                         \
         __PUBLIC                                                                \
         PLOOC_VISIBLE(__VA_ARGS__)                                              \
-    };                                                                                                                                                  
+    };                                                                          
   
 #define __extern_class(__NAME,__PUBLIC, ...)                                    \
     typedef struct __NAME __NAME;                                               \
@@ -188,7 +188,7 @@
             __EXTERN_CLASS_OBJ( __TYPE, __OBJ )
 #endif
 
-/*----------------------------------------------------------------------------*          
+/*----------------------------------------------------------------------------*
  * new standard (lower case)                                                  *
  *----------------------------------------------------------------------------*/
 

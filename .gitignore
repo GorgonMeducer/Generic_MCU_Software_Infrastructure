@@ -18,3 +18,8 @@ example/build/mdk/Out/Blinky.fed
 example/build/mdk/Out/Blinky.l2p
 sources/gmsi/service/gui/tgui/grid/example.lib
 *.lst
+*.map
+*.axf
+*.lnp
+*.dep
+*.gabwan01
