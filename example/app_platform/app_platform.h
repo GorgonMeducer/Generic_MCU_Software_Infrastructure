@@ -23,26 +23,18 @@
 
 #include <stdio.h>
 
-#ifdef FRDM_K64F
-#include "MK64F12.h"
-
-//#include "board.h"
-//#include "fsl_uart.h"
-
-//#include "pin_mux.h"
-//#include "clock_config.h"
+#if   defined (CMSDK_CM7)
+  #include "CMSDK_CM7.h"
+#elif defined (CMSDK_CM7_SP)
+  #include "CMSDK_CM7_SP.h"
+#elif defined (CMSDK_CM7_DP)
+  #include "CMSDK_CM7_DP.h"
 #else
-#include "Device.h"                     // Keil::Board Support:V2M-MPS2:Common
-#include "RTE_Components.h"             // Component selection
-#include "Board_LED.h"                  // ::Board Support:LED
-#include "Board_Buttons.h"              // ::Board Support:Buttons
-#include "Board_Touch.h"                // ::Board Support:Touchscreen
-#include "Board_GLCD.h"                 // ::Board Support:Graphic LCD
-#include "GLCD_Config.h"                // Keil.SAM4E-EK::Board Support:Graphic LCD
+  #error device not specified!
 #endif
 
 #include ".\stdout_USART.h"
-
+#include "RTE_Components.h"
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/     

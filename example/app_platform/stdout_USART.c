@@ -35,16 +35,14 @@
 #include ".\app_cfg.h"
 #include <string.h>
 
-
-#ifdef FRDM_K64F
-#include "MK64F12.h"
-//#include "board.h"
-
-#include "pin_mux.h"
-#include "clock_config.h"
+#if   defined (CMSDK_CM7)
+  #include "CMSDK_CM7.h"
+#elif defined (CMSDK_CM7_SP)
+  #include "CMSDK_CM7_SP.h"
+#elif defined (CMSDK_CM7_DP)
+  #include "CMSDK_CM7_DP.h"
 #else
-#include "Driver_USART.h"
-#include "Device.h"
+  #error device not specified!
 #endif
 
 /*============================ MACROS ========================================*/
@@ -95,60 +93,7 @@
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
-#ifdef FRDM_K64F
-#define __USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                          \
-                                                                        \
-void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)                \
-{                                                                       \
-    /*CMSDK_UART##__NUM->CTRL |= CMSDK_UART_CTRL_RXIRQEN_Msk;*/         \
-}                                                                       \
-                                                                        \
-void STREAM_IN_serial_port_disable_rx_cpl_interrupt(void)               \
-{                                                                       \
-    /*CMSDK_UART##__NUM->CTRL &= ~CMSDK_UART_CTRL_RXIRQEN_Msk; */       \
-}                                                                       \
-                                                                        \
-uint8_t STREAM_IN_serial_port_get_byte(void)                            \
-{                                                                       \
-    return 0;/*CMSDK_UART##__NUM->DATA;*/                              \
-}                                                                       \
-/* this function is called instead of the original UART0RX_Handler() */ \
-void USART##__NUM##_RX_CPL_Handler(void)                                \
-{                                                                       \
-    /*! clear interrupt flag */                                         \
-    /*CMSDK_UART##__NUM->INTCLEAR = CMSDK_UART##__NUM->INTSTATUS; */    \
-    STREAM_IN_insert_serial_port_rx_cpl_event_handler();                \
-}                           
- 
-    
-#define __USE_SERIAL_PORT_OUTPUT_ADAPTER(__NUM)                         \
-                                                                        \
-void STREAM_OUT_serial_port_enable_tx_cpl_interrupt(void)               \
-{                                                                       \
-    /*CMSDK_UART##__NUM->CTRL |= CMSDK_UART_CTRL_TXIRQEN_Msk;*/         \
-}                                                                       \
-                                                                        \
-void STREAM_OUT_serial_port_disbale_tx_cpl_interrupt(void)              \
-{                                                                       \
-    /*CMSDK_UART##__NUM->CTRL &= ~CMSDK_UART_CTRL_TXIRQEN_Msk;*/        \
-}                                                                       \
-                                                                        \
-void STREAM_OUT_serial_port_fill_byte(uint8_t chByte)                   \
-{                                                                       \
-    /*CMSDK_UART##__NUM->DATA = chByte; */                              \
-}                                                                       \
-                                                                        \
-/* this function is called instead of the original UART0TX_Handler() */ \
-void USART##__NUM##_TX_CPL_Handler(void)                                \
-{                                                                       \
-    /*! clear interrupt flag  */                                        \
-    /*CMSDK_UART##__NUM->INTCLEAR = CMSDK_UART##__NUM->INTSTATUS; */    \
-    /*! implement our own version of uart tx interrupt */               \
-                                                                        \
-    STREAM_OUT_insert_serial_port_tx_cpl_event_handler();               \
-}
-                 
-#else
+
 #define __USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                          \
                                                                         \
 void STREAM_IN_serial_port_enable_rx_cpl_interrupt(void)                \
@@ -204,9 +149,8 @@ void USART##__NUM##_TX_CPL_Handler(void)                                \
 
 
                  
-#endif
 
-#define USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                \
+#define USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)                            \
             __USE_SERIAL_PORT_INPUT_ADAPTER(__NUM)
 
 #define USE_SERIAL_PORT_OUTPUT_ADAPTER(__NUM)                           \
@@ -249,11 +193,6 @@ USE_SERIAL_PORT_OUTPUT_ADAPTER(USART_DRV_NUM)
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-
-#ifdef FRDM_K64F
-#else
-extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
-#endif
 /*============================ IMPLEMENTATION ================================*/
 
 
@@ -269,54 +208,19 @@ bool stdout_init (void)
     STREAM_OUT_output_stream_adapter_init();
     STREAM_IN_input_stream_adapter_init();
     
-#ifdef FRDM_K64F
+    CMSDK_UART0->CTRL = 0;         /* Disable UART when changing configuration */
+    CMSDK_UART0->BAUDDIV = 651;    /* 25MHz / 38400 = 651 */
+    CMSDK_UART0->CTRL = CMSDK_UART_CTRL_TXEN_Msk    |
+                        CMSDK_UART_CTRL_RXEN_Msk    | 
+                        CMSDK_UART_CTRL_RXIRQEN_Msk;  
+                            
+    NVIC_ClearPendingIRQ(UART0RX_IRQn);
+    NVIC_EnableIRQ(UART0RX_IRQn);
+    NVIC_ClearPendingIRQ(UART0TX_IRQn);
+    NVIC_EnableIRQ(UART0TX_IRQn);
     
-#else
-    do {
-        int32_t status;
-
-        
-    
-        status = ptrUSART->Initialize(NULL /*&UART0_Signal_Handler*/);
-        if (status != ARM_DRIVER_OK) { 
-            break; 
-        }
-
-        status = ptrUSART->PowerControl(ARM_POWER_FULL);
-        if (status != ARM_DRIVER_OK) { 
-            break; 
-        }
-
-        status = ptrUSART->Control( ARM_USART_MODE_ASYNCHRONOUS     |
-                                    ARM_USART_DATA_BITS_8           |
-                                    ARM_USART_PARITY_NONE           |
-                                    ARM_USART_STOP_BITS_1           |
-                                    ARM_USART_FLOW_CONTROL_NONE,
-                                    USART_BAUDRATE                  );
-        if (status != ARM_DRIVER_OK) { 
-            break; 
-        }
-
-        status = ptrUSART->Control( ARM_USART_CONTROL_TX ,ENABLED   );
-        if (status != ARM_DRIVER_OK) { 
-            break; 
-        }
-        
-        status = ptrUSART->Control( ARM_USART_CONTROL_RX ,ENABLED   );
-        if (status != ARM_DRIVER_OK) { 
-            break; 
-        }
-        
-        
-        return true;
-    } while(false);
-#endif
-    return false;
+    return true;
 }
-
-
-    
-    
     
 /**
   Put a character to the stdout
