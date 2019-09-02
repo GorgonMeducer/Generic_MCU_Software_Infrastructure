@@ -89,17 +89,24 @@
 
 //! \brief macro for inheritance
 
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+#define __IMPLEMENT_EX(__TYPE, __NAME)                                          \
+            __TYPE  __NAME;                                                 
+#else
 #define __IMPLEMENT_EX(__TYPE, __NAME)                                          \
             union {                                                             \
                 __TYPE  __NAME;                                                 \
                 __TYPE;                                                         \
             };
-            
+#endif
+
 #define __INHERIT_EX(__TYPE, __NAME)    __TYPE  __NAME;
 #define INHERIT_EX(__TYPE, __NAME)      __INHERIT_EX(__TYPE, __NAME)
 
 #define __INHERIT(__TYPE)              INHERIT_EX(__TYPE, use_as__##__TYPE)
 #define INHERIT(__TYPE)                __INHERIT(__TYPE)
+
+
 
 /*! \note You can only use IMPLEMENT when defining INTERFACE. For Implement 
  *        interface when defining class, you should use DEF_CLASS_IMPLEMENT 
