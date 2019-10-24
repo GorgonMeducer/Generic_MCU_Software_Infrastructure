@@ -10,7 +10,7 @@
       <TargetName>V2M-MPS2</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6130000::V6.13.0.1 (dev drop 1) for Armv8.1-M and MVE::..\..\Program Files\ARMCompiler6.13DevdropforArmv8.1-MandMVE</pCCUsed>
+      <pCCUsed>6130000::V6.13::.\ARMCompiler6.13</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-Omax -fms-extensions -Wno-microsoft-anon-tag</MiscControls>
-              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\" _MSC_VER</Define>
+              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\" _MSC_VER __USE_COMPILER_SPECIFIED_CMSIS_PATH__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>

@@ -20,8 +20,8 @@
 
 /*============================ INCLUDES ======================================*/
 
-#ifndef __STORE_ENVIRONMENT_CFG_IN_PROJ__
-#include "..\..\environment_cfg.h"
+#ifdef __STORE_ENVIRONMENT_CFG_IN_HEADER_FILE__
+#include "environment_cfg.h"
 #endif
 
 #define __STR(__N)      #__N  

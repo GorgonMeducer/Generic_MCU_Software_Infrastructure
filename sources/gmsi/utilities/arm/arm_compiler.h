@@ -25,7 +25,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "cmsis_compiler.h"
+
+#ifndef __USE_COMPILER_SPECIFIED_CMSIS_PATH__
+#   include "CMSIS/Core/Include/cmsis_compiler.h"
+#else
+#   include "cmsis_compiler.h"
+#endif
 
 //! \name The macros to identify the compiler
 //! @{

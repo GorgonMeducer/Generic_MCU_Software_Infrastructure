@@ -248,7 +248,7 @@ typedef struct {
                                 
     //! request again
     MULTIPLE_DELAY.RequestDelay(&s_tDelayService, 
-                                1500,                                           //!< request delay 1500ms
+                                1500,                             st delay 1500ms
                                 MULTIPLE_DELAY_NORMAL_PRIORITY,                 //!< priority is normal
                                 NULL,                                           //!< no tag
                                 &app_1500ms_delay_timeout_event_handler);       //!< timout event handler
