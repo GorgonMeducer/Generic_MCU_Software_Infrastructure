@@ -318,6 +318,7 @@ private mem_block_t read_block_buffer(  block_t *ptObj,
         } else if (nSize <= wMaxSize) {
             pchBuffer = (uint8_t *)get_block_buffer(ptObj) + wOffsite;
         } else {
+            pchBuffer = (uint8_t *)get_block_buffer(ptObj);
             nSize = wMaxSize;
             memcpy(pchSrc, pchBuffer+wOffsite, nSize);
             pchBuffer = pchSrc;
