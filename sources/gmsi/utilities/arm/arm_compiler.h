@@ -102,6 +102,150 @@
   #warning Not supported compiler type
 #endif
 
+
+
+/*----------------------------------------------------------------------------*
+ * Warning Mitigation                                                         *
+ *----------------------------------------------------------------------------*/
+#if defined(__clang__) //__IS_COMPILER_LLVM__
+#pragma clang diagnostic ignored "-Wmissing-declarations"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wmicrosoft-anon-tag"
+#pragma clang diagnostic ignored "-Wmissing-braces"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wmicrosoft-enum-forward-reference"
+#pragma clang diagnostic ignored "-Wbuiltin-requires-header"
+#pragma clang diagnostic ignored "-Winitializer-overrides" 
+#pragma clang diagnostic ignored "-Wbraced-scalar-init" 
+#pragma clang diagnostic ignored "-Wempty-body" 
+#pragma clang diagnostic ignored "-Wgnu-empty-struct"
+#pragma clang diagnostic ignored "-Wint-conversion" 
+#pragma clang diagnostic ignored "-Wint-to-pointer-cast" 
+#pragma clang diagnostic ignored "-Wmicrosoft-include"
+#pragma clang diagnostic ignored "-Wpragma-pack" 
+#pragma clang diagnostic ignored "-Wunused-function" 
+#pragma clang diagnostic ignored "-Wswitch"
+#pragma clang diagnostic ignored "-Wembedded-directive"
+#pragma clang diagnostic ignored "-Wundef"
+#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wnewline-eof"
+#pragma clang diagnostic ignored "-Wduplicate-enum"
+#pragma clang diagnostic ignored "-Wextra-semi"
+#pragma clang diagnostic ignored "-Wextra-semi-stmt"
+#pragma clang diagnostic ignored "-Wzero-length-array"
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wnonportable-include-path"
+#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+#pragma clang diagnostic ignored "-Wc++-compat"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+#pragma clang diagnostic ignored "-Wcast-qual"
+#pragma clang diagnostic ignored "-Wbad-function-cast"
+#pragma clang diagnostic ignored "-Wswitch-enum"
+#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#pragma clang diagnostic ignored "-Wtautological-pointer-compare"
+
+/*! \NOTE do not ignore following warning unless you take the risk by yourself */
+//#pragma clang diagnostic ignored "-Wbitfield-constant-conversion"
+//#pragma clang diagnostic ignored "-Wpointer-integer-compare" 
+//#pragma clang diagnostic ignored "-Wunused-value" 
+//#pragma clang diagnostic ignored "-Wno-sometimes-uninitialized" 
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations" 
+//#pragma clang diagnostic ignored "-Wunused-variable"  
+
+#elif __IS_COMPILER_GCC__
+// TODO: validate diagnositc ignored for GCC
+#pragma gcc diagnostic ignored "-Wmissing-declarations"
+#pragma gcc diagnostic ignored "-Wdeprecated-declarations"
+#pragma gcc diagnostic ignored "-Wmicrosoft-anon-tag"
+#pragma gcc diagnostic ignored "-Wmissing-braces"
+#pragma gcc diagnostic ignored "-Wconstant-conversion"
+#pragma gcc diagnostic ignored "-Wmicrosoft-enum-forward-reference"
+#pragma gcc diagnostic ignored "-Wbuiltin-requires-header"
+#pragma gcc diagnostic ignored "-Winitializer-overrides" 
+#pragma gcc diagnostic ignored "-Wbraced-scalar-init" 
+#pragma gcc diagnostic ignored "-Wempty-body" 
+#pragma gcc diagnostic ignored "-Wgnu-empty-struct"
+#pragma gcc diagnostic ignored "-Wint-conversion" 
+#pragma gcc diagnostic ignored "-Wint-to-pointer-cast" 
+#pragma gcc diagnostic ignored "-Wmicrosoft-include"
+#pragma gcc diagnostic ignored "-Wpragma-pack" 
+#pragma gcc diagnostic ignored "-Wunused-function" 
+#pragma gcc diagnostic ignored "-Wswitch"
+#pragma gcc diagnostic ignored "-Wembedded-directive"
+#pragma gcc diagnostic ignored "-Wundef"
+#pragma gcc diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#pragma gcc diagnostic ignored "-Wpadded"
+#pragma gcc diagnostic ignored "-Wnewline-eof"
+#pragma gcc diagnostic ignored "-Wduplicate-enum"
+#pragma gcc diagnostic ignored "-Wextra-semi"
+#pragma gcc diagnostic ignored "-Wextra-semi-stmt"
+#pragma gcc diagnostic ignored "-Wzero-length-array"
+#pragma gcc diagnostic ignored "-Wmissing-prototypes"
+#pragma gcc diagnostic ignored "-Wimplicit-int-conversion"
+#pragma gcc diagnostic ignored "-Wnonportable-include-path"
+#pragma gcc diagnostic ignored "-Wmissing-variable-declarations"
+#pragma gcc diagnostic ignored "-Wc++-compat"
+#pragma gcc diagnostic ignored "-Wsign-conversion"
+#pragma gcc diagnostic ignored "-Wimplicit-fallthrough"
+#pragma gcc diagnostic ignored "-Wmissing-noreturn"
+#pragma gcc diagnostic ignored "-Wcast-qual"
+#pragma gcc diagnostic ignored "-Wbad-function-cast"
+#pragma gcc diagnostic ignored "-Wswitch-enum"
+#pragma gcc diagnostic ignored "-Wdisabled-macro-expansion"
+#pragma gcc diagnostic ignored "-Wmissing-field-initializers"
+#pragma gcc diagnostic ignored "-Wtautological-pointer-compare"
+
+/*! \NOTE do not ignore following warning unless you take the risk by yourself */
+//#pragma gcc diagnostic ignored "-Wbitfield-constant-conversion"
+//#pragma gcc diagnostic ignored "-Wpointer-integer-compare" 
+//#pragma gcc diagnostic ignored "-Wunused-value" 
+//#pragma gcc diagnostic ignored "-Wno-sometimes-uninitialized" 
+//#pragma gcc diagnostic ignored "-Wdeprecated-declarations" 
+//#pragma gcc diagnostic ignored "-Wunused-variable"  
+
+#elif __IS_COMPILER_IAR__
+
+//! undefined behavior: the order of volatile accesses is undefined in this statement 
+#pragma diag_suppress=Pa082
+
+//! Typedef name has already been declared (with same type)
+#pragma diag_suppress=pe301
+
+//! enumerated type mixed with another type
+#pragma diag_suppress=pe188
+
+//! extra ";" ignored
+#pragma diag_suppress=pe381
+
+//! enumerated type mixed with another enumerated type 
+#pragma diag_suppress=pa089
+
+//! use of address of unaligned structure member 
+#pragma diag_suppress=pa039
+
+//,Pe186,Pe111,,pe128,,,Pe1866,Pe064,Pa039
+
+#endif
+
+#if __IS_COMPILER_ARM_COMPILER_6__
+#   pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
+#endif
+
+
+/*----------------------------------------------------------------------------*
+ * Warning Emphasize                                                          *
+ *----------------------------------------------------------------------------*/
+#if defined(__clang__) //__IS_COMPILER_LLVM__
+#pragma clang diagnostic warning "-Wcast-align"
+#elif __IS_COMPILER_GCC__
+
+#endif
+
 /*============================ MACROS ========================================*/
 
 #ifndef DEF_REG
