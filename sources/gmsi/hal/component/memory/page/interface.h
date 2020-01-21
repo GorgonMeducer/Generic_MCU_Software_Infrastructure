@@ -35,11 +35,12 @@ typedef fsm_rt_t page_access_t(
 
 //! \name page interface
 //! @{
-DEF_INTERFACE(i_page_t)
+declare_interface(i_page_t)
+def_interface(i_page_t)
     page_access_t *fnPageWrite;                                 //!< write page
     page_access_t *fnPageRead;                                  //!< read page
     fsm_rt_t   (*fnPageErase)(void *pObj, uint32_t wAddress);  //!< page erase
-END_DEF_INTERFACE(i_page_t)
+end_def_interface(i_page_t)
 //! @}
 
 /*============================ GLOBAL VARIABLES ==============================*/
