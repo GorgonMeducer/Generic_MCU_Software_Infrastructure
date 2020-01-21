@@ -43,5 +43,19 @@ uint16_t crc16_check(uint16_t *pwCRCValue,uint8_t chData)
     return (*pwCRCValue);
 }
 
+uint16_t crc16_stream_check(uint16_t *pwCRCValue, 
+                            uint8_t *pchStream, 
+                            uint16_t hwSize)
+{
+    if (NULL == pchStream || 0 == hwSize || NULL == pwCRCValue) {
+        return 0;
+    }
+    
+    do {
+        crc16_check(pwCRCValue, *pchStream++);
+    } while(--hwSize);
+    
+    return (*pwCRCValue);
+}
 
 /* EOF */

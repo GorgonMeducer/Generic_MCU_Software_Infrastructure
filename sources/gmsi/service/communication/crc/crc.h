@@ -82,6 +82,11 @@ extern uint8_t crc7_check(uint8_t *pchCRCValue, uint8_t chData);
  */
 extern uint16_t crc16_check(uint16_t *pwCRCValue,uint8_t chData);
 
+extern 
+uint16_t crc16_stream_check(uint16_t *pwCRCValue, 
+                            uint8_t *pchStream, 
+                            uint16_t hwSize);
+
 /*! \brief CRC8
  *! \param pchCRCValue CRC Variable
  *! \param chData target byte
