@@ -48,7 +48,7 @@ end_def_structure(__es_simple_frame_fsm_internal)
 declare_simple_fsm(es_simple_frame_decoder)
 extern_simple_fsm(es_simple_frame_decoder,
     def_params(
-        i_byte_pipe_t *ptPipe;          //!< pipe
+        i_pipe_t *ptPipe;           //!< pipe
         union {
             frame_parser_t *fnParser;       //!< parser
             frame_block_parser_t *fnBlockParser;
@@ -62,7 +62,7 @@ extern_simple_fsm(es_simple_frame_decoder,
 declare_simple_fsm(es_simple_frame_encoder)
 extern_simple_fsm(es_simple_frame_encoder,
     def_params(
-        i_byte_pipe_t *ptPipe;          //!< pipe
+        i_pipe_t *ptPipe;           //!< pipe
         implement(__es_simple_frame_fsm_internal)
     ))
 
@@ -97,7 +97,7 @@ end_extern_class(es_simple_frame_t)
 //! \name es-simple frame configuration structure
 //! @{
 typedef struct {
-    i_byte_pipe_t   *ptPipe; 
+    i_pipe_t   *ptPipe; 
     void  *fnParser;
     union {
         implement(mem_block_t)

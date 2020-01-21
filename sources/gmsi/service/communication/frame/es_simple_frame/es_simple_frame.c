@@ -50,7 +50,7 @@
 
 def_simple_fsm(es_simple_frame_decoder,
     def_params(
-        i_byte_pipe_t *ptPipe;          //!< pipe
+        i_pipe_t *ptPipe;                   //!< pipe
         union {
             frame_parser_t *fnParser;       //!< parser
             frame_block_parser_t *fnBlockParser;
@@ -63,7 +63,7 @@ def_simple_fsm(es_simple_frame_decoder,
     
 def_simple_fsm(es_simple_frame_encoder,
     def_params(
-        i_byte_pipe_t *ptPipe;          //!< pipe
+        i_pipe_t *ptPipe;                   //!< pipe
         implement(__es_simple_frame_fsm_internal)
     ))
 
@@ -96,7 +96,7 @@ end_def_class(es_simple_frame_t)
 
 private extern_fsm_initialiser(es_simple_frame_decoder,
     args(
-        i_byte_pipe_t *ptPipe, 
+        i_pipe_t    *ptPipe, 
         void *fnParser,
         mem_block_t tMemory,
         block_t *ptBlock,
@@ -105,7 +105,7 @@ private extern_fsm_initialiser(es_simple_frame_decoder,
 
 private extern_fsm_initialiser(es_simple_frame_encoder,
     args(
-        i_byte_pipe_t *ptPipe
+        i_pipe_t    *ptPipe
     ))
     
 private extern_fsm_initialiser(es_simple_frame_decoder_wrapper,
@@ -204,7 +204,10 @@ private bool es_simple_frame_init(
         //|| (0 == ptCFG->hwSize )
         ||  (NULL == ptCFG->fnParser)) {
         return false;
-    } else if ((NULL == ptCFG->ptPipe->ReadByte) || (NULL == ptCFG->ptPipe->WriteByte)) {
+    } else if (     (NULL == ptCFG->ptPipe->ReadByte) 
+                ||  (NULL == ptCFG->ptPipe->WriteByte)
+                ||  (NULL == ptCFG->ptPipe->Stream.Read)
+                ||  (NULL == ptCFG->ptPipe->Stream.Write)) {
         return false;
     }
     
@@ -269,7 +272,7 @@ private bool es_simple_frame_init(
 
 private fsm_initialiser(es_simple_frame_decoder,
     args(
-        i_byte_pipe_t *ptPipe, 
+        i_pipe_t *ptPipe, 
         void *fnParser,
         mem_block_t tMemory,
         block_t *ptBlock,
@@ -316,7 +319,8 @@ private fsm_rt_t decoder(es_simple_frame_t *ptFrame)
 } 
         
         
-private fsm_implementation(es_simple_frame_decoder)
+private fsm_implementation(es_simple_frame_decoder) 
+{
         
     def_states (
          WAIT_FOR_HEAD,
@@ -328,7 +332,8 @@ private fsm_implementation(es_simple_frame_decoder)
     )    
     uint8_t chData;
       
-    body (
+    body_begin();
+    
         on_start(
         
             if (NULL != this.ptBlock) {
@@ -352,132 +357,132 @@ private fsm_implementation(es_simple_frame_decoder)
             
         )
             
-        privilege_group(
-            state(WAIT_FOR_HEAD,
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
-                }
-                
-                if (ES_SIMPLE_FRAME_HEAD == chData) {
-                    update_state_to(WAIT_FOR_LENGTH_L);
-                } else {
-                    fsm_on_going();
-                }
-                
-            )
+        privilege_state(WAIT_FOR_HEAD, 
+            if (!this.ptPipe->ReadByte(&chData)) {
+                fsm_wait_for_obj();
+            }
             
-            state(WAIT_FOR_LENGTH_L,
-                
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
-                }
-                
-                CRC(this.hwCheckSUM, chData);
-                ((uint8_t *)&this.hwLength)[0] = chData;
-                
-                update_state_to(WAIT_FOR_LENGTH_H);
-            )
-                
-            state(WAIT_FOR_LENGTH_H,
-                
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
-                }
-                
-                CRC(this.hwCheckSUM, chData);
-                ((uint8_t *)&this.hwLength)[1] = chData;
-                
-                if (0 == this.hwLength){
-                    /* no data */
-                    transfer_to(WAIT_FOR_CHECK_SUM_L);
-                } else if (this.hwLength > this.nSize) {
-                    //! data is too big 
-                    this.bUnsupportFrame = true;
-                } 
-                this.hwCounter = 0;
-                
-                update_state_to(WAIT_FOR_DATA);
-            )
-              
-            state(WAIT_FOR_DATA,
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
-                }
-                
-                CRC(this.hwCheckSUM, chData);
+            if (ES_SIMPLE_FRAME_HEAD == chData) {
+                update_state_to(WAIT_FOR_LENGTH_L);
+            }
+        )        
+        
+        state(WAIT_FOR_LENGTH_L) {
+            
+            if (!this.ptPipe->ReadByte(&chData)) {
+                fsm_wait_for_obj();
+            }
+            
+            CRC(this.hwCheckSUM, chData);
+            ((uint8_t *)&this.hwLength)[0] = chData;
+            
+            update_state_to(WAIT_FOR_LENGTH_H);
+        }
+            
+        state(WAIT_FOR_LENGTH_H) {
+            
+            if (!this.ptPipe->ReadByte(&chData)) {
+                fsm_wait_for_obj();
+            }
+            
+            CRC(this.hwCheckSUM, chData);
+            ((uint8_t *)&this.hwLength)[1] = chData;
+            
+            if (0 == this.hwLength){
+                /* no data */
+                transfer_to(WAIT_FOR_CHECK_SUM_L);
+            } else if (this.hwLength > this.nSize) {
+                //! data is too big 
+                this.bUnsupportFrame = true;
+            } 
+            this.hwCounter = 0;
+            
+            update_state_to(WAIT_FOR_DATA);
+        }
 
-                if (!this.bUnsupportFrame) {
-                    this.pchBuffer[this.hwCounter] = chData;
-                }
+        state(WAIT_FOR_DATA) {
+            int32_t nRead = 
+            this.ptPipe->Stream.Read(this.pchBuffer + this.hwCounter, 
+                                     this.hwLength - this.hwCounter);
+            if ( nRead > 0) {
                 
-                if (++this.hwCounter >= this.hwLength) {
-                    transfer_to(WAIT_FOR_CHECK_SUM_L);
-                }
-            )
-              
-            state(WAIT_FOR_CHECK_SUM_L,
+                crc16_stream_check(&this.hwCheckSUM, 
+                                    this.pchBuffer + this.hwCounter, 
+                                    nRead);
+                                    
+                this.hwCounter += nRead;
                 
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
+                if (this.hwCounter >= this.hwLength) {
+                    //! get all data
+                    update_state_to(WAIT_FOR_CHECK_SUM_L);
                 }
-                if (!(((uint8_t *)&this.hwCheckSUM)[0] == chData)) {
-                    reset_fsm();
-                    fsm_on_going();
-                }
-                
-                update_state_to(WAIT_FOR_CHECK_SUM_H);
-            )
+            }
             
-                
-            
-            state(WAIT_FOR_CHECK_SUM_H,
-                
-                if (!this.ptPipe->ReadByte(&chData)) {
-                    fsm_wait_for_obj();
-                }
-                if (!(((uint8_t *)&this.hwCheckSUM)[1] == chData)) {
-                    reset_fsm();
-                    fsm_on_going();
-                }
-                    
-                if (this.bUnsupportFrame) {
-                    //! report unsupported frame
-                    this.hwLength = 1;
-                    this.pchBuffer[0] = ES_SIMPLE_FRAME_ERROR;
-                } else if (NULL == this.ptBlock){
-                    //! static buffer mode
-                    //! call parser
-                    this.hwLength = 
-                        this.fnParser(  obj_convert_as(this, mem_block_t), 
-                                        this.hwLength);
-                } else {
-                    block_t *ptBlock = this.ptBlock;
-                    
-                    BLOCK.Size.Set(ptBlock, this.hwLength);
-                    
-                    //! dynamic buffer mode
-                    ptBlock = this.fnBlockParser(ptBlock, this.pTag);
+            fsm_wait_for_obj();
+        }
 
-                    do {
-                        if (NULL == ptBlock) {
-                            this.hwLength = 0;
-                            break;
-                        } 
-                        
-                        //! get reply 
-                        this.ptBlock = ptBlock;
-                        this.hwLength = BLOCK.Size.Get(ptBlock);
-                        this.pchBuffer = BLOCK.Buffer.Get(ptBlock);
-                    } while(false);
-                     
-                }
-                fsm_cpl();
-            )
+        state(WAIT_FOR_CHECK_SUM_L) {
+            
+            if (!this.ptPipe->ReadByte(&chData)) {
+                fsm_wait_for_obj();
+            }
+            if (!(((uint8_t *)&this.hwCheckSUM)[0] == chData)) {
+                reset_fsm();
+                fsm_on_going();
+            }
+            
+            update_state_to(WAIT_FOR_CHECK_SUM_H);
+        }
+        
             
         
-        )
-    )
+        state(WAIT_FOR_CHECK_SUM_H) {
+            
+            if (!this.ptPipe->ReadByte(&chData)) {
+                fsm_wait_for_obj();
+            }
+            if (!(((uint8_t *)&this.hwCheckSUM)[1] == chData)) {
+                reset_fsm();
+                fsm_on_going();
+            }
+                
+            if (this.bUnsupportFrame) {
+                //! report unsupported frame
+                this.hwLength = 1;
+                this.pchBuffer[0] = ES_SIMPLE_FRAME_ERROR;
+            } else if (NULL == this.ptBlock){
+                //! static buffer mode
+                //! call parser
+                this.hwLength = 
+                    this.fnParser(  obj_convert_as(this, mem_block_t), 
+                                    this.hwLength);
+            } else {
+                block_t *ptBlock = this.ptBlock;
+                
+                BLOCK.Size.Set(ptBlock, this.hwLength);
+                
+                //! dynamic buffer mode
+                ptBlock = this.fnBlockParser(ptBlock, this.pTag);
 
+                do {
+                    if (NULL == ptBlock) {
+                        this.hwLength = 0;
+                        break;
+                    } 
+                    
+                    //! get reply 
+                    this.ptBlock = ptBlock;
+                    this.hwLength = BLOCK.Size.Get(ptBlock);
+                    this.pchBuffer = BLOCK.Buffer.Get(ptBlock);
+                } while(false);
+                 
+            }
+            fsm_cpl();
+        }
+            
+        
+    body_end();
+}
                 
 private fsm_initialiser(es_simple_frame_decoder_wrapper,
     args(
@@ -573,7 +578,7 @@ private fsm_implementation(es_simple_frame_decoder_wrapper)
             
 private fsm_initialiser(es_simple_frame_encoder,
     args(
-        i_byte_pipe_t *ptPipe
+        i_pipe_t *ptPipe
     ))
         
     init_body(
@@ -594,11 +599,12 @@ private fsm_implementation(es_simple_frame_encoder,
     args(
         uint8_t *pchData, uint_fast16_t hwSize
     ))
+{
     def_states(SEND_HEAD, SEND_LENGTH_L, SEND_LENGTH_H, SEND_DATA, SEND_CRC_L, SEND_CRC_H)
     
     uint8_t chData;
         
-    body (
+    body_begin()
         on_start(
             if (NULL == pchData || 0 == hwSize) {
                 fsm_report(GSF_ERR_INVALID_PARAMETER);
@@ -609,73 +615,76 @@ private fsm_implementation(es_simple_frame_encoder,
             }
             this.pchBuffer = pchData;
             this.hwLength = hwSize;
-            this.hwCounter = hwSize;
+            this.hwCounter = 0;
             this.hwCheckSUM = CRC_INIT;
+            
+            update_state_to(SEND_HEAD);
         )
             
-        state(SEND_HEAD,
+        state(SEND_HEAD) {
             if (!this.ptPipe->WriteByte(ES_SIMPLE_FRAME_HEAD)) {
                 fsm_on_going();
             }
             
             update_state_to(SEND_LENGTH_L);
-        )
+        }
             
-        state(SEND_LENGTH_L,
+        state(SEND_LENGTH_L) {
             chData = ((uint8_t *)&this.hwLength)[0];
             if (!this.ptPipe->WriteByte(chData)) {
                 fsm_on_going();
             }
             CRC(this.hwCheckSUM, chData);
             update_state_to(SEND_LENGTH_H);
-        )
+        }
             
-        state(SEND_LENGTH_H,
+        state(SEND_LENGTH_H) {
             chData = ((uint8_t *)&this.hwLength)[1];
             if (!this.ptPipe->WriteByte(chData)) {
                 fsm_on_going();
             }
             CRC(this.hwCheckSUM, chData);
             update_state_to(SEND_DATA);
-        )
+        }
 
-        privilege_state(SEND_DATA,
-            
-            chData = *this.pchBuffer;
-            if (!this.ptPipe->WriteByte(chData)) {
-                fsm_on_going();
+        state(SEND_DATA) {
+            int32_t nWrite = this.ptPipe->Stream.Write( this.pchBuffer + this.hwCounter, 
+                                                        this.hwLength - this.hwCounter);
+            if ( nWrite > 0) {
+                
+                crc16_stream_check(&this.hwCheckSUM, 
+                                    this.pchBuffer + this.hwCounter, 
+                                    nWrite);
+                                    
+                this.hwCounter += nWrite;
+                
+                if (this.hwCounter >= this.hwLength) {
+                    //! get all data
+                    update_state_to(SEND_CRC_L);
+                }
             }
-            CRC(this.hwCheckSUM, chData);
             
-            this.pchBuffer++;
-            this.hwCounter--;
-            if (0 == this.hwCounter) {
-                update_state_to(SEND_CRC_L);
-            } /*else {
-                fsm_on_going();
-            } */
-        )
-        
+            fsm_wait_for_obj();
+        }
             
-            
-        state(SEND_CRC_L,
+        state(SEND_CRC_L) {
             if (!this.ptPipe->WriteByte(((uint8_t *)&this.hwCheckSUM)[0])) {
                 fsm_on_going();
             }
             
             update_state_to(SEND_CRC_H);
-        )
+        }
             
-        state(SEND_CRC_H,
+        state(SEND_CRC_H) {
             if (!this.ptPipe->WriteByte(((uint8_t *)&this.hwCheckSUM)[1])) {
                 fsm_on_going();
             }
             
             fsm_cpl();
-        )
+        }
         
-    )
-            
+    body_end();
+}
             
    
             
