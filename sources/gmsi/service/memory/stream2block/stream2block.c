@@ -85,10 +85,10 @@ private bool stream_write_byte(     stream_buffer_t *ptObj,
                                     uint_fast8_t chData);
 private int_fast32_t stream_read(   stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast32_t hwSize);
+                                    int_fast32_t nSize);
 private int_fast32_t stream_write(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast32_t hwSize);
+                                    int_fast32_t nSize);
                                     
 private block_t *request_next_buffer_block(
                                     stream_buffer_t *ptObj, 
@@ -343,29 +343,33 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
             break;
         }
         
-        __SB_ATOM_ACCESS(){
-            if (this.bIsOutput) {
-                
-                if (NULL != ptOld) {
-                    //! reset block size
-                    BLOCK.Size.Reset(ptOld);
-                    //! stream is used for output
-                    BLOCK.Heap.Free(this.ptBlockPool, ptOld);
+        if (this.bIsOutput) {
+            
+            if (NULL != ptOld) {
+                //! reset block size
+                BLOCK.Size.Reset(ptOld);
+                //! stream is used for output
+                BLOCK.Heap.Free(this.ptBlockPool, ptOld);
+            }
+            
+            
+            //! find the next block from the list
+            ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
+        
+            __SB_ATOM_ACCESS(){
+                if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
+                    this.tStatus.IsBlockBufferDrain = true;
                 }
                 
-                
-                    //! find the next block from the list
-                    ptItem = BLOCK_QUEUE.Dequeue( ref_obj_as(this, block_queue_t));
-                
-                    if (0 == BLOCK_QUEUE.Count(ref_obj_as(this, block_queue_t))) {
-                        this.tStatus.IsBlockBufferDrain = true;
-                    }
-                    
-                    if (NULL != ptItem) {
-                        this.chBlockCount--;
-                    }
-                
-            } else {
+                if (NULL != ptItem) {
+                    this.chBlockCount--;
+                }
+                this.ptUsedByOutside = ptItem;
+            }
+            
+        } else {
+        
+            __SB_ATOM_ACCESS(){
                 if (NULL != ptOld) {
                 
                     /*if (BLOCK.Size.Get(ptOld) < BLOCK.Size.Capability(ptOld)) {
@@ -379,9 +383,8 @@ private block_t *request_next_buffer_block(stream_buffer_t *ptObj, block_t *ptOl
                 }
                 
                 ptItem = __get_new_block(ptObj);
+                this.ptUsedByOutside = ptItem;
             }
-        
-            this.ptUsedByOutside = ptItem;
         }
         
     } while(false);
@@ -525,12 +528,12 @@ private bool stream_read_byte(stream_buffer_t *ptObj, uint8_t *pchData)
 
 private int_fast32_t stream_read(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast32_t wSize)
+                                    int_fast32_t nSize)
 {
     int_fast32_t nResult = -1;
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
-        if (NULL == ptThis || NULL == pchData || 0 == wSize) {
+        if (NULL == ptThis || NULL == pchData || 0 == nSize) {
             break;
         } else if (this.bIsOutput) {
             break;
@@ -548,7 +551,7 @@ private int_fast32_t stream_read(  stream_buffer_t *ptObj,
                                         REF_OBJ_AS( this, 
                                                     QUEUE(StreamBufferQueue)), 
                                                     pchData, 
-                                                    wSize);
+                                                    nSize);
             if (nResult < 0) {
                 this.bIsQueueInitialised = false;
             } else {
@@ -564,12 +567,12 @@ private int_fast32_t stream_read(  stream_buffer_t *ptObj,
 
 private int_fast32_t stream_write(  stream_buffer_t *ptObj, 
                                     uint8_t *pchData, 
-                                    uint_fast32_t wSize)
+                                    int_fast32_t nSize)
 {
     int_fast32_t nResult = -1;
     do {
         class_internal(ptObj, ptThis, stream_buffer_t);
-        if (NULL == ptThis || NULL == pchData || 0 == wSize) {
+        if (NULL == ptThis || NULL == pchData || 0 == nSize) {
             break;
         } else if (!this.bIsOutput) {
             break;
@@ -587,7 +590,7 @@ private int_fast32_t stream_write(  stream_buffer_t *ptObj,
                                         REF_OBJ_AS( this, 
                                                     QUEUE(StreamBufferQueue)), 
                                                     pchData, 
-                                                    wSize);
+                                                    nSize);
             if (nResult < 0) {
                 this.bIsQueueInitialised = false;
             } else {

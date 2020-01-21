@@ -58,8 +58,6 @@ def_class(delegate_t,,
 end_def_class(delegate_t)
 //! @}
 
-uint32_t s_wSize = sizeof(delegate_t);
-
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/

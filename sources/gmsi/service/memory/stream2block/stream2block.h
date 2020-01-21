@@ -108,7 +108,7 @@
                                                                                 \
         struct {                                                                \
             bool            (*WriteByte)(uint_fast8_t);                         \
-            int_fast32_t    (*Write)(uint8_t *, uint_fast32_t );                \
+            int_fast32_t    (*Write)(uint8_t *, int_fast32_t );                 \
             bool            (*Flush)(void);                                     \
         } Stream;                                                               \
                                                                                 \
@@ -128,11 +128,11 @@
         return STREAM_BUFFER.Stream.WriteByte(                                  \
                                         &s_t##__NAME##StreamBuffer, chData);    \
     }                                                                           \
-    private int_fast32_t __NAME##_stream_write(uint8_t *pchSrc, uint_fast32_t wSize)\
+    private int_fast32_t __NAME##_stream_write(uint8_t *pchSrc, int_fast32_t nSize)\
     {                                                                           \
         return STREAM_BUFFER.Stream.Write(  &s_t##__NAME##StreamBuffer,         \
                                             pchSrc,                             \
-                                            wSize);                            \
+                                            nSize);                            \
     }                                                                           \
     private bool __NAME##_stream_flush(void)                                    \
     {                                                                           \
@@ -243,7 +243,7 @@
     }                                                                           \
     void __NAME##_output_stream_adapter_init(void)                              \
     {                                                                           \
-        NO_INIT private __NAME##_stream_buffer_block_t                           \
+        NO_INIT private __NAME##_stream_buffer_block_t                          \
                         s_tBlocks[__BLOCK_COUNT];                               \
         OUTPUT_STREAM_BUFFER_CFG(                                               \
             __NAME,                                                             \
@@ -279,7 +279,7 @@
                                                                                 \
         struct {                                                                \
             bool            (*ReadByte)(uint8_t *);                             \
-            int_fast32_t    (*Read)(uint8_t *, uint_fast32_t );                 \
+            int_fast32_t    (*Read)(uint8_t *, int_fast32_t );                  \
         } Stream;                                                               \
                                                                                 \
         struct {                                                                \
@@ -299,11 +299,11 @@
         return STREAM_BUFFER.Stream.ReadByte(                                   \
                                         &s_t##__NAME##StreamBuffer, pchData);   \
     }                                                                           \
-    private int_fast32_t __NAME##_stream_read(uint8_t *pchSrc, uint_fast32_t hwSize) \
+    private int_fast32_t __NAME##_stream_read(uint8_t *pchSrc, int_fast32_t nSize)\
     {                                                                           \
         return STREAM_BUFFER.Stream.Read(  &s_t##__NAME##StreamBuffer,          \
                                             pchSrc,                             \
-                                            hwSize);                            \
+                                            nSize);                            \
     }                                                                           \
     __INPUT_STREAM_BUFFER_COMMON(__NAME) = {                                    \
             .Init =         &__NAME##_stream_buffer_init,                       \
@@ -429,7 +429,7 @@
     }                                                                           \
     void __NAME##_input_stream_adapter_init(void)                               \
     {                                                                           \
-        NO_INIT private __NAME##_stream_buffer_block_t                           \
+        NO_INIT private __NAME##_stream_buffer_block_t                          \
                         s_tBlocks[__BLOCK_COUNT];                               \
         INPUT_STREAM_BUFFER_CFG(                                                \
             __NAME,                                                             \
@@ -518,8 +518,8 @@ def_interface(i_stream_buffer_t)
     struct {
         bool            (*ReadByte)     (stream_buffer_t *, uint8_t *);
         bool            (*WriteByte)    (stream_buffer_t *, uint_fast8_t);
-        int_fast32_t    (*Read)         (stream_buffer_t *, uint8_t *, uint_fast32_t );
-        int_fast32_t    (*Write)        (stream_buffer_t *, uint8_t *, uint_fast32_t );
+        int_fast32_t    (*Read)         (stream_buffer_t *, uint8_t *, int_fast32_t );
+        int_fast32_t    (*Write)        (stream_buffer_t *, uint8_t *, int_fast32_t );
         bool            (*WriteBlock)   (stream_buffer_t *, block_t *ptBlock);
         bool            (*Flush)        (stream_buffer_t *ptObj);
     } Stream;

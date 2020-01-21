@@ -52,7 +52,7 @@ end_def_interface(i_byte_pipe_t)
 //! @{
 def_interface(i_pipe_t)
 
-    inherit(i_byte_pipe_t)
+    implement(i_byte_pipe_t)
     
     struct {
         //! read a block
