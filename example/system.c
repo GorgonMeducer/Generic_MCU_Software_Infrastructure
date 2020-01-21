@@ -176,9 +176,14 @@ static void app_init(void)
     //! initialise simple frame service
     do {
         NO_INIT static uint8_t s_chFrameBuffer[FRAME_BUFFER_SIZE];
-        NO_INIT static i_byte_pipe_t s_tPipe;
-        s_tPipe.ReadByte = (STREAM_IN.Stream.ReadByte);
-        s_tPipe.WriteByte = (STREAM_OUT.Stream.WriteByte);
+        i_pipe_t s_tPipe = {
+            .ReadByte = (STREAM_IN.Stream.ReadByte),
+            .WriteByte = (STREAM_OUT.Stream.WriteByte),
+            .Stream = {
+                .Read = STREAM_IN.Stream.Read,
+                .Write = STREAM_OUT.Stream.Write,
+            },
+        };
         
     #if DEMO_FRAME_USE_BLOCK_MODE == ENABLED
     
