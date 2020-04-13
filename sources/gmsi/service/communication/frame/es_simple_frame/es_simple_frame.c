@@ -373,7 +373,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 fsm_wait_for_obj();
             }
             
-            CRC(this.hwCheckSUM, chData);
+            GMSI_CRC(this.hwCheckSUM, chData);
             ((uint8_t *)&this.hwLength)[0] = chData;
             
             update_state_to(WAIT_FOR_LENGTH_H);
@@ -385,7 +385,7 @@ private fsm_implementation(es_simple_frame_decoder)
                 fsm_wait_for_obj();
             }
             
-            CRC(this.hwCheckSUM, chData);
+            GMSI_CRC(this.hwCheckSUM, chData);
             ((uint8_t *)&this.hwLength)[1] = chData;
             
             if (0 == this.hwLength){
@@ -634,7 +634,7 @@ private fsm_implementation(es_simple_frame_encoder,
             if (!this.ptPipe->WriteByte(chData)) {
                 fsm_on_going();
             }
-            CRC(this.hwCheckSUM, chData);
+            GMSI_CRC(this.hwCheckSUM, chData);
             update_state_to(SEND_LENGTH_H);
         }
             
@@ -643,7 +643,7 @@ private fsm_implementation(es_simple_frame_encoder,
             if (!this.ptPipe->WriteByte(chData)) {
                 fsm_on_going();
             }
-            CRC(this.hwCheckSUM, chData);
+            GMSI_CRC(this.hwCheckSUM, chData);
             update_state_to(SEND_DATA);
         }
 

@@ -38,10 +38,10 @@
 
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
-#define CRC(__CRCVAL,__NEWCHAR)             crc16_check(&(__CRCVAL),(__NEWCHAR))
-#define CRC16(__CRCVAL,__NEWCHAR)           crc16_check(&(__CRCVAL),(__NEWCHAR))
-#define CRC8(__CRCVAL,__NEWCHAR)            crc8_check(&(__CRCVAL),(__NEWCHAR))
-#define CRC32_IEEE802_3(__CRCVAL,__NEWCHAR) crc32_ieee802_3_check(&(__CRCVAL),(__NEWCHAR))
+#define GMSI_CRC(__CRCVAL,__NEWCHAR)             crc16_check(&(__CRCVAL),(__NEWCHAR))
+#define GMSI_CRC16(__CRCVAL,__NEWCHAR)           crc16_check(&(__CRCVAL),(__NEWCHAR))
+#define GMSI_CRC8(__CRCVAL,__NEWCHAR)            crc8_check(&(__CRCVAL),(__NEWCHAR))
+#define GMSI_CRC32_IEEE802_3(__CRCVAL,__NEWCHAR) crc32_ieee802_3_check(&(__CRCVAL),(__NEWCHAR))
 
 /*============================ TYPES =========================================*/
 /*============================ PROTOTYPES ====================================*/
