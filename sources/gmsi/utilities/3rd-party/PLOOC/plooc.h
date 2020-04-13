@@ -51,6 +51,8 @@
 
 /*! \note add which macro to support multiple inheriting and implementations
  *!
+ *!       declare_interface( i_lv0_abc_t )
+ *!       declare_interface( i_lv0_efg_t )
  *!       def_interface( i_lv0_abc_t )
  *!           ...
  *!       end_def_interface( i_lv0_abc_t )
@@ -59,6 +61,7 @@
  *!           ...
  *!       end_def_interface( i_lv0_efg_t )
  *!     
+ *!       declare_interface( i_lv1_t )
  *!       def_interface( i_lv1_t, which( inherit( i_lv0_abc_t ) 
  *!                                      inherit( i_lv0_efg_t ) ) )
  *!           ...
@@ -189,10 +192,12 @@
 #   define def_interface(__NAME)            __def_interface(__NAME)
 #   define def_structure(__NAME)            __def_structure(__NAME)
 #   define def_params(__CODE)               __CODE
+#   define end_def_params()
 #else
 #   define def_interface(__NAME, ...)       __def_interface(__NAME, __VA_ARGS__)
 #   define def_structure(__NAME, ...)       __def_structure(__NAME, __VA_ARGS__)
 #   define def_params(...)                  __VA_ARGS__
+#   define end_def_params(...)
 #endif
 
 #define implement(__TYPE)                   IMPLEMENT(__TYPE)
