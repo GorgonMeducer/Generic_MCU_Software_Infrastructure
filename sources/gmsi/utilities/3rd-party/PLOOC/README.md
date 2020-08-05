@@ -76,7 +76,18 @@ If you have any questions or suggestions, please feel free to let us know.
 
 ## Update Log
 ---
-- \[15/04/2020\] Update __PLOOC_EVAL, version 4.53
+- \[05/08/2020\] Add \_\_PLOOC\_CLASS\_IMPLEMENT\_\_ and \_\_PLOOC\_CLASS\_INHERIT\_\_ version 4.5.6
+    - use \_\_xxxxx\_\_ as emphasis because \_\_xxxxx usually means "internal"
+    - The original \_\_PLOOC\_CLASS\_IMPLEMENT and \_\_PLOOC\_CLASS\_INHERIT are deprecated and will be kept for a while before completely removed. 
+- \[18/05/2020\] Introduce both short- and long- style of macro, version 4.5.5
+    - dcl_xxxxx/declare_xxxxx
+    - def_xxxx/define_xxxxx; end_def_xxxx/end_define_xxxx
+- \[16/05/2020\] Minor Update, version 4.5.4a
+    - Introduce \_\_OOC\_CPP\_\_ to replace \_\_OOC\_DEBUG\_\_ when you want to mix C source code with C++ source code. Please put it in the project global configuration. 
+- \[11/05/2020\] Minor Update, version 4.5.4
+    - Make it possible to use PLOOC based C source code in C++ project
+        - Please make sure \_\_OOC\_DEBUG\_\_ is defined in the project 
+- \[15/04/2020\] Update __PLOOC_EVAL, version 4.5.3
     - Increase the range of number of arguments, from 1~8 to 0~16.
 - [19/02/2020] Minor update to enable RAM footprint optimisation, version 4.52
     - Introducing macro PLOOC_CFG_REMOVE_MEMORY_LAYOUT_BOUNDARY___USE_WITH_CAUTION which removes structure layout boundaries for PLOOC_VISIBLE. It can save RAM when certain condition is met and \_\_OOC\_DEBUG\_\_ is defined. Please use it with caution as it will cause different memory layouts when \_\_OOC\_DEBUG\_\_ is not defined. 
