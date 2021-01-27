@@ -16,8 +16,12 @@
 ****************************************************************************/
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_platform\app_platform.h"
+//#include ".\app_platform\app_platform.h"
+#include "utilities/compiler.h"
+#include "utilities/ooc.h"
 
+#undef this
+#define this    (*ptThis)
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
