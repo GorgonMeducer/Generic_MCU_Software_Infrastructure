@@ -29,7 +29,7 @@
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 static void counter_overflow(void);
-
+extern void SystemCoreClockUpdate (void);
 /*============================ IMPLEMENTATION ================================*/
 
  #if __IS_COMPILER_ARM_COMPILER_6__
@@ -65,27 +65,28 @@ void app_platform_1ms_event_handler(void)
     STREAM_IN_1ms_event_handler();
 }
 
-
+__attribute__((constructor(101)))
 /*! \note initialize board specific package
  *  \param none
  *  \retval true hal initialization succeeded.
  *  \retval false hal initialization failed
  */  
-bool app_platform_init( void )
+void app_platform_init( void )
 {
     do {
         SystemCoreClockUpdate();
 
-    #ifdef RTE_Compiler_IO_STDOUT_User
+        gmsi_platform_init();
+    
+
         if (!stdout_init()) {
             break;
         }
-    #endif
         
-        return true;
+        return ;
     } while(false);
     
-    return false;
+    NVIC_SystemReset();
 }
   
 volatile static int32_t s_nCycleCounts = 0;

@@ -14,7 +14,7 @@
 /*
  * Define the Device Header File: 
  */
-#define CMSIS_device_header "CMSDK_CM7_SP.h"
+#define CMSIS_device_header "ARMCM4_FP.h"
 
 /* Keil.ARM Compiler::Compiler:I/O:STDIN:User:1.2.0 */
 #define RTE_Compiler_IO_STDIN           /* Compiler I/O: STDIN */

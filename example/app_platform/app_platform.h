@@ -23,31 +23,16 @@
 
 #include <stdio.h>
 
-#if   defined (CMSDK_CM7)
-  #include "CMSDK_CM7.h"
-#elif defined (CMSDK_CM7_SP)
-  #include "CMSDK_CM7_SP.h"
-#elif defined (CMSDK_CM7_DP)
-  #include "CMSDK_CM7_DP.h"
-#else
-  #error device not specified!
-#endif
+#include <ARMCM4_FP.h>
 
 #include ".\stdout_USART.h"
-#include "RTE_Components.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/     
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-
-/*! \note initialize board specific package
- *  \param none
- *  \retval true hal initialization succeeded.
- *  \retval false hal initialization failed
- */  
-extern bool app_platform_init( void );
 
 /* \note please put it into a 1ms timer handler
  */

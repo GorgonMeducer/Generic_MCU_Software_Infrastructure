@@ -70,12 +70,6 @@ void SysTick_Handler (void)
 
 static void system_init(void)
 {
-    gmsi_platform_init();
-    
-    if (!app_platform_init()) {
-        NVIC_SystemReset();
-    }
-
     //! initialise multiple delay service
     do {
         NO_INIT static multiple_delay_item_t s_tDelayObjPool[DELAY_OBJ_POOL_SIZE];
@@ -269,6 +263,8 @@ int main (void)
 {
     system_init();
     app_init();
+    
+    printf("for any string you entered, it will be echo back immediatly.\r\n");
     
     while (true) {
     
