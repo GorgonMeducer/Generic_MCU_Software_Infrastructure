@@ -142,13 +142,13 @@ def_menu(TopMenu, NULL, default_menu_engine)
         "This is Top Menu A"
     )
     menu_item(
-        top_menu_item_a_handler, 
+        top_menu_item_b_handler, 
         NULL, 
         "Top Menu B",
         "This is Top Menu B"
     )
     menu_item(
-        top_menu_item_a_handler, 
+        top_menu_item_c_handler, 
         NULL, 
         "Top Menu C",
         "This is Top Menu C"
