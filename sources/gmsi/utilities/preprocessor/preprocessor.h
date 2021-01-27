@@ -20,6 +20,6 @@
 
 #include "connect.h"
 #include "macro_repeat.h"
-
+#include "language_extension.h"
 
 #endif  /* __PREPROCESSOR_H__ */
