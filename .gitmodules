@@ -1,0 +1,3 @@
+[submodule "sources/gmsi/utilities/3rd-party/PLOOC"]
+	path = sources/gmsi/utilities/3rd-party/PLOOC
+	url = https://github.com/GorgonMeducer/PLOOC.git
