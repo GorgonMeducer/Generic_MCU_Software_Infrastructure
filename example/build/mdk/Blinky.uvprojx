@@ -134,7 +134,7 @@
             <UseExternalTool>1</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>1</Capability>
+            <Capability>0</Capability>
             <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>6</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -333,12 +333,12 @@
             <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
+            <v6Lto>1</v6Lto>
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-fms-extensions</MiscControls>
-              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\" _MSC_VER __USE_COMPILER_SPECIFIED_CMSIS_PATH__,__PLOOC_I_KNOW_BLACK_BOX_IS_INCOMPATIBLE_WITH_OTHER_TEMPLATES__</Define>
+              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\" _MSC_VER __USE_COMPILER_SPECIFIED_CMSIS_PATH__</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\sources\gmsi</IncludePath>
             </VariousControls>

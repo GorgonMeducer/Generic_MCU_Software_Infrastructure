@@ -264,7 +264,7 @@ int main (void)
     system_init();
     app_init();
     
-    printf("for any string you entered, it will be echo back immediatly.\r\n");
+    printf("for any string you entered, it will echo it back immediatly.\r\n");
     
     while (true) {
     

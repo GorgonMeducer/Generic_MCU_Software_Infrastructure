@@ -171,8 +171,8 @@ Output:
         NULL != ptCodeRegion;                                                   \
         ptCodeRegion = NULL)                                                    \
         for(uint8_t chLocal[IAR_PATCH_CODE_REGION_LOCAL_SIZE],                  \
-                TPASTE2(__code_region_, __LINE__) = 1;                          \
-            TPASTE2(__code_region_, __LINE__)-- ?                               \
+                ATPASTE2(__code_region_, __LINE__) = 1;                         \
+            ATPASTE2(__code_region_, __LINE__)-- ?                              \
                 (ptCodeRegion->ptMethods->OnEnter(  ptCodeRegion->pTarget,      \
                                                     chLocal)                    \
                     ,1)                                                         \
@@ -184,8 +184,8 @@ Output:
         NULL != ptCodeRegion;                                                   \
         ptCodeRegion = NULL)                                                    \
         for(uint8_t chLocal[ptCodeRegion->ptMethods->chLocalObjSize],           \
-                TPASTE2(__code_region_, __LINE__) = 1;                          \
-            TPASTE2(__code_region_, __LINE__)-- ?                               \
+                ATPASTE2(__code_region_, __LINE__) = 1;                         \
+            ATPASTE2(__code_region_, __LINE__)-- ?                              \
                 (ptCodeRegion->ptMethods->OnEnter(  ptCodeRegion->pTarget,      \
                                                     chLocal)                    \
                     ,1)                                                         \

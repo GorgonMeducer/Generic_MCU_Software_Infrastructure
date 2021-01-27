@@ -152,18 +152,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>308</LineNumber>
+          <LineNumber>510</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>2724</Address>
+          <Address>3742</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\menu_example.c</Filename>
+          <Filename>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Blinky\../../system.c\308</Expression>
+          <Expression>\\Blinky\../../../sources/gmsi/service/memory/stream2block/stream2block.c\510</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -260,7 +260,7 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>3</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\menu_example.c</PathWithFileName>
@@ -304,7 +304,7 @@
 
   <Group>
     <GroupName>gmsi</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
