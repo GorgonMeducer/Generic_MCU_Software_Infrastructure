@@ -58,9 +58,6 @@
 #define with(...)                                                               \
             CONNECT2(__with, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
-#undef _
-#define _       (*_p)
-
 #ifndef dimof
 #   define dimof(__array)          (sizeof(__array)/sizeof(__array[0]))
 #endif
