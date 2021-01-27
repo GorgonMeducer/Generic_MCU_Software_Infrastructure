@@ -32,7 +32,7 @@
 
 enum {
     BLOCK_FREE_TO_ANY = 0,
-    MREPEAT(254, __BLOCK_FREE_TO, NULL)
+    MACRO_REPEAT(254, __BLOCK_FREE_TO, NULL)
     BLOCK_NO_FREE     = 255
 };
 

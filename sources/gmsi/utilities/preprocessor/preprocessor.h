@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2017 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -15,12 +15,11 @@
 *                                                                           *
 ****************************************************************************/
 
-#ifndef _PREPROCESSOR_H_
-#define _PREPROCESSOR_H_
+#ifndef __PREPROCESSOR_H__
+#define __PREPROCESSOR_H__
 
-#include "tpaste.h"
-#include "stringz.h"
-#include "mrepeat.h"
+#include "connect.h"
+#include "macro_repeat.h"
 
 
-#endif  // _PREPROCESSOR_H_
+#endif  /* __PREPROCESSOR_H__ */
