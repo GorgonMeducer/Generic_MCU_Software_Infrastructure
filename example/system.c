@@ -284,6 +284,10 @@ int main (void)
     #if DEMO_MULTIPLE_DELAY == ENABLED
         MULTIPLE_DELAY.Task(&s_tDelayService);
     #endif
+    
+        extern void example_menu_task(void);
+        example_menu_task();
+    
     }
 }
 

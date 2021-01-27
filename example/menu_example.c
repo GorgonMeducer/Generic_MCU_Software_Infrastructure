@@ -289,7 +289,6 @@ key_t get_key(void)
 }
 
 
-
 fsm_rt_t menu_task(menu_engine_cb_t *ptThis)
 {
     do {
@@ -311,4 +310,14 @@ fsm_rt_t menu_task(menu_engine_cb_t *ptThis)
     } while(false);
     
     return fsm_rt_err;
+}
+
+
+static menu_engine_cb_t s_tMyMenu = {
+    .ptCurrentMenu = &menu(TopMenu),
+};
+
+void example_menu_task(void)
+{
+    menu_task(&s_tMyMenu);
 }
