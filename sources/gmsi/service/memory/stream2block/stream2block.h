@@ -204,7 +204,7 @@
                 BLOCK.Size.Get(ref_obj_as((*ptBlock), block_t));                \
             s_t##__NAME##StreamOutService.hwIndex = 0;                          \
                                                                                 \
-            SAFE_ATOM_CODE(){                                                   \
+            __IRQ_SAFE {                                                        \
                 __NAME##_serial_port_enable_tx_cpl_interrupt();                 \
                                                                                 \
                 __NAME##_serial_port_fill_byte(                                 \

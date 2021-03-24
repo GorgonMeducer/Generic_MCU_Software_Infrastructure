@@ -173,7 +173,7 @@ safe_task_t *new_task( safe_task_func_t *fnRoutine, void *pArg )
         }
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         if (NULL != s_pFreeList) {
             pTask = s_pFreeList;
             s_pFreeList = s_pFreeList->pNext;
@@ -260,7 +260,7 @@ void free_task( safe_task_t *pTask )
         s_pFreeList = pTask;
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         pTask->pchKey = NULL;                   //!< clear task key
 
         //! add task item to freelist
@@ -297,7 +297,7 @@ bool task_pool_init(void *pHeap, uint16_t hwSize)
             s_pFreeList = pTask;
         )
 #else
-        SAFE_ATOM_CODE(){
+        __IRQ_SAFE {
             pTask->pchKey = NULL;                   //!< clear task key
 
             //! add task item to freelist

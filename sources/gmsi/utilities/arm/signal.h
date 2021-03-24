@@ -21,6 +21,7 @@
 /*============================ INCLUDES ======================================*/
 #include <stdbool.h>
 #include <stdint.h>
+#include "../preprocessor/preprocessor.h"
 
 /*! \brief How To Define and Use your own CODE_REGION
  *!        Example:
@@ -204,6 +205,13 @@ Output:
 #define code_region_simple(__REGION_ADDR, ...)                                  \
             __CODE_REGION_SIMPLE((__REGION_ADDR), __VA_ARGS__)
 
+
+
+#ifndef __IRQ_SAFE
+#   define __IRQ_SAFE                                                           \
+            using(  uint32_t CONNECT2(temp,__LINE__) = __disable_irq(),         \
+                    __set_PRIMASK(CONNECT2(temp,__LINE__)))
+#endif    
 
 /*============================ TYPES =========================================*/
 typedef volatile bool locker_t;

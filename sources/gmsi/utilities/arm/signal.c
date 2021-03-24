@@ -109,7 +109,7 @@ bool enter_lock(locker_t *ptLock)
         return true;
     }
     if (UNLOCKED == (*ptLock)) {
-        SAFE_ATOM_CODE(){
+        __IRQ_SAFE {
             if (UNLOCKED == (*ptLock)) {
                 (*ptLock) = LOCKED;
                 bResult = true;

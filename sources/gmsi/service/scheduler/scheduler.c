@@ -460,7 +460,7 @@ bool scheduler( void )
             return false;
         }       
     )*/
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         pTask = get_task_from_queue(s_TaskQueuePool);
     }
     if (NULL == pTask) {
@@ -519,7 +519,7 @@ bool scheduler( void )
                     }
                 )
                 */
-                SAFE_ATOM_CODE(){
+                __IRQ_SAFE {
                     if (pTask->ptFlag->bSignal) {
                         //! signal already set
                         pTask->bThreadBlocked = false;
@@ -614,7 +614,7 @@ void set_event(event_t *pEvent)
 
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         //! wake up blocked tasks
         safe_task_t *pTask = ptEvent->ptHead;
         while(NULL != pTask) {
@@ -683,7 +683,7 @@ void leave_critical_section(critical_section_t *ptCritical)
         }
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         if (!ptEvent->bSignal) {
             //! wake up blocked tasks
             safe_task_t *ptTask = ptEvent->ptHead;
@@ -729,7 +729,7 @@ void reset_event(event_t *pEvent)
         ptEvent->bSignal = false;
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         ptEvent->bSignal = false;
     }
 #endif
@@ -779,7 +779,7 @@ bool wait_for_single_object(fsm_flag_t *ptFlag, void *ptTask)
         }
     )
 #else
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         bResult = ptEvent->bSignal;
         if (!ptEvent->bManualReset) {
             ptEvent->bSignal = false;
@@ -854,7 +854,7 @@ static bool _register_task( safe_task_t *pTask )
             bResult = false;   
         } 
     )*/
-    SAFE_ATOM_CODE(){
+    __IRQ_SAFE {
         if (!add_task_to_queue(&s_TaskQueuePool[0],pTask)) {
             bResult = false;   
         }

@@ -105,6 +105,7 @@
  * Warning Mitigation                                                         *
  *----------------------------------------------------------------------------*/
 #if defined(__clang__) //__IS_COMPILER_LLVM__
+#pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #pragma clang diagnostic ignored "-Wmissing-declarations"
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wmicrosoft-anon-tag"
