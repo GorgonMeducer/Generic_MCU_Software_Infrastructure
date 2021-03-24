@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2017 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -15,77 +15,21 @@
 *                                                                           *
 ****************************************************************************/
 
+
+//! \note do not move this pre-processor statement to other places
+#include "..\app_cfg.h"
+
+#ifndef __ARCH_APP_CFG_H__
+#define __ARCH_APP_CFG_H__
+
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
-
-
-#include <stdio.h>
-#include "app_platform.h"
-
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
-static void counter_overflow(void);
-extern void SystemCoreClockUpdate (void);
-/*============================ IMPLEMENTATION ================================*/
 
- #if __IS_COMPILER_ARM_COMPILER_6__
-__asm(".global __use_no_semihosting\n\t");
-__asm(".global __ARM_use_no_argv\n\t");
-
-void _sys_exit(int ch)
-{
-    while(1);
-}
-
-
-void _ttywrch(int ch)
-{
-    
-}
-
-#include <rt_sys.h>
-
-FILEHANDLE $Sub$$_sys_open(const char *name, int openmode)
-{
-    return 0;
-}
 
 #endif
-
-
-/* \note please put it into a 1ms timer handler
- */
-void app_platform_1ms_event_handler(void)
-{
-    STREAM_IN_1ms_event_handler();
-}
-
-__attribute__((constructor(101)))
-/*! \note initialize board specific package
- *  \param none
- *  \retval true hal initialization succeeded.
- *  \retval false hal initialization failed
- */  
-void app_platform_init( void )
-{
-    do {
-        SystemCoreClockUpdate();
-
-        gmsi_platform_init();
-    
-
-        if (!stdout_init()) {
-            break;
-        }
-        
-        return ;
-    } while(false);
-    
-    NVIC_SystemReset();
-}
-
 /* EOF */

@@ -546,6 +546,8 @@ __attribute__((always_inline)) static inline void ____set_PRIMASK(uint32_t priMa
 #   error Unsupported compiler detected. Please contact vsf team for support.
 #endif
 
+#define __GMSI_ARCH_HEADER              "arm/cortex-m/arch_cortex-m.h"
+
 /*============================ TYPES =========================================*/
 /*============================ INCLUDES ======================================*/
 

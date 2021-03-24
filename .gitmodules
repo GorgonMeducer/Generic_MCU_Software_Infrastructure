@@ -1,3 +1,6 @@
 [submodule "sources/gmsi/utilities/3rd-party/PLOOC"]
 	path = sources/gmsi/utilities/3rd-party/PLOOC
 	url = https://github.com/GorgonMeducer/PLOOC.git
+[submodule "sources/gmsi/arch/arm/cortex-m/perf_counter"]
+	path = sources/gmsi/arch/arm/cortex-m/perf_counter
+	url = https://github.com/GorgonMeducer/perf_counter

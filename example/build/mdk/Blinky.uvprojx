@@ -704,6 +704,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\sources\gmsi\utilities\delegate.c</FilePath>
             </File>
+            <File>
+              <FileName>arch_cortex-m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\sources\gmsi\arch\arm\cortex-m\arch_cortex-m.c</FilePath>
+            </File>
+            <File>
+              <FileName>perf_counter.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\..\sources\gmsi\arch\arm\cortex-m\perf_counter\lib\perf_counter.lib</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

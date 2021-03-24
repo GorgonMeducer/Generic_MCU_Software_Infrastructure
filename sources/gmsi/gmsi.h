@@ -20,9 +20,10 @@
 
 
 /*============================ INCLUDES ======================================*/
-#include ".\app_cfg.h"
-#include ".\hal\hal.h"
-#include ".\service\service.h"
+#include "./app_cfg.h"
+#include "./arch/arch.h"
+#include "./hal/hal.h"
+#include "./service\/service.h"
 
 /*============================ MACROS ========================================*/
 
