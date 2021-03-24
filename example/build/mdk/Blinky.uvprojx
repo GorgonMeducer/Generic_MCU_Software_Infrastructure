@@ -10,7 +10,7 @@
       <TargetName>FastModel</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-fms-extensions</MiscControls>
-              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\" _MSC_VER __USE_COMPILER_SPECIFIED_CMSIS_PATH__</Define>
+              <Define>__USER_APP_CFG_H__=\"../example/app_cfg.h\"</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\sources\gmsi</IncludePath>
             </VariousControls>
@@ -613,11 +613,6 @@
               <FileName>stream2block.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\sources\gmsi\service\memory\stream2block\stream2block.h</FilePath>
-            </File>
-            <File>
-              <FileName>environment_cfg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\sources\environment_cfg.h</FilePath>
             </File>
             <File>
               <FileName>app_cfg.h</FileName>
