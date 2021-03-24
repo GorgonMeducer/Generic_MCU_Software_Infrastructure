@@ -4,7 +4,7 @@
  *      *** Do not modify ! ***
  *
  * Project: 'Blinky' 
- * Target:  'V2M-MPS2' 
+ * Target:  'FastModel' 
  */
 
 #ifndef RTE_COMPONENTS_H

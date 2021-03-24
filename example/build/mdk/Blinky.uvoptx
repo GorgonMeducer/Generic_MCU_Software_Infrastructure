@@ -22,7 +22,7 @@
   </DaveTm>
 
   <Target>
-    <TargetName>V2M-MPS2</TargetName>
+    <TargetName>FastModel</TargetName>
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
@@ -304,7 +304,7 @@
 
   <Group>
     <GroupName>gmsi</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
