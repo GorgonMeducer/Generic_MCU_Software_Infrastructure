@@ -95,7 +95,8 @@ Output:
          
 #define __SAFE_ATOM_CODE(...)                                                   \
         {                                                                       \
-            istate_t tState = DISABLE_GLOBAL_INTERRUPT();                       \
+            istate_t tState = GET_GLOBAL_INTERRUPT_STATE();                     \
+            DISABLE_GLOBAL_INTERRUPT();                                         \
             __VA_ARGS__;                                                        \
             SET_GLOBAL_INTERRUPT_STATE(tState);                                 \
         }
@@ -209,9 +210,10 @@ Output:
 
 #ifndef __IRQ_SAFE
 #   define __IRQ_SAFE                                                           \
-            using(  uint32_t CONNECT2(temp,__LINE__) = __disable_irq(),         \
-                    __set_PRIMASK(CONNECT2(temp,__LINE__)))
-#endif    
+            using(  uint32_t CONNECT2(temp,__LINE__) =                          \
+                        ({uint32_t temp=__get_PRIMASK();__disable_irq();temp;}),\
+                        __set_PRIMASK(CONNECT2(temp,__LINE__)))
+#endif  
 
 /*============================ TYPES =========================================*/
 typedef volatile bool locker_t;

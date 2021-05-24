@@ -66,7 +66,8 @@ static void __default_code_region_atom_code_on_enter(void *pObj, void *pLocal)
 {
     istate_t *ptState = (istate_t *)pLocal;
     assert(NULL != pLocal);
-    (*ptState) = DISABLE_GLOBAL_INTERRUPT();
+    (*ptState) = GET_GLOBAL_INTERRUPT_STATE();
+    DISABLE_GLOBAL_INTERRUPT();
 }
 
 static void __default_code_region_atom_code_on_leave(void *pObj,void *pLocal)
