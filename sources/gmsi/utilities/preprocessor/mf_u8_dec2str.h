@@ -31,8 +31,7 @@ a compile-time constant value.
 #undef __MFUNC_OUT_DEC_DIGIT_TEMP0
 #undef __MFUNC_OUT_DEC_DIGIT_TEMP1
 #undef __MFUNC_OUT_DEC_DIGIT_TEMP2
-#undef __MFUNC_OUT_DEC_STR_TEMP
-#undef MFUNC_OUT_DEC_STR
+
 
 
 #if     (MFUNC_IN_U8_DEC_VALUE % 10) == 0
@@ -89,17 +88,88 @@ a compile-time constant value.
 #endif
 
 
-#if __MFUNC_OUT_DEC_DIGIT_TEMP2 == 0 
-#   if __MFUNC_OUT_DEC_DIGIT_TEMP1 == 0
-#       define MFUNC_OUT_DEC_STR        __MFUNC_OUT_DEC_DIGIT_TEMP0
+#undef __MFUNC_OUT_DEC_DIGIT0
+#undef __MFUNC_OUT_DEC_DIGIT1
+#undef __MFUNC_OUT_DEC_DIGIT2
+
+#if     __MFUNC_OUT_DEC_DIGIT_TEMP0 == 0
+#   define __MFUNC_OUT_DEC_DIGIT0       0
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 1
+#   define __MFUNC_OUT_DEC_DIGIT0       1
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 2
+#   define __MFUNC_OUT_DEC_DIGIT0       2
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 3
+#   define __MFUNC_OUT_DEC_DIGIT0       3
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 4
+#   define __MFUNC_OUT_DEC_DIGIT0       4
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 5
+#   define __MFUNC_OUT_DEC_DIGIT0       5
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 6
+#   define __MFUNC_OUT_DEC_DIGIT0       6
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 7
+#   define __MFUNC_OUT_DEC_DIGIT0       7
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 8
+#   define __MFUNC_OUT_DEC_DIGIT0       8
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP0 == 9
+#   define __MFUNC_OUT_DEC_DIGIT0       9
+#endif
+
+#if     __MFUNC_OUT_DEC_DIGIT_TEMP1 == 0
+#   define __MFUNC_OUT_DEC_DIGIT1       0
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 1
+#   define __MFUNC_OUT_DEC_DIGIT1       1
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 2
+#   define __MFUNC_OUT_DEC_DIGIT1       2
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 3
+#   define __MFUNC_OUT_DEC_DIGIT1       3
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 4
+#   define __MFUNC_OUT_DEC_DIGIT1       4
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 5
+#   define __MFUNC_OUT_DEC_DIGIT1       5
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 6
+#   define __MFUNC_OUT_DEC_DIGIT1       6
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 7
+#   define __MFUNC_OUT_DEC_DIGIT1       7
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 8
+#   define __MFUNC_OUT_DEC_DIGIT1       8
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP1 == 9
+#   define __MFUNC_OUT_DEC_DIGIT1       9
+#endif
+
+#if     __MFUNC_OUT_DEC_DIGIT_TEMP2 == 0
+#   define __MFUNC_OUT_DEC_DIGIT2       0
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 1
+#   define __MFUNC_OUT_DEC_DIGIT2       1
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 2
+#   define __MFUNC_OUT_DEC_DIGIT2       2
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 3
+#   define __MFUNC_OUT_DEC_DIGIT2       3
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 4
+#   define __MFUNC_OUT_DEC_DIGIT2       4
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 5
+#   define __MFUNC_OUT_DEC_DIGIT2       5
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 6
+#   define __MFUNC_OUT_DEC_DIGIT2       6
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 7
+#   define __MFUNC_OUT_DEC_DIGIT2       7
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 8
+#   define __MFUNC_OUT_DEC_DIGIT2       8
+#elif   __MFUNC_OUT_DEC_DIGIT_TEMP2 == 9
+#   define __MFUNC_OUT_DEC_DIGIT2       9
+#endif
+
+#undef MFUNC_OUT_DEC_STR
+#if __MFUNC_OUT_DEC_DIGIT2 == 0 
+#   if __MFUNC_OUT_DEC_DIGIT1 == 0
+#       define MFUNC_OUT_DEC_STR        __MFUNC_OUT_DEC_DIGIT0
 #   else
-#       define MFUNC_OUT_DEC_STR        CONNECT2(   __MFUNC_OUT_DEC_DIGIT_TEMP1,\
-                                                    __MFUNC_OUT_DEC_DIGIT_TEMP0)
+#       define MFUNC_OUT_DEC_STR        CONNECT2(   __MFUNC_OUT_DEC_DIGIT1,\
+                                                    __MFUNC_OUT_DEC_DIGIT0)
 #   endif
 #else
-#   define MFUNC_OUT_DEC_STR            CONNECT3(   __MFUNC_OUT_DEC_DIGIT_TEMP2,\
-                                                    __MFUNC_OUT_DEC_DIGIT_TEMP1,\
-                                                    __MFUNC_OUT_DEC_DIGIT_TEMP0)
+#   define MFUNC_OUT_DEC_STR            CONNECT3(   __MFUNC_OUT_DEC_DIGIT2,\
+                                                    __MFUNC_OUT_DEC_DIGIT1,\
+                                                    __MFUNC_OUT_DEC_DIGIT0)
 #endif
 
 
