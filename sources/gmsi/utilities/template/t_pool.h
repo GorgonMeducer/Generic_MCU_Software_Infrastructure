@@ -138,6 +138,7 @@ void __NAME##_pool_free(                                                        
                                                                                 \
     __ATOM_ACCESS(                                                              \
         __##__NAME##_pool_free_item(ptPool, (__NAME##_pool_item_t *)ptItem);    \
+                                                                                \
         if (((class(__NAME##_pool_t) *)ptPool)->tCounter) {                     \
             ((class(__NAME##_pool_t) *)ptPool)->tCounter--;                     \
         }                                                                       \
@@ -162,8 +163,15 @@ __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool)                              
                 ((class(__NAME##_pool_t) *)ptPool)->ptFreeList,                 \
                 ptItem                                                          \
             );                                                                  \
+                                                                                \
+            ((class(__NAME##_pool_t) *)ptPool)->tCounter++;                     \
+                                                                                \
         } while(false);                                                         \
     )                                                                           \
+                                                                                \
+    if(NULL == ptItem) {                                                        \
+        return NULL:                                                            \
+    }                                                                           \
                                                                                 \
     return &(((class(__NAME##_pool_item_t) *)ptItem)->tObject);                 \
 }                                                                               \
