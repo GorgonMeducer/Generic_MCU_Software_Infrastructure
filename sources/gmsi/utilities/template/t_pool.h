@@ -138,7 +138,10 @@ void __NAME##_pool_free(                                                        
                                                                                 \
     __ATOM_ACCESS(                                                              \
         __##__NAME##_pool_free_item(ptPool, (__NAME##_pool_item_t *)ptItem);    \
-        ((class(__NAME##_pool_t) *)ptPool)->tCounter++;                         \
+                                                                                \
+        if (((class(__NAME##_pool_t) *)ptPool)->tCounter) {                     \
+            ((class(__NAME##_pool_t) *)ptPool)->tCounter--;                     \
+        }                                                                       \
     )                                                                           \
 }                                                                               \
                                                                                 \
@@ -161,9 +164,8 @@ __TYPE *__NAME##_pool_new(__NAME##_pool_t *ptPool)                              
                 ptItem                                                          \
             );                                                                  \
                                                                                 \
-            if (((class(__NAME##_pool_t) *)ptPool)->tCounter) {                 \
-                ((class(__NAME##_pool_t) *)ptPool)->tCounter--;                 \
-            }                                                                   \
+            ((class(__NAME##_pool_t) *)ptPool)->tCounter++;                     \
+                                                                                \
         } while(false);                                                         \
     )                                                                           \
                                                                                 \
@@ -182,8 +184,6 @@ bool __NAME##_pool_add_heap(                                                    
     }                                                                           \
                                                                                 \
     __ATOM_ACCESS(                                                              \
-        ((class(__NAME##_pool_t) *)ptPool)->tCounter = tSize;                   \
-                                                                                \
         do {                                                                    \
             __##__NAME##_pool_free_item(ptPool, ptBuffer++);                    \
         } while(--tSize);                                                       \
